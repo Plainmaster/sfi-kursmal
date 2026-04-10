@@ -185,6 +185,74 @@
           "themes": []
         }
       ]
+    },
+    "uttal": {
+      "goals": [
+        {
+          "id": "B-UTTA-01",
+          "text": "Jag uttalar alla bokstäver i alfabetet.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-UTTA-02",
+          "text": "Jag uttalar vokaler — hårda (a, o, u, å) och mjuka (e, i, y, ä, ö).",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-UTTA-03",
+          "text": "Jag uttalar ng-ljudet, sje-ljudet och tje-ljudet.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-UTTA-04",
+          "text": "Jag läser enkel text med tydligt uttal.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "grammatik": {
+      "goals": [
+        {
+          "id": "B-GRAM-01",
+          "text": "Jag använder stor bokstav, punkt och frågetecken.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-GRAM-02",
+          "text": "Jag böjer substantiv i singular och plural.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-GRAM-03",
+          "text": "Jag använder verb i presens och preteritum.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-GRAM-04",
+          "text": "Jag använder vanliga hjälpverb: vill, kan, ska, måste.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-GRAM-05",
+          "text": "Jag använder rak ordföljd: subjekt + verb + objekt.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-GRAM-06",
+          "text": "Jag använder frågeorden: vem, vad, var, när, hur.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
     }
   }
 }

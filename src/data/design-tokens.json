@@ -34,11 +34,34 @@
       "icon": "PenLine",
       "color_hex": "#DC2626",
       "color_name": "red"
+    },
+    "uttal": {
+      "label": "Uttal",
+      "label_short": "Uttal",
+      "icon": "Speech",
+      "color_hex": "#0D9488",
+      "color_name": "teal"
+    },
+    "grammatik": {
+      "label": "Grammatik",
+      "label_short": "Grammatik",
+      "icon": "Blocks",
+      "color_hex": "#CA8A04",
+      "color_name": "yellow"
     }
   },
   "courses": {
-    "B": { "color_hex": "#0891B2", "color_name": "cyan" },
-    "C": { "color_hex": "#7C3AED", "color_name": "violet" },
-    "D": { "color_hex": "#E11D48", "color_name": "rose" }
+    "B": {
+      "color_hex": "#0891B2",
+      "color_name": "cyan"
+    },
+    "C": {
+      "color_hex": "#7C3AED",
+      "color_name": "violet"
+    },
+    "D": {
+      "color_hex": "#E11D48",
+      "color_name": "rose"
+    }
   }
 }

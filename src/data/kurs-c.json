@@ -195,6 +195,68 @@
           "themes": []
         }
       ]
+    },
+    "uttal": {
+      "goals": [
+        {
+          "id": "C-UTTA-01",
+          "text": "Jag uttalar med större säkerhet än i kurs B.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-UTTA-02",
+          "text": "Jag betonar ord på rätt ställe så att andra förstår.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-UTTA-03",
+          "text": "Jag uttalar långa och korta vokaler korrekt.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "grammatik": {
+      "goals": [
+        {
+          "id": "C-GRAM-01",
+          "text": "Jag känner igen 8 ordklasser: substantiv, verb, adjektiv, pronomen, prepositioner, konjunktioner, adverb, räkneord.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-GRAM-02",
+          "text": "Jag böjer substantiv i bestämd och obestämd form.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-GRAM-03",
+          "text": "Jag använder vanliga konjunktioner: och, men, eller, för att, eftersom.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-GRAM-04",
+          "text": "Jag använder omvänd ordföljd när meningen inte börjar med subjekt.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-GRAM-05",
+          "text": "Jag böjer adjektiv efter substantivet.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-GRAM-06",
+          "text": "Jag använder reflexiva pronomen: mig, dig, sig, oss, er.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
     }
   }
 }

@@ -1,5 +1,5 @@
 ---
-import { Ear, BookOpen, MessagesSquare, Mic, PenLine } from "@lucide/astro";
+import { Ear, BookOpen, MessagesSquare, Mic, PenLine, Speech, Blocks } from "@lucide/astro";
 import GoalCheckbox from "./GoalCheckbox.astro";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 
 const { domainKey, label, labelShort, icon, colorClass, goals, course } = Astro.props;
 
-const iconMap: Record<string, any> = { Ear, BookOpen, MessagesSquare, Mic, PenLine };
+const iconMap: Record<string, any> = { Ear, BookOpen, MessagesSquare, Mic, PenLine, Speech, Blocks };
 const IconComponent = iconMap[icon];
 ---
 

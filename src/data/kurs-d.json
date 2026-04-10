@@ -188,6 +188,62 @@
           "themes": []
         }
       ]
+    },
+    "uttal": {
+      "goals": [
+        {
+          "id": "D-UTTA-01",
+          "text": "Jag uttalar med god säkerhet så att alla förstår mig.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-UTTA-02",
+          "text": "Jag betonar meningar med rätt intonation.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-UTTA-03",
+          "text": "Jag läser längre text högt med flyt och tydlighet.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "grammatik": {
+      "goals": [
+        {
+          "id": "D-GRAM-01",
+          "text": "Jag använder presens perfekt och pluskvamperfekt.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-GRAM-02",
+          "text": "Jag böjer adjektiv i bestämd form och komparerar dem.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-GRAM-03",
+          "text": "Jag använder bisatser med rätt ordföljd.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-GRAM-04",
+          "text": "Jag placerar satsadverbialet rätt i huvudsats och bisats.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-GRAM-05",
+          "text": "Jag använder relativa pronomen (som) och olika konjunktioner.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
     }
   }
 }
