@@ -41,8 +41,8 @@ human_verification:
 | 7 | kurs-b.json contains "Jag kan..." goals for all 5 skill domains | VERIFIED | 5+5+5+4+5 = 24 goals across all domains. |
 | 8 | Every goal has a stable ID in format B-XXXX-NN | VERIFIED | Regex `^B-(HORA\|LASA\|MINT\|MPRO\|SKRI)-\d{2}$` matches all 24 kurs B IDs. |
 | 9 | Theme values use only the 7 canonical arshjul strings | VERIFIED | Same as Truth 5 -- validated across all 73 goals. |
-| 10 | kurs-c.json contains "Jag kan..." goals for all 5 domains at CEFR B1 level | VERIFIED (structure) | 25 goals, all "Jag kan..." prefix, valid IDs (C-XXXX-NN). Language level needs human check. |
-| 11 | kurs-d.json contains "Jag kan..." goals for all 5 domains at CEFR B2 level | VERIFIED (structure) | 24 goals, all "Jag kan..." prefix, valid IDs (D-XXXX-NN). Language level needs human check. |
+| 10 | kurs-c.json contains "Jag kan..." goals for all 5 domains at CEFR A2 level | VERIFIED (structure) | 25 goals, all "Jag kan..." prefix, valid IDs (C-XXXX-NN). Language level needs human check. |
+| 11 | kurs-d.json contains "Jag kan..." goals for all 5 domains at CEFR B1 level | VERIFIED (structure) | 24 goals, all "Jag kan..." prefix, valid IDs (D-XXXX-NN). Language level needs human check. |
 | 12 | Domain keys in kurs-c.json and kurs-d.json match kurs-b.json exactly | VERIFIED | `JSON.stringify(Object.keys())` identical across all 4 JSON files. |
 | 13 | Goal complexity increases from B to C to D while structure stays identical | ? UNCERTAIN | Structure is identical (confirmed). Complexity increase visible in text (B uses "enkla/korta", C uses "aktuella amnen/sammanhangande", D uses "argumentera/formellt"). Requires teacher confirmation. |
 
@@ -101,23 +101,23 @@ Not applicable -- Phase 1 produces data files only. No rendering components exis
 
 ### Human Verification Required
 
-### 1. CEFR Language Level Calibration (Kurs B = A2)
+### 1. CEFR Language Level Calibration (Kurs B = A1)
 
-**Test:** Read through all 24 kurs B goals in `src/data/kurs-b.json` and confirm the vocabulary and sentence structures are appropriate for CEFR A2 / SFI kurs B students.
-**Expected:** Simple, concrete statements using everyday vocabulary. No abstractions, no subordinate clauses, max one clause per sentence.
-**Why human:** Automated tools cannot assess whether Swedish text is appropriately simplified for A2 learners. This requires native speaker / teacher judgment.
+**Test:** Read through all 24 kurs B goals in `src/data/kurs-b.json` and confirm the vocabulary and sentence structures are appropriate for CEFR A1 / SFI kurs B students.
+**Expected:** Very simple, concrete survival-level statements. No abstractions, no subordinate clauses, max one clause per sentence.
+**Why human:** Automated tools cannot assess whether Swedish text is appropriately simplified for A1 learners. This requires native speaker / teacher judgment.
 
-### 2. CEFR Language Level Calibration (Kurs C = B1)
+### 2. CEFR Language Level Calibration (Kurs C = A2)
 
-**Test:** Read through all 25 kurs C goals in `src/data/kurs-c.json` and confirm they are noticeably more complex than kurs B but still accessible.
-**Expected:** Broader topics (news, workplace, society), some subordinate clauses, opinion expression with reasoning.
-**Why human:** CEFR B1 calibration requires pedagogical judgment about what intermediate SFI students can actually understand.
+**Test:** Read through all 25 kurs C goals in `src/data/kurs-c.json` and confirm they are noticeably more complex than kurs B but still elementary everyday level.
+**Expected:** Everyday situations (shopping, family, work), simple descriptions, basic opinion expression. Still concrete and personal.
+**Why human:** CEFR A2 calibration requires pedagogical judgment about what elementary SFI students can actually understand.
 
-### 3. CEFR Language Level Calibration (Kurs D = B2)
+### 3. CEFR Language Level Calibration (Kurs D = B1)
 
-**Test:** Read through all 24 kurs D goals in `src/data/kurs-d.json` and confirm they reflect advanced competencies.
-**Expected:** Argumentation, formal register, structured presentations, source comparison, formal writing.
-**Why human:** CEFR B2 calibration requires teacher confirmation that goals match actual D-level student abilities.
+**Test:** Read through all 24 kurs D goals in `src/data/kurs-d.json` and confirm they reflect threshold/independent user competencies.
+**Expected:** Understanding main points of clear standard speech, handling most travel/work situations, writing simple connected text on familiar topics.
+**Why human:** CEFR B1 calibration requires teacher confirmation that goals match actual D-level student abilities.
 
 ### 4. kursplan_year Confirmation
 
