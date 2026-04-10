@@ -172,36 +172,54 @@ import examples from "../data/examples.json";
   });
 
   // --- 7. Lexin Audio Playback ---
-  // Fetches pronunciation from Lexin API and plays inline
-  async function playLexinAudio(word) {
-    const btn = event.currentTarget;
-    btn.disabled = true;
+  // Plays pronunciation from Lexin. Tries API first, falls back to new tab.
+  const audioCache = {};
+
+  async function playLexinAudio(word, btn) {
     btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+
+    const lexinUrl = `https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`;
+
     try {
-      const resp = await fetch(`https://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${encodeURIComponent(word)}&output=JSON`);
+      // Check cache first
+      if (audioCache[word]) {
+        const audio = new Audio(audioCache[word]);
+        await audio.play();
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+        return;
+      }
+
+      const resp = await fetch(
+        `https://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${encodeURIComponent(word)}&output=JSON`
+      );
+      if (!resp.ok) throw new Error('fetch failed');
       const text = await resp.text();
-      // Extract phonetic file URL from response
       const match = text.match(/"phonetic_file"\s*:\s*"([^"]+)"/);
       if (match) {
+        audioCache[word] = match[1];
         const audio = new Audio(match[1]);
-        audio.play();
+        await audio.play();
       } else {
-        // Fallback: open Lexin in new tab
-        window.open(`https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`, '_blank');
+        window.open(lexinUrl, '_blank');
       }
     } catch {
-      window.open(`https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`, '_blank');
+      // CORS or network error — open Lexin in new tab
+      window.open(lexinUrl, '_blank');
     }
-    btn.disabled = false;
+
     btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
   }
 
-  // Attach click handlers to all lexin-audio buttons
+  // Delegated click handler for dynamically inserted lexin buttons
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-lexin-word]');
     if (btn) {
       e.preventDefault();
-      playLexinAudio(btn.dataset.lexinWord);
+      e.stopPropagation();
+      playLexinAudio(btn.dataset.lexinWord, btn);
     }
   });
 
