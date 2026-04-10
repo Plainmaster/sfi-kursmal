@@ -1,39 +1,44 @@
 {
   "domains": {
     "horforstaelse": {
-      "label": "H\u00f6rf\u00f6rst\u00e5else",
-      "label_short": "H\u00f6ra",
+      "label": "Hörförståelse",
+      "label_short": "Höra",
       "icon": "Ear",
       "color_hex": "#D97706",
       "color_name": "amber"
     },
     "lasforstaelse": {
-      "label": "L\u00e4sf\u00f6rst\u00e5else",
-      "label_short": "L\u00e4sa",
+      "label": "Läsförståelse",
+      "label_short": "Läsa",
       "icon": "BookOpen",
       "color_hex": "#2563EB",
       "color_name": "blue"
     },
     "muntlig-interaktion": {
       "label": "Muntlig interaktion",
-      "label_short": "Prata",
-      "icon": "MessageCircle",
+      "label_short": "Samtala",
+      "icon": "MessagesSquare",
       "color_hex": "#16A34A",
       "color_name": "green"
     },
     "muntlig-produktion": {
       "label": "Muntlig produktion",
-      "label_short": "Ber\u00e4tta",
+      "label_short": "Berätta",
       "icon": "Mic",
       "color_hex": "#7C3AED",
       "color_name": "violet"
     },
     "skriftlig-fardighet": {
-      "label": "Skriftlig f\u00e4rdighet",
+      "label": "Skriftlig färdighet",
       "label_short": "Skriva",
       "icon": "PenLine",
       "color_hex": "#DC2626",
       "color_name": "red"
     }
+  },
+  "courses": {
+    "B": { "color_hex": "#0891B2", "color_name": "cyan" },
+    "C": { "color_hex": "#7C3AED", "color_name": "violet" },
+    "D": { "color_hex": "#E11D48", "color_name": "rose" }
   }
 }

@@ -7,31 +7,37 @@
       "goals": [
         {
           "id": "C-HORA-01",
-          "text": "Jag kan förstå vanliga ord och enkla meningar om vardagliga ämnen.",
+          "text": "Jag förstår vanliga ord och enkla meningar om vardagliga ämnen.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-HORA-02",
-          "text": "Jag kan förstå enkla samtal om familj, arbete och fritid.",
+          "text": "Jag förstår enkla samtal om familj, arbete och fritid.",
           "kursplan_year": 2018,
-          "themes": ["relationer", "arbete-och-studier", "fritid-och-halsa"]
+          "themes": [
+            "relationer",
+            "arbete-och-studier",
+            "fritid-och-halsa"
+          ]
         },
         {
           "id": "C-HORA-03",
-          "text": "Jag kan förstå information i korta meddelanden och annonser.",
+          "text": "Jag förstår information i korta meddelanden och annonser.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-HORA-04",
-          "text": "Jag kan förstå enkla instruktioner på jobbet eller i skolan.",
+          "text": "Jag förstår enkla instruktioner på jobbet eller i skolan.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         },
         {
           "id": "C-HORA-05",
-          "text": "Jag kan förstå vad någon berättar om en vardaglig händelse.",
+          "text": "Jag förstår vad någon berättar om en vardaglig händelse.",
           "kursplan_year": 2018,
           "themes": []
         }
@@ -41,33 +47,36 @@
       "goals": [
         {
           "id": "C-LASA-01",
-          "text": "Jag kan läsa och förstå korta enkla texter om bekanta ämnen.",
+          "text": "Jag läser och förstår korta enkla texter om bekanta ämnen.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-LASA-02",
-          "text": "Jag kan hitta information i vardagliga texter, till exempel annonser och tidtabeller.",
+          "text": "Jag hittar information i vardagliga texter, till exempel annonser och tidtabeller.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-LASA-03",
-          "text": "Jag kan förstå ett kort brev eller mejl om vardagliga saker.",
+          "text": "Jag förstår ett kort brev eller mejl om vardagliga saker.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-LASA-04",
-          "text": "Jag kan förstå enkla beskrivningar av personer, platser och händelser.",
+          "text": "Jag förstår enkla beskrivningar av personer, platser och händelser.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-LASA-05",
-          "text": "Jag kan förstå enkel information från skolan eller en myndighet.",
+          "text": "Jag förstår enkel information från skolan eller en myndighet.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier", "samhalle"]
+          "themes": [
+            "arbete-och-studier",
+            "samhalle"
+          ]
         }
       ]
     },
@@ -75,31 +84,37 @@
       "goals": [
         {
           "id": "C-MINT-01",
-          "text": "Jag kan prata om vardagliga ämnen, till exempel mat, väder och familj.",
+          "text": "Jag pratar om vardagliga ämnen, till exempel mat, väder och familj.",
           "kursplan_year": 2018,
-          "themes": ["relationer"]
+          "themes": [
+            "relationer"
+          ]
         },
         {
           "id": "C-MINT-02",
-          "text": "Jag kan ställa och svara på frågor om mitt arbete och min vardag.",
+          "text": "Jag ställer och svarar på frågor om mitt arbete och min vardag.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         },
         {
           "id": "C-MINT-03",
-          "text": "Jag kan handla i en affär och fråga om priser och varor.",
+          "text": "Jag handlar i en affär och frågar om priser och varor.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-MINT-04",
-          "text": "Jag kan säga vad jag tycker om enkla saker, till exempel en film eller en plats.",
+          "text": "Jag säger vad jag tycker om enkla saker, till exempel en film eller en plats.",
           "kursplan_year": 2018,
-          "themes": ["fritid-och-halsa"]
+          "themes": [
+            "fritid-och-halsa"
+          ]
         },
         {
           "id": "C-MINT-05",
-          "text": "Jag kan be om hjälp och förklara ett enkelt problem.",
+          "text": "Jag ber om hjälp och förklarar ett enkelt problem.",
           "kursplan_year": 2018,
           "themes": []
         }
@@ -109,31 +124,35 @@
       "goals": [
         {
           "id": "C-MPRO-01",
-          "text": "Jag kan berätta om mina vanor och vad jag gör varje dag.",
+          "text": "Jag berättar om mina vanor och vad jag gör varje dag.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-MPRO-02",
-          "text": "Jag kan beskriva min bostad och mitt område med enkla meningar.",
+          "text": "Jag beskriver min bostad och mitt område med enkla meningar.",
           "kursplan_year": 2018,
-          "themes": ["bostad"]
+          "themes": [
+            "bostad"
+          ]
         },
         {
           "id": "C-MPRO-03",
-          "text": "Jag kan berätta om något som jag har upplevt.",
+          "text": "Jag berättar om något som jag har upplevt.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-MPRO-04",
-          "text": "Jag kan berätta om mina planer, till exempel vad jag vill göra i helgen.",
+          "text": "Jag berättar om mina planer, till exempel vad jag vill göra i helgen.",
           "kursplan_year": 2018,
-          "themes": ["fritid-och-halsa"]
+          "themes": [
+            "fritid-och-halsa"
+          ]
         },
         {
           "id": "C-MPRO-05",
-          "text": "Jag kan förklara varför jag tycker om eller inte tycker om något.",
+          "text": "Jag förklarar varför jag tycker om eller inte tycker om något.",
           "kursplan_year": 2018,
           "themes": []
         }
@@ -143,31 +162,35 @@
       "goals": [
         {
           "id": "C-SKRI-01",
-          "text": "Jag kan skriva korta meddelanden och mejl om vardagliga saker.",
+          "text": "Jag skriver korta meddelanden och mejl om vardagliga saker.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-SKRI-02",
-          "text": "Jag kan fylla i enkla formulär med personlig information.",
+          "text": "Jag fyller i enkla formulär med personlig information.",
           "kursplan_year": 2018,
-          "themes": ["samhalle"]
+          "themes": [
+            "samhalle"
+          ]
         },
         {
           "id": "C-SKRI-03",
-          "text": "Jag kan skriva en kort text om mig själv och min familj.",
+          "text": "Jag skriver en kort text om mig själv och min familj.",
           "kursplan_year": 2018,
-          "themes": ["relationer"]
+          "themes": [
+            "relationer"
+          ]
         },
         {
           "id": "C-SKRI-04",
-          "text": "Jag kan skriva om en vanlig dag eller en händelse med enkla meningar.",
+          "text": "Jag skriver om en vanlig dag eller en händelse med enkla meningar.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "C-SKRI-05",
-          "text": "Jag kan skriva en kort text där jag berättar vad jag tycker.",
+          "text": "Jag skriver en kort text där jag berättar vad jag tycker.",
           "kursplan_year": 2018,
           "themes": []
         }

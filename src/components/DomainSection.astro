@@ -1,26 +1,27 @@
 ---
-import { Ear, BookOpen, MessageCircle, Mic, PenLine } from "@lucide/astro";
+import { Ear, BookOpen, MessagesSquare, Mic, PenLine } from "@lucide/astro";
 import GoalCheckbox from "./GoalCheckbox.astro";
 
 interface Props {
   domainKey: string;
   label: string;
+  labelShort: string;
   icon: string;
   colorClass: string;
   goals: Array<{ id: string; text: string }>;
   course: string;
 }
 
-const { domainKey, label, icon, colorClass, goals, course } = Astro.props;
+const { domainKey, label, labelShort, icon, colorClass, goals, course } = Astro.props;
 
-const iconMap: Record<string, any> = { Ear, BookOpen, MessageCircle, Mic, PenLine };
+const iconMap: Record<string, any> = { Ear, BookOpen, MessagesSquare, Mic, PenLine };
 const IconComponent = iconMap[icon];
 ---
 
 <section class="mb-6">
   <div class={`${colorClass} rounded-t-lg px-4 py-3 flex items-center gap-2`}>
     {IconComponent && <IconComponent size={24} class="text-white" />}
-    <h2 class="text-white font-semibold text-lg">{label}</h2>
+    <h2 class="text-white font-semibold text-lg">{labelShort}</h2>
   </div>
   <p
     class="text-sm text-gray-500 px-4 py-1"
@@ -28,7 +29,7 @@ const IconComponent = iconMap[icon];
   >
     0 av {goals.length} avklarade
   </p>
-  <div class="bg-white rounded-b-lg border border-t-0 border-gray-200 divide-y divide-gray-100">
+  <div class="bg-white rounded-b-lg border border-t-0 border-gray-200">
     {goals.map((goal) => (
       <GoalCheckbox id={goal.id} text={goal.text} course={course} />
     ))}

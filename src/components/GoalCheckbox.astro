@@ -8,18 +8,36 @@ interface Props {
 const { id, text, course } = Astro.props;
 ---
 
-<label class="flex items-center gap-3 py-2 px-3 min-h-[44px] cursor-pointer">
-  <input
-    type="checkbox"
-    class="w-6 h-6 shrink-0 accent-current"
-    data-goal-id={id}
-    data-course={course}
-  />
-  <span class="text-base">{text}</span>
-  <span
-    class="saved-indicator text-green-600 text-sm ml-auto hidden"
-    data-saved-for={id}
-  >
-    Sparat!
-  </span>
-</label>
+<div class="goal-item border-b border-gray-100 last:border-b-0">
+  <label class="flex items-center gap-3 py-2 px-3 min-h-[44px] cursor-pointer">
+    <input
+      type="checkbox"
+      class="w-6 h-6 shrink-0 accent-current"
+      data-goal-id={id}
+      data-course={course}
+    />
+    <span class="text-base flex-1">{text}</span>
+    <span
+      class="saved-indicator text-green-600 text-sm ml-auto hidden"
+      data-saved-for={id}
+    >
+      Sparat!
+    </span>
+    <button
+      class="expand-btn shrink-0 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+      data-expand-for={id}
+      aria-label="Visa exempel"
+      type="button"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="expand-icon transition-transform">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </label>
+  <div class="goal-details hidden px-4 pb-3 ml-9" data-details-for={id}>
+    <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-600 border border-gray-200">
+      <p class="font-medium text-gray-700 mb-1">Exempel:</p>
+      <p class="text-gray-600 italic" data-example-for={id}>Laddar...</p>
+    </div>
+  </div>
+</div>

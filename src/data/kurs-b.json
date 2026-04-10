@@ -7,31 +7,37 @@
       "goals": [
         {
           "id": "B-HORA-01",
-          "text": "Jag kan förstå enkelt tal i vanliga situationer.",
+          "text": "Jag förstår enkelt tal i vanliga situationer.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-HORA-02",
-          "text": "Jag kan förstå korta meddelanden, till exempel på en tågstation.",
+          "text": "Jag förstår korta meddelanden, till exempel på en tågstation.",
           "kursplan_year": 2018,
-          "themes": ["fritid-och-halsa"]
+          "themes": [
+            "fritid-och-halsa"
+          ]
         },
         {
           "id": "B-HORA-03",
-          "text": "Jag kan förstå enkla instruktioner i klassrummet.",
+          "text": "Jag förstår enkla instruktioner i klassrummet.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         },
         {
           "id": "B-HORA-04",
-          "text": "Jag kan förstå när någon berättar om sin familj.",
+          "text": "Jag förstår när någon berättar om sin familj.",
           "kursplan_year": 2018,
-          "themes": ["relationer"]
+          "themes": [
+            "relationer"
+          ]
         },
         {
           "id": "B-HORA-05",
-          "text": "Jag kan förstå enkla frågor om mig själv.",
+          "text": "Jag förstår enkla frågor om mig själv.",
           "kursplan_year": 2018,
           "themes": []
         }
@@ -41,33 +47,41 @@
       "goals": [
         {
           "id": "B-LASA-01",
-          "text": "Jag kan läsa och förstå enkla texter om vardagliga ämnen.",
+          "text": "Jag läser och förstår enkla texter om vardagliga ämnen.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-LASA-02",
-          "text": "Jag kan förstå enkel information, till exempel 'ställ upp stolarna'.",
+          "text": "Jag förstår enkel information, till exempel 'ställ upp stolarna'.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         },
         {
           "id": "B-LASA-03",
-          "text": "Jag kan förstå korta instruktioner, till exempel 'kryssa för rätt svar'.",
+          "text": "Jag förstår korta instruktioner, till exempel 'kryssa för rätt svar'.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         },
         {
           "id": "B-LASA-04",
-          "text": "Jag kan förstå korta meddelanden, till exempel att skolan är stängd.",
+          "text": "Jag förstår korta meddelanden, till exempel att skolan är stängd.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         },
         {
           "id": "B-LASA-05",
-          "text": "Jag kan läsa och förstå mitt schema.",
+          "text": "Jag läser och förstår mitt schema.",
           "kursplan_year": 2018,
-          "themes": ["arbete-och-studier"]
+          "themes": [
+            "arbete-och-studier"
+          ]
         }
       ]
     },
@@ -75,31 +89,33 @@
       "goals": [
         {
           "id": "B-MINT-01",
-          "text": "Jag kan svara på enkla frågor i ett samtal.",
+          "text": "Jag svarar på enkla frågor i ett samtal.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-MINT-02",
-          "text": "Jag kan ställa enkla frågor i ett samtal.",
+          "text": "Jag ställer enkla frågor i ett samtal.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-MINT-03",
-          "text": "Jag kan berätta vad jag tycker med enkla ord.",
+          "text": "Jag berättar vad jag tycker med enkla ord.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-MINT-04",
-          "text": "Jag kan prata om mig själv, till exempel min familj och mitt land.",
+          "text": "Jag pratar om mig själv, till exempel min familj och mitt land.",
           "kursplan_year": 2018,
-          "themes": ["relationer"]
+          "themes": [
+            "relationer"
+          ]
         },
         {
           "id": "B-MINT-05",
-          "text": "Jag kan hålla ett kort samtal med en annan person.",
+          "text": "Jag håller ett kort samtal med en annan person.",
           "kursplan_year": 2018,
           "themes": []
         }
@@ -109,25 +125,25 @@
       "goals": [
         {
           "id": "B-MPRO-01",
-          "text": "Jag kan berätta om mig själv med enkla meningar.",
+          "text": "Jag berättar om mig själv med enkla meningar.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-MPRO-02",
-          "text": "Jag kan berätta om min dag för klassen.",
+          "text": "Jag berättar om min dag för klassen.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-MPRO-03",
-          "text": "Jag kan beskriva en person eller en plats med enkla ord.",
+          "text": "Jag beskriver en person eller en plats med enkla ord.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-MPRO-04",
-          "text": "Jag kan berätta om något som har hänt.",
+          "text": "Jag berättar om något som har hänt.",
           "kursplan_year": 2018,
           "themes": []
         }
@@ -137,31 +153,34 @@
       "goals": [
         {
           "id": "B-SKRI-01",
-          "text": "Jag kan skriva korta och enkla meningar.",
+          "text": "Jag skriver korta och enkla meningar.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-SKRI-02",
-          "text": "Jag kan skriva ett kort meddelande, till exempel ett sms.",
+          "text": "Jag skriver ett kort meddelande, till exempel ett sms.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-SKRI-03",
-          "text": "Jag kan skriva om mig själv, till exempel mitt namn, min adress och mitt telefonnummer.",
+          "text": "Jag skriver om mig själv, till exempel mitt namn, min adress och mitt telefonnummer.",
           "kursplan_year": 2018,
           "themes": []
         },
         {
           "id": "B-SKRI-04",
-          "text": "Jag kan skriva en kort hälsning.",
+          "text": "Jag skriver en kort hälsning.",
           "kursplan_year": 2018,
-          "themes": ["relationer", "hogtider"]
+          "themes": [
+            "relationer",
+            "hogtider"
+          ]
         },
         {
           "id": "B-SKRI-05",
-          "text": "Jag kan skriva enkla texter om saker jag har gjort.",
+          "text": "Jag skriver enkla texter om saker jag har gjort.",
           "kursplan_year": 2018,
           "themes": []
         }

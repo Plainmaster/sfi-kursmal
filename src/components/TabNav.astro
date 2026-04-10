@@ -1,23 +1,25 @@
 ---
-// No props -- courses are hardcoded B, C, D
+// Distinct colors per course from design-tokens
 const tabs = [
-  { course: "B", label: "Kurs B" },
-  { course: "C", label: "Kurs C" },
-  { course: "D", label: "Kurs D" },
+  { course: "B", label: "Kurs B", color: "border-cyan-600 text-cyan-700", activeColor: "bg-cyan-600" },
+  { course: "C", label: "Kurs C", color: "border-violet-600 text-violet-700", activeColor: "bg-violet-600" },
+  { course: "D", label: "Kurs D", color: "border-rose-600 text-rose-700", activeColor: "bg-rose-600" },
 ];
 ---
 
-<nav class="sticky top-0 z-10 bg-white border-b border-gray-200">
+<nav class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
   <div class="flex justify-around">
     {tabs.map((tab, i) => (
       <button
         class:list={[
-          "course-tab flex-1 py-3 text-center font-semibold text-base min-h-[44px] border-b-3 transition-colors",
+          "course-tab flex-1 py-3 text-center font-bold text-lg min-h-[44px] border-b-4 transition-colors",
           i === 0
-            ? "border-blue-500 text-gray-900"
+            ? `${tab.color}`
             : "border-transparent text-gray-400",
         ]}
         data-course={tab.course}
+        data-active-border={tab.color.split(' ')[0]}
+        data-active-text={tab.color.split(' ')[1]}
       >
         {tab.label}
       </button>
