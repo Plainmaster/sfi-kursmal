@@ -1,0 +1,21 @@
+{
+  "course": "B",
+  "kursplan_year": 2018,
+  "domains": {
+    "horforstaelse": {
+      "goals": []
+    },
+    "lasforstaelse": {
+      "goals": []
+    },
+    "muntlig-interaktion": {
+      "goals": []
+    },
+    "muntlig-produktion": {
+      "goals": []
+    },
+    "skriftlig-fardighet": {
+      "goals": []
+    }
+  }
+}
