@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md -- Design tokens and kurs B content (schema foundation + reference course)
-- [ ] 01-02-PLAN.md -- Kurs C and kurs D content (remaining courses following kurs B pattern)
+- [x] 01-02-PLAN.md -- Kurs C and kurs D content (remaining courses following kurs B pattern)
 
 ### Phase 2: Interaktiv checklista
 **Goal**: Eleven kan oppna sajten pa sin mobil, se sina kursmal med visuellt stod, och kryssa av uppnadda formagor -- och avprickningen sparas automatiskt
