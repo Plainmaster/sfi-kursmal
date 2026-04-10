@@ -1,0 +1,26 @@
+---
+// No props -- courses are hardcoded B, C, D
+const tabs = [
+  { course: "B", label: "Kurs B" },
+  { course: "C", label: "Kurs C" },
+  { course: "D", label: "Kurs D" },
+];
+---
+
+<nav class="sticky top-0 z-10 bg-white border-b border-gray-200">
+  <div class="flex justify-around">
+    {tabs.map((tab, i) => (
+      <button
+        class:list={[
+          "course-tab flex-1 py-3 text-center font-semibold text-base min-h-[44px] border-b-3 transition-colors",
+          i === 0
+            ? "border-blue-500 text-gray-900"
+            : "border-transparent text-gray-400",
+        ]}
+        data-course={tab.course}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+</nav>

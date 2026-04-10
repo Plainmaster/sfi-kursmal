@@ -1,0 +1,46 @@
+---
+import DomainSection from "./DomainSection.astro";
+import ResetButton from "./ResetButton.astro";
+
+interface Props {
+  course: string;
+  courseData: any;
+  tokens: any;
+  initiallyHidden?: boolean;
+}
+
+const { course, courseData, tokens, initiallyHidden = false } = Astro.props;
+
+const domainColorMap: Record<string, string> = {
+  "horforstaelse": "bg-domain-hora",
+  "lasforstaelse": "bg-domain-lasa",
+  "muntlig-interaktion": "bg-domain-prata",
+  "muntlig-produktion": "bg-domain-beratta",
+  "skriftlig-fardighet": "bg-domain-skriva",
+};
+
+// Use token key order to guarantee consistent domain ordering
+const domainOrder = Object.keys(tokens.domains);
+---
+
+<div
+  id={`panel-${course}`}
+  class:list={["course-panel pt-4 pb-8", { hidden: initiallyHidden }]}
+>
+  {domainOrder.map((domainKey) => {
+    const domainData = courseData.domains[domainKey];
+    const tokenData = tokens.domains[domainKey];
+    if (!domainData || !tokenData) return null;
+    return (
+      <DomainSection
+        domainKey={domainKey}
+        label={tokenData.label}
+        icon={tokenData.icon}
+        colorClass={domainColorMap[domainKey]}
+        goals={domainData.goals}
+        course={course}
+      />
+    );
+  })}
+  <ResetButton course={course} />
+</div>
