@@ -11,6 +11,13 @@ import "../styles/global.css";
   </head>
   <body class="font-sans bg-gray-50 text-gray-900 text-base">
     <div class="max-w-2xl mx-auto px-4">
+      <div class="print-header hidden print:block">
+        <h1 class="text-xl font-bold mb-1">SFI Spar 2 — Kurs <span id="print-course">B</span> — Kursmal</h1>
+        <div class="flex gap-8 mt-2 mb-4 border-b border-black pb-2">
+          <p>Namn: ____________________________</p>
+          <p>Datum: _______________</p>
+        </div>
+      </div>
       <slot />
     </div>
   </body>

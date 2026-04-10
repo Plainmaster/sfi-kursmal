@@ -23,3 +23,81 @@
 .saved-indicator {
   animation: fade-out 1.5s ease-out forwards;
 }
+
+@media print {
+  /* --- Hide interactive elements (D-13) --- */
+  nav,
+  [data-reset],
+  [data-confirm],
+  .expand-btn,
+  .saved-indicator,
+  [data-lexin-word],
+  .print-hide,
+  [data-progress] {
+    display: none !important;
+  }
+
+  /* --- Show print header (D-16) --- */
+  .print-header {
+    display: block !important;
+  }
+
+  /* --- Expand all goal details for print (D-14) --- */
+  .goal-details {
+    display: block !important;
+  }
+
+  /* --- Base typography (D-17) --- */
+  body {
+    font-size: 12pt !important;
+    color: #000 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* --- Remove sticky positioning --- */
+  .sticky {
+    position: static !important;
+  }
+
+  /* --- Checkbox rendering (D-17) --- */
+  input[type="checkbox"] {
+    -webkit-appearance: checkbox !important;
+    appearance: checkbox !important;
+    width: 18px !important;
+    height: 18px !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* --- Domain headers grayscale-safe (D-14) --- */
+  [class*="bg-domain-"] {
+    background: #555 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* --- Remove shadows and decorative borders --- */
+  .shadow-sm {
+    box-shadow: none !important;
+  }
+
+  /* --- Ensure readable layout --- */
+  .max-w-2xl {
+    max-width: 100% !important;
+  }
+
+  /* --- Page breaks: avoid breaking inside a domain section --- */
+  section {
+    break-inside: avoid;
+  }
+
+  /* --- Min plan custom text inputs: show as underlined text --- */
+  input[type="text"] {
+    border: none !important;
+    border-bottom: 1px solid #999 !important;
+    background: transparent !important;
+  }
+}

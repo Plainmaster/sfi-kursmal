@@ -260,7 +260,42 @@ import MinPlanPanel from "../components/MinPlanPanel.astro";
     });
   }
 
-  // --- 10. Initialize Min Plan State ---
+  // --- 10. Print Preparation ---
+  let prePrintState = null;
+
+  window.addEventListener('beforeprint', () => {
+    // Save current panel visibility state
+    prePrintState = [];
+    document.querySelectorAll('.course-panel').forEach(p => {
+      prePrintState.push({ id: p.id, hidden: p.classList.contains('hidden') });
+    });
+
+    // Show the last-active course panel + Min plan (D-14, D-15)
+    document.querySelectorAll('.course-panel').forEach(p => {
+      if (p.id === `panel-${lastActiveCourse}` || p.id === 'panel-plan') {
+        p.classList.remove('hidden');
+      } else {
+        p.classList.add('hidden');
+      }
+    });
+
+    // Update print header with active course (D-16)
+    const printCourse = document.getElementById('print-course');
+    if (printCourse) printCourse.textContent = lastActiveCourse;
+  });
+
+  window.addEventListener('afterprint', () => {
+    // Restore panel visibility
+    if (prePrintState) {
+      prePrintState.forEach(({ id, hidden }) => {
+        const p = document.getElementById(id);
+        if (p) p.classList.toggle('hidden', hidden);
+      });
+      prePrintState = null;
+    }
+  });
+
+  // --- 11. Initialize Min Plan State ---
   const planState = loadPlanState();
   Object.entries(planState.checked).forEach(([id, checked]) => {
     if (checked) {
