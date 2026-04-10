@@ -3,19 +3,168 @@
   "kursplan_year": 2018,
   "domains": {
     "horforstaelse": {
-      "goals": []
+      "goals": [
+        {
+          "id": "B-HORA-01",
+          "text": "Jag kan f\u00f6rst\u00e5 enkelt tal i vanliga situationer.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-HORA-02",
+          "text": "Jag kan f\u00f6rst\u00e5 korta ber\u00e4ttelser om v\u00e4lbekanta \u00e4mnen.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-HORA-03",
+          "text": "Jag kan f\u00f6rst\u00e5 korta meddelanden, till exempel p\u00e5 en t\u00e5gstation.",
+          "kursplan_year": 2018,
+          "themes": ["fritid-och-halsa"]
+        },
+        {
+          "id": "B-HORA-04",
+          "text": "Jag kan f\u00f6rst\u00e5 enkla instruktioner i klassrummet.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "B-HORA-05",
+          "text": "Jag kan f\u00f6rst\u00e5 n\u00e4r n\u00e5gon ber\u00e4ttar om sin familj eller sitt arbete.",
+          "kursplan_year": 2018,
+          "themes": ["relationer", "arbete-och-studier"]
+        }
+      ]
     },
     "lasforstaelse": {
-      "goals": []
+      "goals": [
+        {
+          "id": "B-LASA-01",
+          "text": "Jag kan l\u00e4sa och f\u00f6rst\u00e5 enkla texter om vardagliga \u00e4mnen.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-LASA-02",
+          "text": "Jag kan f\u00f6rst\u00e5 enkel information, till exempel 'st\u00e4ll upp stolarna'.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "B-LASA-03",
+          "text": "Jag kan f\u00f6rst\u00e5 korta instruktioner, till exempel 'kryssa f\u00f6r r\u00e4tt svar'.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "B-LASA-04",
+          "text": "Jag kan f\u00f6rst\u00e5 korta meddelanden, till exempel att skolan \u00e4r st\u00e4ngd.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "B-LASA-05",
+          "text": "Jag kan l\u00e4sa och f\u00f6rst\u00e5 mitt schema.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        }
+      ]
     },
     "muntlig-interaktion": {
-      "goals": []
+      "goals": [
+        {
+          "id": "B-MINT-01",
+          "text": "Jag kan svara p\u00e5 enkla fr\u00e5gor i ett samtal.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-MINT-02",
+          "text": "Jag kan st\u00e4lla enkla fr\u00e5gor i ett samtal.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-MINT-03",
+          "text": "Jag kan ber\u00e4tta vad jag tycker med enkla ord.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-MINT-04",
+          "text": "Jag kan prata om v\u00e4lbekanta \u00e4mnen, till exempel familj och arbete.",
+          "kursplan_year": 2018,
+          "themes": ["relationer", "arbete-och-studier"]
+        },
+        {
+          "id": "B-MINT-05",
+          "text": "Jag kan h\u00e5lla ett kort samtal med en annan person.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
     },
     "muntlig-produktion": {
-      "goals": []
+      "goals": [
+        {
+          "id": "B-MPRO-01",
+          "text": "Jag kan ber\u00e4tta om mig sj\u00e4lv med enkla meningar.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-MPRO-02",
+          "text": "Jag kan ber\u00e4tta om min dag f\u00f6r klassen.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-MPRO-03",
+          "text": "Jag kan beskriva en person eller en plats med enkla ord.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-MPRO-04",
+          "text": "Jag kan ber\u00e4tta om n\u00e5got som har h\u00e4nt.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
     },
     "skriftlig-fardighet": {
-      "goals": []
+      "goals": [
+        {
+          "id": "B-SKRI-01",
+          "text": "Jag kan skriva korta och enkla meningar.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-SKRI-02",
+          "text": "Jag kan skriva ett kort meddelande, till exempel ett sms.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-SKRI-03",
+          "text": "Jag kan skriva om mig sj\u00e4lv, till exempel mitt namn, min adress och mitt telefonnummer.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "B-SKRI-04",
+          "text": "Jag kan skriva en kort h\u00e4lsning.",
+          "kursplan_year": 2018,
+          "themes": ["relationer", "hogtider"]
+        },
+        {
+          "id": "B-SKRI-05",
+          "text": "Jag kan skriva enkla texter om saker jag har gjort.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
     }
   }
 }
