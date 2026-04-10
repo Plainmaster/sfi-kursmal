@@ -7,6 +7,7 @@ import kursC from "../data/kurs-c.json";
 import kursD from "../data/kurs-d.json";
 import tokens from "../data/design-tokens.json";
 import examples from "../data/examples.json";
+import lexinAudio from "../data/lexin-audio.json";
 ---
 
 <BaseLayout>
@@ -17,7 +18,7 @@ import examples from "../data/examples.json";
     <CoursePanel course="D" courseData={kursD} tokens={tokens} initiallyHidden={true} />
   </main>
 
-<script define:vars={{ examples }}>
+<script define:vars={{ examples, lexinAudio }}>
   // --- 1. Tab Switching with distinct course colors ---
   const tabs = document.querySelectorAll('.course-tab');
   const panels = document.querySelectorAll('.course-panel');
@@ -172,45 +173,21 @@ import examples from "../data/examples.json";
   });
 
   // --- 7. Lexin Audio Playback ---
-  // Plays pronunciation from Lexin. Tries API first, falls back to new tab.
-  const audioCache = {};
-
-  async function playLexinAudio(word, btn) {
-    btn.style.opacity = '0.5';
-    btn.style.pointerEvents = 'none';
-
-    const lexinUrl = `https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`;
-
-    try {
-      // Check cache first
-      if (audioCache[word]) {
-        const audio = new Audio(audioCache[word]);
-        await audio.play();
+  // Uses pre-fetched audio URLs from lexin-audio.json (built at build time, no CORS)
+  function playLexinAudio(word, btn) {
+    const url = lexinAudio[word];
+    if (url) {
+      btn.style.opacity = '0.5';
+      const audio = new Audio(url);
+      audio.play().then(() => {
+        audio.onended = () => { btn.style.opacity = '1'; };
+      }).catch(() => {
         btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-        return;
-      }
-
-      const resp = await fetch(
-        `https://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${encodeURIComponent(word)}&output=JSON`
-      );
-      if (!resp.ok) throw new Error('fetch failed');
-      const text = await resp.text();
-      const match = text.match(/"phonetic_file"\s*:\s*"([^"]+)"/);
-      if (match) {
-        audioCache[word] = match[1];
-        const audio = new Audio(match[1]);
-        await audio.play();
-      } else {
-        window.open(lexinUrl, '_blank');
-      }
-    } catch {
-      // CORS or network error — open Lexin in new tab
-      window.open(lexinUrl, '_blank');
+        window.open(`https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`, '_blank');
+      });
+    } else {
+      window.open(`https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`, '_blank');
     }
-
-    btn.style.opacity = '1';
-    btn.style.pointerEvents = 'auto';
   }
 
   // Delegated click handler for dynamically inserted lexin buttons
