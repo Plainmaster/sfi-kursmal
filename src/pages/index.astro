@@ -155,13 +155,18 @@ import examples from "../data/examples.json";
         icon.style.transform = isHidden ? 'rotate(180deg)' : '';
       }
 
-      // Load example text
+      // Load example as list items, split on sentence boundaries
       if (isHidden) {
         const exampleEl = document.querySelector(`[data-example-for="${CSS.escape(goalId)}"]`);
         if (exampleEl && examples[goalId]) {
-          exampleEl.textContent = examples[goalId];
+          const text = examples[goalId];
+          // Split on ". " or "! " or "? " but keep the punctuation with the sentence
+          const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.trim());
+          exampleEl.innerHTML = sentences.map(s =>
+            `<li class="text-gray-600 pl-3 border-l-2 border-gray-300">${s}</li>`
+          ).join('');
         } else if (exampleEl) {
-          exampleEl.textContent = 'Inget exempel ännu.';
+          exampleEl.innerHTML = '<li class="text-gray-500 italic">Inget exempel ännu.</li>';
         }
       }
     });
