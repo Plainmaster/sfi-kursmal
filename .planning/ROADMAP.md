@@ -29,7 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Varje fardighetsomrade har en definierad ikon och fargkod
   4. Kursmal ar skrivna pa enkel svenska anpassad till respektive kursniva (B, C, D)
   5. Kopplingen mellan mal och arshjulets sju teman ar mappad i JSON
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md -- Design tokens and kurs B content (schema foundation + reference course)
+- [ ] 01-02-PLAN.md -- Kurs C and kurs D content (remaining courses following kurs B pattern)
 
 ### Phase 2: Interaktiv checklista
 **Goal**: Eleven kan oppna sajten pa sin mobil, se sina kursmal med visuellt stod, och kryssa av uppnadda formagor -- och avprickningen sparas automatiskt
@@ -72,7 +76,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Innehallsgrund | 0/? | Not started | - |
+| 1. Innehallsgrund | 0/2 | Planning complete | - |
 | 2. Interaktiv checklista | 0/? | Not started | - |
 | 3. Min Plan och fullstandig produkt | 0/? | Not started | - |
 | 4. Driftsattning | 0/? | Not started | - |
