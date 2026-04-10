@@ -171,7 +171,41 @@ import examples from "../data/examples.json";
     });
   });
 
-  // --- 7. Initialize on Page Load ---
+  // --- 7. Lexin Audio Playback ---
+  // Fetches pronunciation from Lexin API and plays inline
+  async function playLexinAudio(word) {
+    const btn = event.currentTarget;
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    try {
+      const resp = await fetch(`https://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${encodeURIComponent(word)}&output=JSON`);
+      const text = await resp.text();
+      // Extract phonetic file URL from response
+      const match = text.match(/"phonetic_file"\s*:\s*"([^"]+)"/);
+      if (match) {
+        const audio = new Audio(match[1]);
+        audio.play();
+      } else {
+        // Fallback: open Lexin in new tab
+        window.open(`https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`, '_blank');
+      }
+    } catch {
+      window.open(`https://lexin.nada.kth.se/lexin/#searchinfo=both,swe_swe,${encodeURIComponent(word)}`, '_blank');
+    }
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+
+  // Attach click handlers to all lexin-audio buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-lexin-word]');
+    if (btn) {
+      e.preventDefault();
+      playLexinAudio(btn.dataset.lexinWord);
+    }
+  });
+
+  // --- 8. Initialize on Page Load ---
   ['B', 'C', 'D'].forEach(course => {
     const state = loadState(course);
     Object.entries(state).forEach(([goalId, checked]) => {
