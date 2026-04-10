@@ -24,9 +24,9 @@
 
 ### Design och Layout
 
-- [ ] **DESIGN-01**: Mobilforst responsiv design (375px viewport som minimum)
+- [x] **DESIGN-01**: Mobilforst responsiv design (375px viewport som minimum)
 - [ ] **DESIGN-02**: Flikar/navigation for att vaxla mellan kurs B, C och D utan omladdning
-- [ ] **DESIGN-03**: Fargglad visuell stil inspirerad av tradmaterialet med illustrationer och ikoner
+- [x] **DESIGN-03**: Fargglad visuell stil inspirerad av tradmaterialet med illustrationer och ikoner
 - [ ] **DESIGN-04**: Ikoner alltid parade med textbeskrivning (aldrig ikon utan text)
 - [x] **DESIGN-05**: Enkel svenska anpassad till respektive kursniva
 - [ ] **DESIGN-06**: Utskriftsvy via @media print for klassrumsanvandning
@@ -68,9 +68,9 @@
 | INTER-02 | Phase 2 | Pending |
 | INTER-04 | Phase 2 | Pending |
 | INTER-05 | Phase 2 | Pending |
-| DESIGN-01 | Phase 2 | Pending |
+| DESIGN-01 | Phase 2 | Complete |
 | DESIGN-02 | Phase 2 | Pending |
-| DESIGN-03 | Phase 2 | Pending |
+| DESIGN-03 | Phase 2 | Complete |
 | DESIGN-04 | Phase 2 | Pending |
 | INTER-03 | Phase 3 | Pending |
 | DESIGN-06 | Phase 3 | Pending |
