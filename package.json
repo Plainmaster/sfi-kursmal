@@ -1,0 +1,21 @@
+{
+  "name": "sfi-spar2-kursmal",
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^6.1.5",
+    "tailwindcss": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.2",
+    "@lucide/astro": "^1.8.0",
+    "@fontsource/inter": "^5.2.8"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.14.1"
+  }
+}
