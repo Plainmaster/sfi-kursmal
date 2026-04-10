@@ -1,0 +1,44 @@
+---
+import { Ear, BookOpen, MessagesSquare, PenLine } from "@lucide/astro";
+
+interface Props {
+  domainKey: string;
+  label: string;
+  icon: string;
+  colorClass: string;
+  items: Array<{ id: string; text: string }>;
+  customRowCount?: number;
+}
+
+const { domainKey, label, icon, colorClass, items, customRowCount = 2 } = Astro.props;
+
+const iconMap: Record<string, any> = { Ear, BookOpen, MessagesSquare, PenLine };
+const IconComponent = iconMap[icon];
+---
+
+<section class="mb-6">
+  <div class={`${colorClass} rounded-t-lg px-4 py-3 flex items-center gap-2`}>
+    {IconComponent && <IconComponent size={24} class="text-white" />}
+    <h2 class="text-white font-semibold text-lg">{label}</h2>
+  </div>
+  <div class="bg-white rounded-b-lg border border-t-0 border-gray-200">
+    {items.map((item) => (
+      <label class="flex items-center gap-3 py-2 px-3 min-h-[44px] cursor-pointer border-b border-gray-100">
+        <input type="checkbox" class="w-6 h-6 shrink-0 accent-emerald-600" data-plan-id={item.id} />
+        <span class="text-base">Jag ska {item.text}</span>
+      </label>
+    ))}
+    {Array.from({ length: customRowCount }).map((_, i) => (
+      <label class="flex items-center gap-3 py-2 px-3 min-h-[44px] border-b border-gray-100">
+        <input type="checkbox" class="w-6 h-6 shrink-0 accent-emerald-600" data-plan-custom={`${domainKey}-custom-${i + 1}`} />
+        <span class="text-base shrink-0">Jag ska</span>
+        <input
+          type="text"
+          class="flex-1 border-b border-gray-300 focus:border-gray-500 outline-none text-base py-1"
+          data-plan-text={`${domainKey}-custom-${i + 1}`}
+          placeholder="..."
+        />
+      </label>
+    ))}
+  </div>
+</section>

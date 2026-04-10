@@ -1,0 +1,41 @@
+---
+import MinPlanSection from "./MinPlanSection.astro";
+import minPlan from "../data/min-plan.json";
+import tokens from "../data/design-tokens.json";
+
+const domainColorMap: Record<string, string> = {
+  "horforstaelse": "bg-domain-hora",
+  "lasforstaelse": "bg-domain-lasa",
+  "muntlig-interaktion": "bg-domain-prata",
+  "skriftlig-fardighet": "bg-domain-skriva",
+};
+---
+
+<div id="panel-plan" class="course-panel pt-4 pb-8 hidden">
+  <h2 class="text-2xl font-bold text-gray-800 px-4 mb-1">{minPlan.header}</h2>
+  <p class="text-gray-600 px-4 mb-6">{minPlan.intro}</p>
+
+  {minPlan.domains.map((domain) => {
+    const tokenData = tokens.domains[domain.key];
+    if (!tokenData) return null;
+    return (
+      <MinPlanSection
+        domainKey={domain.key}
+        label={domain.label}
+        icon={tokenData.icon}
+        colorClass={domainColorMap[domain.key]}
+        items={domain.items}
+        customRowCount={2}
+      />
+    );
+  })}
+
+  <div class="px-4 pt-2">
+    <button
+      class="print-hide text-gray-500 border border-gray-300 rounded-lg px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
+      onclick="window.print()"
+    >
+      Skriv ut
+    </button>
+  </div>
+</div>
