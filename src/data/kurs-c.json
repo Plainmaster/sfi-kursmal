@@ -1,0 +1,176 @@
+{
+  "course": "C",
+  "kursplan_year": 2018,
+  "domains": {
+    "horforstaelse": {
+      "goals": [
+        {
+          "id": "C-HORA-01",
+          "text": "Jag kan förstå huvudinnehållet i korta nyhetsinslag.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "C-HORA-02",
+          "text": "Jag kan förstå ett samtal om ett aktuellt ämne.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "C-HORA-03",
+          "text": "Jag kan förstå instruktioner på en arbetsplats.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "C-HORA-04",
+          "text": "Jag kan förstå när någon förklarar hur man gör något.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-HORA-05",
+          "text": "Jag kan förstå olika åsikter i en diskussion om ett vanligt ämne.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "lasforstaelse": {
+      "goals": [
+        {
+          "id": "C-LASA-01",
+          "text": "Jag kan läsa och förstå enkla tidningsartiklar om aktuella ämnen.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "C-LASA-02",
+          "text": "Jag kan förstå skriftliga instruktioner för en uppgift på jobbet.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "C-LASA-03",
+          "text": "Jag kan läsa och förstå information från myndigheter, till exempel Försäkringskassan.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "C-LASA-04",
+          "text": "Jag kan förstå huvudinnehållet i en enkel berättande text.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-LASA-05",
+          "text": "Jag kan hitta specifik information i en längre text.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "muntlig-interaktion": {
+      "goals": [
+        {
+          "id": "C-MINT-01",
+          "text": "Jag kan delta i ett samtal om ett aktuellt ämne och säga vad jag tycker.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "C-MINT-02",
+          "text": "Jag kan förklara och motivera mina åsikter i en diskussion.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-MINT-03",
+          "text": "Jag kan fråga om och beskriva saker i en affär eller på ett kontor.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-MINT-04",
+          "text": "Jag kan diskutera planer och förslag med andra.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "C-MINT-05",
+          "text": "Jag kan hantera oväntade situationer i ett samtal, till exempel missförstånd.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "muntlig-produktion": {
+      "goals": [
+        {
+          "id": "C-MPRO-01",
+          "text": "Jag kan berätta om en upplevelse så att andra förstår vad som hände.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-MPRO-02",
+          "text": "Jag kan presentera ett ämne som jag har förberett.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "C-MPRO-03",
+          "text": "Jag kan beskriva mina planer och önskemål för framtiden.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "C-MPRO-04",
+          "text": "Jag kan ge en kort sammanfattning av en text eller film.",
+          "kursplan_year": 2018,
+          "themes": ["fritid-och-halsa"]
+        },
+        {
+          "id": "C-MPRO-05",
+          "text": "Jag kan förklara hur man gör något, till exempel ett recept eller en väg.",
+          "kursplan_year": 2018,
+          "themes": ["bostad"]
+        }
+      ]
+    },
+    "skriftlig-fardighet": {
+      "goals": [
+        {
+          "id": "C-SKRI-01",
+          "text": "Jag kan skriva en enkel sammanhängande text om ett bekant ämne.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-SKRI-02",
+          "text": "Jag kan skriva ett mejl med en fråga eller en förklaring.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "C-SKRI-03",
+          "text": "Jag kan beskriva en person, en plats eller en händelse i skrift.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-SKRI-04",
+          "text": "Jag kan skriva en kort text där jag uttrycker min åsikt.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "C-SKRI-05",
+          "text": "Jag kan använda skiljetecken och styckeindelning i mina texter.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    }
+  }
+}
