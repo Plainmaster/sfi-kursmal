@@ -1,0 +1,170 @@
+{
+  "course": "D",
+  "kursplan_year": 2018,
+  "domains": {
+    "horforstaelse": {
+      "goals": [
+        {
+          "id": "D-HORA-01",
+          "text": "Jag kan förstå huvudinnehållet i ett längre samtal om ett samhällsämne.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-HORA-02",
+          "text": "Jag kan förstå olika talare i en diskussion, även när de har olika åsikter.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-HORA-03",
+          "text": "Jag kan förstå nyheter och dokumentärer om aktuella ämnen.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-HORA-04",
+          "text": "Jag kan förstå föreläsningar eller presentationer om bekanta ämnen.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "D-HORA-05",
+          "text": "Jag kan förstå när någon argumenterar för eller emot något.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "lasforstaelse": {
+      "goals": [
+        {
+          "id": "D-LASA-01",
+          "text": "Jag kan läsa och förstå längre tidningsartiklar om samhällsfrågor.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-LASA-02",
+          "text": "Jag kan förstå formella brev från myndigheter.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-LASA-03",
+          "text": "Jag kan läsa en argumenterande text och förstå både för- och motargument.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-LASA-04",
+          "text": "Jag kan förstå huvudinnehållet i enkla skönlitterära texter.",
+          "kursplan_year": 2018,
+          "themes": ["fritid-och-halsa"]
+        },
+        {
+          "id": "D-LASA-05",
+          "text": "Jag kan jämföra information från olika texter om samma ämne.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "muntlig-interaktion": {
+      "goals": [
+        {
+          "id": "D-MINT-01",
+          "text": "Jag kan delta aktivt i en diskussion om ett samhällsämne.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-MINT-02",
+          "text": "Jag kan argumentera för min åsikt och bemöta andras argument.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-MINT-03",
+          "text": "Jag kan anpassa mitt språk till situationen, till exempel formellt eller informellt.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-MINT-04",
+          "text": "Jag kan diskutera för- och nackdelar med olika lösningar.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "D-MINT-05",
+          "text": "Jag kan förhandla och kompromissa i ett samtal.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        }
+      ]
+    },
+    "muntlig-produktion": {
+      "goals": [
+        {
+          "id": "D-MPRO-01",
+          "text": "Jag kan hålla en kort presentation om ett ämne jag har förberett.",
+          "kursplan_year": 2018,
+          "themes": ["arbete-och-studier"]
+        },
+        {
+          "id": "D-MPRO-02",
+          "text": "Jag kan berätta om en händelse på ett strukturerat sätt med inledning, mitt och slut.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-MPRO-03",
+          "text": "Jag kan motivera mina åsikter med exempel och förklaringar.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-MPRO-04",
+          "text": "Jag kan sammanfatta ett längre samtal eller en text muntligt.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    },
+    "skriftlig-fardighet": {
+      "goals": [
+        {
+          "id": "D-SKRI-01",
+          "text": "Jag kan skriva en sammanhängande text med tydlig struktur.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-SKRI-02",
+          "text": "Jag kan skriva ett formellt mejl, till exempel till en myndighet.",
+          "kursplan_year": 2018,
+          "themes": ["samhalle"]
+        },
+        {
+          "id": "D-SKRI-03",
+          "text": "Jag kan uttrycka och motivera min åsikt i skrift.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-SKRI-04",
+          "text": "Jag kan skriva en text där jag jämför två saker eller idéer.",
+          "kursplan_year": 2018,
+          "themes": []
+        },
+        {
+          "id": "D-SKRI-05",
+          "text": "Jag kan använda varierade meningar och bindord i mina texter.",
+          "kursplan_year": 2018,
+          "themes": []
+        }
+      ]
+    }
+  }
+}
