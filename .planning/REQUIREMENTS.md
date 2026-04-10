@@ -17,10 +17,10 @@
 ### Interaktion
 
 - [x] **INTER-01**: Avprickningslista dar eleven kryssar av uppnadda formagor per kurs
-- [ ] **INTER-02**: Checkbox-state sparas i webblasarens localStorage per kurs
+- [x] **INTER-02**: Checkbox-state sparas i webblasarens localStorage per kurs
 - [ ] **INTER-03**: "Min plan" -- eleven valjer vad de ska trana (lasa, skriva, hora, tala) med checkboxar
-- [ ] **INTER-04**: Synlig "Sparat"-indikator nar eleven kryssar i nagot
-- [ ] **INTER-05**: Aterstallningsknapp med tvastegsbekraftelse
+- [x] **INTER-04**: Synlig "Sparat"-indikator nar eleven kryssar i nagot
+- [x] **INTER-05**: Aterstallningsknapp med tvastegsbekraftelse
 
 ### Design och Layout
 
@@ -65,9 +65,9 @@
 | KURS-06 | Phase 1 | Complete |
 | DESIGN-05 | Phase 1 | Complete |
 | INTER-01 | Phase 2 | Complete |
-| INTER-02 | Phase 2 | Pending |
-| INTER-04 | Phase 2 | Pending |
-| INTER-05 | Phase 2 | Pending |
+| INTER-02 | Phase 2 | Complete |
+| INTER-04 | Phase 2 | Complete |
+| INTER-05 | Phase 2 | Complete |
 | DESIGN-01 | Phase 2 | Complete |
 | DESIGN-02 | Phase 2 | Complete |
 | DESIGN-03 | Phase 2 | Complete |
