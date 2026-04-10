@@ -7,12 +7,12 @@
 
 ### Kursinnehall
 
-- [ ] **KURS-01**: Forenklade kursmal i "Jag kan..."-format for kurs B, C och D baserade pa Skolverkets betygskriterier
-- [ ] **KURS-02**: Kursmal uppdelade i fem fardighetsomraden: horforstaelse, lasforstaelse, muntlig interaktion, muntlig produktion, skriftlig fardighet
-- [ ] **KURS-03**: Visuellt stod med ikoner och fargkodning per fardighetsomrade
-- [ ] **KURS-04**: Kursmal lagrade i separata JSON-datafiler (en per kurs) for enkel uppdatering
-- [ ] **KURS-05**: JSON-schema med stabil mal-ID och kursplan_year-falt for framtida kursplansandringar
-- [ ] **KURS-06**: Koppling mellan kursmal och arshjulets teman (relationer, miljo, bostad, arbete, fritid, hogtider, samhalle)
+- [x] **KURS-01**: Forenklade kursmal i "Jag kan..."-format for kurs B, C och D baserade pa Skolverkets betygskriterier
+- [x] **KURS-02**: Kursmal uppdelade i fem fardighetsomraden: horforstaelse, lasforstaelse, muntlig interaktion, muntlig produktion, skriftlig fardighet
+- [x] **KURS-03**: Visuellt stod med ikoner och fargkodning per fardighetsomrade
+- [x] **KURS-04**: Kursmal lagrade i separata JSON-datafiler (en per kurs) for enkel uppdatering
+- [x] **KURS-05**: JSON-schema med stabil mal-ID och kursplan_year-falt for framtida kursplansandringar
+- [x] **KURS-06**: Koppling mellan kursmal och arshjulets teman (relationer, miljo, bostad, arbete, fritid, hogtider, samhalle)
 
 ### Interaktion
 
@@ -28,7 +28,7 @@
 - [ ] **DESIGN-02**: Flikar/navigation for att vaxla mellan kurs B, C och D utan omladdning
 - [ ] **DESIGN-03**: Fargglad visuell stil inspirerad av tradmaterialet med illustrationer och ikoner
 - [ ] **DESIGN-04**: Ikoner alltid parade med textbeskrivning (aldrig ikon utan text)
-- [ ] **DESIGN-05**: Enkel svenska anpassad till respektive kursniva
+- [x] **DESIGN-05**: Enkel svenska anpassad till respektive kursniva
 - [ ] **DESIGN-06**: Utskriftsvy via @media print for klassrumsanvandning
 
 ## v2 Requirements
@@ -57,13 +57,13 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| KURS-01 | Phase 1 | Pending |
-| KURS-02 | Phase 1 | Pending |
-| KURS-03 | Phase 1 | Pending |
-| KURS-04 | Phase 1 | Pending |
-| KURS-05 | Phase 1 | Pending |
-| KURS-06 | Phase 1 | Pending |
-| DESIGN-05 | Phase 1 | Pending |
+| KURS-01 | Phase 1 | Complete |
+| KURS-02 | Phase 1 | Complete |
+| KURS-03 | Phase 1 | Complete |
+| KURS-04 | Phase 1 | Complete |
+| KURS-05 | Phase 1 | Complete |
+| KURS-06 | Phase 1 | Complete |
+| DESIGN-05 | Phase 1 | Complete |
 | INTER-01 | Phase 2 | Pending |
 | INTER-02 | Phase 2 | Pending |
 | INTER-04 | Phase 2 | Pending |
