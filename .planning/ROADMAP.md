@@ -60,8 +60,11 @@ Plans:
   1. Eleven kan kryssa i checkboxar i "Min plan" for att valja fardighetsomraden att trana (lasa, skriva, hora, tala)
   2. "Min plan"-val sparas i localStorage och kvarstar mellan sessioner
   3. En utskrift av sidan via webblesarens utskriftsfunktion ger ett anvandbart klassrumsdokument utan navigeringselement
-**Plans**: TBD
-**UI hint**: yes
+**Plans:** 2 plans
+
+Plans:
+- [ ] 03-01-PLAN.md -- Min plan tab with 4 skill domains, checkboxes, custom goals, and localStorage persistence
+- [ ] 03-02-PLAN.md -- Print stylesheet and print preparation JS for classroom handouts
 
 ### Phase 4: Driftsattning
 **Goal**: Sajten ar publikt tillganglig och lararen kan sjalvstandigt uppdatera kursmal nar Skolverket reviderar kursplanerna
@@ -82,5 +85,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Innehallsgrund | 2/2 | Complete | 2026-04-10 |
 | 2. Interaktiv checklista | 0/3 | Planning complete | - |
-| 3. Min Plan och fullstandig produkt | 0/? | Not started | - |
+| 3. Min Plan och fullstandig produkt | 0/2 | Planning complete | - |
 | 4. Driftsattning | 0/? | Not started | - |
