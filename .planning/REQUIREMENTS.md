@@ -63,23 +63,23 @@
 | KURS-04 | Phase 1 | Pending |
 | KURS-05 | Phase 1 | Pending |
 | KURS-06 | Phase 1 | Pending |
+| DESIGN-05 | Phase 1 | Pending |
 | INTER-01 | Phase 2 | Pending |
 | INTER-02 | Phase 2 | Pending |
-| INTER-03 | Phase 3 | Pending |
 | INTER-04 | Phase 2 | Pending |
 | INTER-05 | Phase 2 | Pending |
 | DESIGN-01 | Phase 2 | Pending |
 | DESIGN-02 | Phase 2 | Pending |
 | DESIGN-03 | Phase 2 | Pending |
 | DESIGN-04 | Phase 2 | Pending |
-| DESIGN-05 | Phase 1 | Pending |
-| DESIGN-06 | Phase 2 | Pending |
+| INTER-03 | Phase 3 | Pending |
+| DESIGN-06 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 18 total
-- Mapped to phases: 18
+- v1 requirements: 17 total
+- Mapped to phases: 17
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-10*
-*Last updated: 2026-04-10 after initial definition*
+*Last updated: 2026-04-10 -- traceability updated after roadmap creation*
