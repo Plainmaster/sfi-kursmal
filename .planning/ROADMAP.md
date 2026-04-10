@@ -64,7 +64,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md -- Min plan tab with 4 skill domains, checkboxes, custom goals, and localStorage persistence
-- [ ] 03-02-PLAN.md -- Print stylesheet and print preparation JS for classroom handouts
+- [x] 03-02-PLAN.md -- Print stylesheet and print preparation JS for classroom handouts
 
 ### Phase 4: Driftsattning
 **Goal**: Sajten ar publikt tillganglig och lararen kan sjalvstandigt uppdatera kursmal nar Skolverket reviderar kursplanerna

@@ -29,7 +29,7 @@
 - [x] **DESIGN-03**: Fargglad visuell stil inspirerad av tradmaterialet med illustrationer och ikoner
 - [x] **DESIGN-04**: Ikoner alltid parade med textbeskrivning (aldrig ikon utan text)
 - [x] **DESIGN-05**: Enkel svenska anpassad till respektive kursniva
-- [ ] **DESIGN-06**: Utskriftsvy via @media print for klassrumsanvandning
+- [x] **DESIGN-06**: Utskriftsvy via @media print for klassrumsanvandning
 
 ## v2 Requirements
 
@@ -73,7 +73,7 @@
 | DESIGN-03 | Phase 2 | Complete |
 | DESIGN-04 | Phase 2 | Complete |
 | INTER-03 | Phase 3 | Complete |
-| DESIGN-06 | Phase 3 | Pending |
+| DESIGN-06 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
