@@ -49,7 +49,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md -- Scaffold Astro 6 project with Tailwind CSS 4, base layout, and global styles
-- [ ] 02-02-PLAN.md -- Build all Astro components (tabs, domain sections, checkboxes, reset) and compose index page
+- [x] 02-02-PLAN.md -- Build all Astro components (tabs, domain sections, checkboxes, reset) and compose index page
 - [ ] 02-03-PLAN.md -- Wire client-side JavaScript interactivity and human verification of complete checklist
 
 ### Phase 3: Min Plan och fullstandig produkt

@@ -16,7 +16,7 @@
 
 ### Interaktion
 
-- [ ] **INTER-01**: Avprickningslista dar eleven kryssar av uppnadda formagor per kurs
+- [x] **INTER-01**: Avprickningslista dar eleven kryssar av uppnadda formagor per kurs
 - [ ] **INTER-02**: Checkbox-state sparas i webblasarens localStorage per kurs
 - [ ] **INTER-03**: "Min plan" -- eleven valjer vad de ska trana (lasa, skriva, hora, tala) med checkboxar
 - [ ] **INTER-04**: Synlig "Sparat"-indikator nar eleven kryssar i nagot
@@ -25,9 +25,9 @@
 ### Design och Layout
 
 - [x] **DESIGN-01**: Mobilforst responsiv design (375px viewport som minimum)
-- [ ] **DESIGN-02**: Flikar/navigation for att vaxla mellan kurs B, C och D utan omladdning
+- [x] **DESIGN-02**: Flikar/navigation for att vaxla mellan kurs B, C och D utan omladdning
 - [x] **DESIGN-03**: Fargglad visuell stil inspirerad av tradmaterialet med illustrationer och ikoner
-- [ ] **DESIGN-04**: Ikoner alltid parade med textbeskrivning (aldrig ikon utan text)
+- [x] **DESIGN-04**: Ikoner alltid parade med textbeskrivning (aldrig ikon utan text)
 - [x] **DESIGN-05**: Enkel svenska anpassad till respektive kursniva
 - [ ] **DESIGN-06**: Utskriftsvy via @media print for klassrumsanvandning
 
@@ -64,14 +64,14 @@
 | KURS-05 | Phase 1 | Complete |
 | KURS-06 | Phase 1 | Complete |
 | DESIGN-05 | Phase 1 | Complete |
-| INTER-01 | Phase 2 | Pending |
+| INTER-01 | Phase 2 | Complete |
 | INTER-02 | Phase 2 | Pending |
 | INTER-04 | Phase 2 | Pending |
 | INTER-05 | Phase 2 | Pending |
 | DESIGN-01 | Phase 2 | Complete |
-| DESIGN-02 | Phase 2 | Pending |
+| DESIGN-02 | Phase 2 | Complete |
 | DESIGN-03 | Phase 2 | Complete |
-| DESIGN-04 | Phase 2 | Pending |
+| DESIGN-04 | Phase 2 | Complete |
 | INTER-03 | Phase 3 | Pending |
 | DESIGN-06 | Phase 3 | Pending |
 
