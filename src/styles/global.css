@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/inter/latin-700.css";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --color-domain-hora: #D97706;
+  --color-domain-lasa: #2563EB;
+  --color-domain-prata: #16A34A;
+  --color-domain-beratta: #7C3AED;
+  --color-domain-skriva: #DC2626;
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.saved-indicator {
+  animation: fade-out 1.5s ease-out forwards;
+}
