@@ -8,6 +8,7 @@ import kursD from "../data/kurs-d.json";
 import tokens from "../data/design-tokens.json";
 import examples from "../data/examples.json";
 import lexinAudio from "../data/lexin-audio.json";
+import MinPlanPanel from "../components/MinPlanPanel.astro";
 ---
 
 <BaseLayout>
@@ -16,6 +17,7 @@ import lexinAudio from "../data/lexin-audio.json";
     <CoursePanel course="B" courseData={kursB} tokens={tokens} />
     <CoursePanel course="C" courseData={kursC} tokens={tokens} initiallyHidden={true} />
     <CoursePanel course="D" courseData={kursD} tokens={tokens} initiallyHidden={true} />
+    <MinPlanPanel />
   </main>
 
 <script define:vars={{ examples, lexinAudio }}>
@@ -27,9 +29,13 @@ import lexinAudio from "../data/lexin-audio.json";
     B: { border: 'border-cyan-600', text: 'text-cyan-700' },
     C: { border: 'border-violet-600', text: 'text-violet-700' },
     D: { border: 'border-rose-600', text: 'text-rose-700' },
+    plan: { border: 'border-emerald-600', text: 'text-emerald-700' },
   };
 
+  let lastActiveCourse = 'B';
+
   function switchTab(course) {
+    if (course !== 'plan') lastActiveCourse = course;
     panels.forEach(p => {
       p.classList.toggle('hidden', p.id !== `panel-${course}`);
     });
@@ -210,6 +216,64 @@ import lexinAudio from "../data/lexin-audio.json";
       }
     });
     updateProgressCounts(course);
+  });
+
+  // --- 9. Min Plan Persistence ---
+  const PLAN_STORAGE_KEY = 'sfi-minplan';
+
+  function loadPlanState() {
+    try {
+      return JSON.parse(localStorage.getItem(PLAN_STORAGE_KEY) || '{"checked":{},"custom":{}}');
+    } catch {
+      return { checked: {}, custom: {} };
+    }
+  }
+
+  function savePlanState(state) {
+    try {
+      localStorage.setItem(PLAN_STORAGE_KEY, JSON.stringify(state));
+    } catch {}
+  }
+
+  const planPanel = document.getElementById('panel-plan');
+  if (planPanel) {
+    planPanel.addEventListener('change', (e) => {
+      const cb = e.target.closest('input[type="checkbox"]');
+      if (!cb) return;
+      const state = loadPlanState();
+      const planId = cb.dataset.planId;
+      const customId = cb.dataset.planCustom;
+      const key = planId || customId;
+      if (key) {
+        if (cb.checked) { state.checked[key] = true; }
+        else { delete state.checked[key]; }
+        savePlanState(state);
+      }
+    });
+
+    planPanel.addEventListener('input', (e) => {
+      const input = e.target.closest('input[type="text"][data-plan-text]');
+      if (!input) return;
+      const state = loadPlanState();
+      state.custom[input.dataset.planText] = input.value;
+      savePlanState(state);
+    });
+  }
+
+  // --- 10. Initialize Min Plan State ---
+  const planState = loadPlanState();
+  Object.entries(planState.checked).forEach(([id, checked]) => {
+    if (checked) {
+      const cb = document.querySelector(`[data-plan-id="${CSS.escape(id)}"]`) ||
+                 document.querySelector(`[data-plan-custom="${CSS.escape(id)}"]`);
+      if (cb) cb.checked = true;
+    }
+  });
+  Object.entries(planState.custom).forEach(([id, text]) => {
+    if (text) {
+      const input = document.querySelector(`[data-plan-text="${CSS.escape(id)}"]`);
+      if (input) input.value = text;
+    }
   });
 </script>
 </BaseLayout>
