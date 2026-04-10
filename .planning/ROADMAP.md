@@ -63,7 +63,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md -- Min plan tab with 4 skill domains, checkboxes, custom goals, and localStorage persistence
+- [x] 03-01-PLAN.md -- Min plan tab with 4 skill domains, checkboxes, custom goals, and localStorage persistence
 - [ ] 03-02-PLAN.md -- Print stylesheet and print preparation JS for classroom handouts
 
 ### Phase 4: Driftsattning
