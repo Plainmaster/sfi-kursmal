@@ -15,4 +15,129 @@ import tokens from "../data/design-tokens.json";
     <CoursePanel course="C" courseData={kursC} tokens={tokens} initiallyHidden={true} />
     <CoursePanel course="D" courseData={kursD} tokens={tokens} initiallyHidden={true} />
   </main>
+
+<script>
+  // --- 1. Tab Switching (D-03, D-04, D-05, D-06) ---
+  const tabs = document.querySelectorAll('.course-tab');
+  const panels = document.querySelectorAll('.course-panel');
+
+  function switchTab(course: string) {
+    panels.forEach(p => {
+      p.classList.toggle('hidden', p.id !== `panel-${course}`);
+    });
+    tabs.forEach(t => {
+      const el = t as HTMLElement;
+      const isActive = el.dataset.course === course;
+      el.classList.toggle('border-blue-500', isActive);
+      el.classList.toggle('text-gray-900', isActive);
+      el.classList.toggle('border-transparent', !isActive);
+      el.classList.toggle('text-gray-400', !isActive);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchTab((tab as HTMLElement).dataset.course!);
+    });
+  });
+
+  // --- 2. localStorage Persistence (D-14, INTER-02) ---
+  const STORAGE_KEY = (course: string) => `sfi-checklist-${course}`;
+
+  function loadState(course: string): Record<string, boolean> {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY(course)) || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function saveState(course: string, state: Record<string, boolean>) {
+    try {
+      localStorage.setItem(STORAGE_KEY(course), JSON.stringify(state));
+    } catch {
+      // Storage full or disabled -- silently degrade
+    }
+  }
+
+  // --- 3. Checkbox Handling + Save Indicator (D-12, INTER-01, INTER-04) ---
+  function showSavedIndicator(goalId: string) {
+    const indicator = document.querySelector(`[data-saved-for="${goalId}"]`);
+    if (!indicator) return;
+    indicator.classList.remove('hidden');
+    const clone = indicator.cloneNode(true) as HTMLElement;
+    indicator.parentNode!.replaceChild(clone, indicator);
+    setTimeout(() => clone.classList.add('hidden'), 1500);
+  }
+
+  // --- 4. Progress Counts (D-13) ---
+  function updateProgressCounts(course: string) {
+    const panel = document.getElementById(`panel-${course}`);
+    if (!panel) return;
+    const progressElements = panel.querySelectorAll('[data-progress]');
+    progressElements.forEach(el => {
+      const section = el.closest('section');
+      if (!section) return;
+      const total = section.querySelectorAll('input[type="checkbox"]').length;
+      const checked = section.querySelectorAll('input[type="checkbox"]:checked').length;
+      el.textContent = `${checked} av ${total} avklarade`;
+    });
+  }
+
+  document.querySelectorAll('input[type="checkbox"][data-goal-id]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const el = cb as HTMLInputElement;
+      const course = el.dataset.course!;
+      const goalId = el.dataset.goalId!;
+      const state = loadState(course);
+      if (el.checked) {
+        state[goalId] = true;
+      } else {
+        delete state[goalId];
+      }
+      saveState(course, state);
+      showSavedIndicator(goalId);
+      updateProgressCounts(course);
+    });
+  });
+
+  // --- 5. Reset Flow (D-15, D-16, D-17, INTER-05) ---
+  ['B', 'C', 'D'].forEach(course => {
+    const resetBtn = document.querySelector(`[data-reset="${course}"]`);
+    const confirmDiv = document.querySelector(`[data-confirm="${course}"]`);
+    if (!resetBtn || !confirmDiv) return;
+
+    resetBtn.addEventListener('click', () => {
+      resetBtn.classList.add('hidden');
+      confirmDiv.classList.remove('hidden');
+    });
+
+    confirmDiv.querySelector('.cancel')?.addEventListener('click', () => {
+      confirmDiv.classList.add('hidden');
+      resetBtn.classList.remove('hidden');
+    });
+
+    confirmDiv.querySelector('.confirm')?.addEventListener('click', () => {
+      try { localStorage.removeItem(STORAGE_KEY(course)); } catch {}
+      document.querySelectorAll(`#panel-${course} input[type="checkbox"]`)
+        .forEach(cb => { (cb as HTMLInputElement).checked = false; });
+      updateProgressCounts(course);
+      confirmDiv.classList.add('hidden');
+      resetBtn.classList.remove('hidden');
+    });
+  });
+
+  // --- 6. Initialize on Page Load ---
+  ['B', 'C', 'D'].forEach(course => {
+    const state = loadState(course);
+    Object.entries(state).forEach(([goalId, checked]) => {
+      if (checked) {
+        const cb = document.querySelector(`[data-goal-id="${goalId}"]`) as HTMLInputElement | null;
+        if (cb) cb.checked = true;
+      }
+    });
+    updateProgressCounts(course);
+  });
+</script>
 </BaseLayout>
