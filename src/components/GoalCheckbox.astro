@@ -1,0 +1,25 @@
+---
+interface Props {
+  id: string;
+  text: string;
+  course: string;
+}
+
+const { id, text, course } = Astro.props;
+---
+
+<label class="flex items-center gap-3 py-2 px-3 min-h-[44px] cursor-pointer">
+  <input
+    type="checkbox"
+    class="w-6 h-6 shrink-0 accent-current"
+    data-goal-id={id}
+    data-course={course}
+  />
+  <span class="text-base">{text}</span>
+  <span
+    class="saved-indicator text-green-600 text-sm ml-auto hidden"
+    data-saved-for={id}
+  >
+    Sparat!
+  </span>
+</label>
