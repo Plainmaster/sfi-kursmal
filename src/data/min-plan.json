@@ -6,14 +6,14 @@
       "key": "lasforstaelse",
       "label": "Läsa",
       "items": [
-        { "id": "plan-lasa-01", "text": "läsa böcker på lätt svenska (biblioteket har många böcker för sfi-elever)" },
+        { "id": "plan-lasa-01", "text": "läsa böcker på lätt svenska (biblioteket har många böcker för sfi-elever)", "link": "https://sites.google.com/skola.lund.se/komvuxbibliotek?usp=sharing", "linkText": "Komvux bibliotek" },
         { "id": "plan-lasa-02", "text": "läsa reklam från affärer och annonser" },
         { "id": "plan-lasa-03", "text": "läsa ord och meningar i svenska tidningar" },
         { "id": "plan-lasa-04", "text": "läsa information på anslagstavlor" },
         { "id": "plan-lasa-05", "text": "läsa vad jag har skrivit på kursen" },
         { "id": "plan-lasa-06", "text": "läsa nyheter på lätt svenska", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska", "linkText": "SVT Nyheter på lätt svenska" },
-        { "id": "plan-lasa-07", "text": "lyssna på ljudbok med text via Inläsningstjänst (lund.se/skolportalen)" },
-        { "id": "plan-lasa-08", "text": "öva svenska i Lunis (digitalt läromedel) hemma" }
+        { "id": "plan-lasa-07", "text": "lyssna på ljudbok med text via Inläsningstjänst", "link": "https://lund.se/skolportalen", "linkText": "Skolportalen → Elev → Inläsningstjänst" },
+        { "id": "plan-lasa-08", "text": "öva svenska i Lunis hemma", "link": "https://lunis.liber.se/", "linkText": "Lunis" }
       ]
     },
     {
@@ -38,7 +38,7 @@
         { "id": "plan-hora-03", "text": "lyssna på personer som pratar svenska" },
         { "id": "plan-hora-04", "text": "lyssna på hörförståelser på nätet" },
         { "id": "plan-hora-05", "text": "lyssna på information, till exempel på en tågstation" },
-        { "id": "plan-hora-06", "text": "lyssna på ljudbok med text via Inläsningstjänst (lund.se/skolportalen)" },
+        { "id": "plan-hora-06", "text": "lyssna på ljudbok med text via Inläsningstjänst", "link": "https://lund.se/skolportalen", "linkText": "Skolportalen → Elev → Inläsningstjänst" },
         { "id": "plan-hora-07", "text": "titta på nyheter på lätt svenska", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska", "linkText": "SVT Nyheter" }
       ]
     },
@@ -61,24 +61,27 @@
       "items": [
         { "id": "plan-digital-01", "text": "kunna använda datorn och mobilen för skolarbete" },
         { "id": "plan-digital-02", "text": "kunna läsa och skriva på Google Classroom" },
-        { "id": "plan-digital-03", "text": "öva svenska i Lunis hemma" },
+        { "id": "plan-digital-03", "text": "öva svenska i Lunis hemma", "link": "https://lunis.liber.se/", "linkText": "Lunis" },
         { "id": "plan-digital-04", "text": "använda AI som stöd — ställa frågor och få hjälp med texter" },
-        { "id": "plan-digital-05", "text": "hitta information på lund.se/skolportalen" }
+        { "id": "plan-digital-05", "text": "hitta information på Skolportalen", "link": "https://lund.se/skolportalen", "linkText": "Skolportalen" },
+        { "id": "plan-digital-06", "text": "läsa Elevhandboken", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida", "linkText": "Elevhandboken Komvux" }
       ]
     }
   ],
   "resources": {
     "header": "Resurser och stöd",
+    "intro": "Lärcentrum Kompassen — Studiestöd i Studion: kl. 12:00–14:00 (sfi 1 & 2), onsdagar 11:00–12:00 (sfi 3). Språkcafé med Interkultur — torsdagar 10:30–13:30.",
+    "calendar": "https://calendar.google.com/calendar/u/0/embed?ctz=Europe/Stockholm&src=komvux.info@skola.lund.se",
     "items": [
-      { "text": "Studiestöd på Komvux: Läsa, skriva, höra i Studion kl. 12:00–14:00 (sfi 1 & 2), onsdagar 11:00–12:00 (sfi 3)" },
-      { "text": "Språkcafé med Interkultur — torsdagar 10:30–13:30" },
+      { "text": "Lärcentrum Kompassen — schema och studiestöd", "link": "https://sites.google.com/skola.lund.se/lrcentruminprogress200507/?usp=sharing" },
+      { "text": "Elevhandboken Komvux", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida" },
+      { "text": "Komvux bibliotek — böcker för sfi-elever", "link": "https://sites.google.com/skola.lund.se/komvuxbibliotek?usp=sharing" },
+      { "text": "Skolportalen (Inläsningstjänst, Lunis m.m.)", "link": "https://lund.se/skolportalen" },
+      { "text": "Lunis — digitalt läromedel", "link": "https://lunis.liber.se/" },
       { "text": "Språkcaféer i Lunds kommun", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe" },
       { "text": "Nyheter på lätt svenska (SVT)", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska" },
       { "text": "Radio Sweden på lätt svenska", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska" },
-      { "text": "UR Play — program för sfi", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" },
-      { "text": "Ljudböcker med text via Inläsningstjänst (lund.se/skolportalen)" },
-      { "text": "Lunis — digitalt läromedel (tillgängligt hemma)" },
-      { "text": "Biblioteket — böcker för vuxna sfi-elever" }
+      { "text": "UR Play — program för sfi", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" }
     ]
   }
 }

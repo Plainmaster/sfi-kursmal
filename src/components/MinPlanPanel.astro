@@ -45,6 +45,25 @@ const domainIconMap: Record<string, string> = {
         <h2 class="text-white font-semibold text-lg">{minPlan.resources.header}</h2>
       </div>
       <div class="bg-white rounded-b-lg border border-t-0 border-gray-200">
+        {minPlan.resources.intro && (
+          <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
+            <p class="text-sm text-gray-700 font-medium">{minPlan.resources.intro}</p>
+          </div>
+        )}
+
+        {minPlan.resources.calendar && (
+          <div class="px-4 py-3 border-b border-gray-200 print-hide">
+            <p class="text-xs text-gray-500 mb-2">Schema — Lärcentrum Kompassen</p>
+            <iframe
+              src={minPlan.resources.calendar}
+              class="w-full rounded border border-gray-200"
+              style="height: 400px;"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        )}
+
         {minPlan.resources.items.map((item) => (
           <div class="py-2 px-4 border-b border-gray-100 last:border-b-0">
             {item.link ? (
