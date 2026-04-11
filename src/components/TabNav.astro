@@ -1,11 +1,11 @@
 ---
 // Distinct colors per course from design-tokens
 const tabs = [
-  { course: "B", label: "Kurs B", color: "border-cyan-600 text-cyan-700", activeColor: "bg-cyan-600" },
-  { course: "C", label: "Kurs C", color: "border-violet-600 text-violet-700", activeColor: "bg-violet-600" },
-  { course: "D", label: "Kurs D", color: "border-rose-600 text-rose-700", activeColor: "bg-rose-600" },
-  { course: "plan", label: "Min plan", color: "border-emerald-600 text-emerald-700", activeColor: "bg-emerald-600" },
-  { course: "resurser", label: "Resurser", color: "border-gray-600 text-gray-700", activeColor: "bg-gray-600" },
+  { course: "B", label: "Kurs B", shortLabel: "B", color: "border-cyan-600 text-cyan-700", activeColor: "bg-cyan-600" },
+  { course: "C", label: "Kurs C", shortLabel: "C", color: "border-violet-600 text-violet-700", activeColor: "bg-violet-600" },
+  { course: "D", label: "Kurs D", shortLabel: "D", color: "border-rose-600 text-rose-700", activeColor: "bg-rose-600" },
+  { course: "plan", label: "Min plan", shortLabel: "Plan", color: "border-emerald-600 text-emerald-700", activeColor: "bg-emerald-600" },
+  { course: "resurser", label: "Resurser", shortLabel: "Res.", color: "border-gray-600 text-gray-700", activeColor: "bg-gray-600" },
 ];
 ---
 
@@ -23,7 +23,8 @@ const tabs = [
         data-active-border={tab.color.split(' ')[0]}
         data-active-text={tab.color.split(' ')[1]}
       >
-        {tab.label}
+        <span class="sm:hidden">{tab.shortLabel}</span>
+        <span class="hidden sm:inline">{tab.label}</span>
       </button>
     ))}
   </div>
