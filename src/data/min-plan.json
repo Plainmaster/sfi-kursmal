@@ -73,15 +73,15 @@
     "intro": "Lärcentrum Kompassen — Studiestöd i Studion: kl. 12:00–14:00 (sfi 1 & 2), onsdagar 11:00–12:00 (sfi 3). Språkcafé med Interkultur — torsdagar 10:30–13:30.",
     "calendar": "https://calendar.google.com/calendar/u/0/embed?ctz=Europe/Stockholm&src=komvux.info@skola.lund.se",
     "items": [
-      { "icon": "GraduationCap", "text": "Lärcentrum Kompassen — schema och studiestöd", "link": "https://sites.google.com/skola.lund.se/lrcentruminprogress200507/?usp=sharing" },
-      { "icon": "BookMarked", "text": "Elevhandboken Komvux", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida" },
-      { "icon": "Library", "text": "Komvux bibliotek — böcker för sfi-elever", "link": "https://sites.google.com/skola.lund.se/komvuxbibliotek?usp=sharing" },
-      { "icon": "Globe", "text": "Skolportalen (Inläsningstjänst, Lunis m.m.)", "link": "https://lund.se/skolportalen" },
-      { "icon": "Laptop", "text": "Lunis — digitalt läromedel", "link": "https://lunis.liber.se/" },
-      { "icon": "Coffee", "text": "Språkcaféer i Lunds kommun", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe" },
-      { "icon": "Tv", "text": "Nyheter på lätt svenska (SVT)", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska" },
-      { "icon": "Radio", "text": "Radio Sweden på lätt svenska", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska" },
-      { "icon": "Play", "text": "UR Play — program för sfi", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" }
+      { "icon": "GraduationCap", "text": "Lärcentrum Kompassen", "desc": "Här kan du få extra hjälp med svenska. Lärare hjälper dig med läsa, skriva och höra.", "link": "https://sites.google.com/skola.lund.se/lrcentruminprogress200507/?usp=sharing" },
+      { "icon": "BookMarked", "text": "Elevhandboken", "desc": "Viktig information om din skola. Regler, kontakter och hur saker fungerar på Komvux.", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida" },
+      { "icon": "Library", "text": "Biblioteket", "desc": "Låna böcker på lätt svenska. Det finns många böcker som passar för sfi-elever.", "link": "https://sites.google.com/skola.lund.se/komvuxbibliotek?usp=sharing" },
+      { "icon": "Globe", "text": "Skolportalen", "desc": "Logga in för att hitta Inläsningstjänst (ljudböcker med text) och Lunis. Gå till Elev → Inläsningstjänst.", "link": "https://lund.se/skolportalen" },
+      { "icon": "Laptop", "text": "Lunis", "desc": "Öva svenska på datorn eller mobilen. Du kan använda Lunis hemma, i skolan och på bussen.", "link": "https://lunis.liber.se/" },
+      { "icon": "Coffee", "text": "Språkcaféer i Lund", "desc": "Träffa nya människor och prata svenska. Gratis och öppet för alla. Det finns på flera platser i Lund.", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe" },
+      { "icon": "Tv", "text": "Nyheter på lätt svenska", "desc": "Korta nyheter med enkelt språk. Bra för att öva hörförståelse och lära sig nya ord.", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska" },
+      { "icon": "Radio", "text": "Radio Sweden på lätt svenska", "desc": "Lyssna på nyheter och reportage med tydligt och enkelt språk. Bra att lyssna på i mobilen.", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska" },
+      { "icon": "Play", "text": "UR Play — program för sfi", "desc": "Gratis filmer och program som är gjorda för dig som läser sfi. Många bra serier och övningar.", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" }
     ]
   }
 }

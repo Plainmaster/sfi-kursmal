@@ -1,0 +1,73 @@
+---
+import minPlan from "../data/min-plan.json";
+import {
+  GraduationCap, BookMarked, Library, Globe, Laptop,
+  Coffee, Tv, Radio, Play, Calendar
+} from "@lucide/astro";
+
+const resourceIconMap: Record<string, any> = {
+  GraduationCap, BookMarked, Library, Globe, Laptop, Coffee, Tv, Radio, Play,
+};
+
+const resources = minPlan.resources;
+---
+
+<div id="panel-resurser" class="course-panel pt-4 pb-8 hidden">
+  <h2 class="text-2xl font-bold text-gray-800 px-4 mb-2">Resurser och stöd</h2>
+  <p class="text-gray-600 px-4 mb-6 text-sm leading-relaxed">
+    Här hittar du hjälp och verktyg för att lära dig svenska. Allt är gratis.
+  </p>
+
+  {resources.intro && (
+    <div class="mx-4 mb-6 px-4 py-3 rounded-lg bg-amber-50 border border-amber-200">
+      <div class="flex items-center gap-2 mb-1">
+        <Calendar size={18} class="text-amber-700" />
+        <p class="text-sm text-amber-800 font-bold">Tider att komma ihåg</p>
+      </div>
+      <p class="text-sm text-amber-800 leading-relaxed">{resources.intro}</p>
+    </div>
+  )}
+
+  {resources.calendar && (
+    <div class="mx-4 mb-6 print-hide">
+      <p class="text-xs text-gray-500 mb-2 font-medium">Schema — Lärcentrum Kompassen</p>
+      <iframe
+        src={resources.calendar}
+        class="w-full rounded-lg border border-gray-200"
+        style="height: 400px;"
+        frameborder="0"
+        scrolling="no"
+      ></iframe>
+    </div>
+  )}
+
+  <div class="space-y-3 px-4">
+    {resources.items.map((item) => {
+      const IconComp = item.icon ? resourceIconMap[item.icon] : null;
+      return (
+        <a
+          href={item.link}
+          target="_blank"
+          rel="noopener"
+          class="block rounded-lg border border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm transition-all p-4"
+        >
+          <div class="flex items-start gap-3">
+            {IconComp && (
+              <span class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                <IconComp size={20} />
+              </span>
+            )}
+            <div class="flex-1 min-w-0">
+              <p class="text-base font-semibold text-gray-800 mb-0.5">
+                {item.text} <span class="text-blue-400 text-sm">↗</span>
+              </p>
+              {item.desc && (
+                <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+              )}
+            </div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</div>
