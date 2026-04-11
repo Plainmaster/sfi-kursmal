@@ -471,145 +471,171 @@ const tabClasses = {
     </style>
 
     <script define:vars={{ allSkillsClient, allGoalTexts }}>
-      /* ---- localStorage (shared with checklist) ---- */
-      const STORAGE_KEY = "sfi-checklist-B";
+      /* ---- Multi-course localStorage (shared with checklist) ---- */
+      const COURSES = ["B", "C", "D"];
+      const states = {};
 
-      function loadState() {
-        try {
-          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-        } catch {
-          return {};
+      function loadState(course) {
+        try { return JSON.parse(localStorage.getItem(`sfi-checklist-${course}`) || "{}"); } catch { return {}; }
+      }
+      function saveState(course, st) {
+        try { localStorage.setItem(`sfi-checklist-${course}`, JSON.stringify(st)); } catch {}
+      }
+
+      COURSES.forEach(c => { states[c] = loadState(c); });
+
+      /* ---- Tab switching ---- */
+      let activeCourse = "B";
+
+      const treeTabs = document.querySelectorAll('.tree-tab');
+      const treePanels = document.querySelectorAll('.course-tree-panel');
+      const headerSubtitle = document.getElementById('tree-header-subtitle');
+
+      const tabActiveClasses = {
+        B: ["border-cyan-600", "text-cyan-700"],
+        C: ["border-violet-600", "text-violet-700"],
+        D: ["border-rose-600", "text-rose-700"],
+      };
+      const tabInactiveClasses = ["border-transparent", "text-gray-400"];
+
+      function switchTreeTab(course) {
+        activeCourse = course;
+
+        treePanels.forEach(p => p.classList.toggle('hidden', p.id !== `tree-panel-${course}`));
+
+        treeTabs.forEach(t => {
+          const tc = t.dataset.course;
+          Object.values(tabActiveClasses).forEach(cls => cls.forEach(c => t.classList.remove(c)));
+          tabInactiveClasses.forEach(c => t.classList.remove(c));
+
+          if (tc === course) {
+            tabActiveClasses[course].forEach(c => t.classList.add(c));
+            t.setAttribute("aria-selected", "true");
+          } else {
+            tabInactiveClasses.forEach(c => t.classList.add(c));
+            t.setAttribute("aria-selected", "false");
+          }
+        });
+
+        if (headerSubtitle) {
+          headerSubtitle.textContent = `Kurs ${course} \u00B7 Dina f\u00F6rm\u00E5gor v\u00E4xer`;
         }
       }
 
-      function saveState(state) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        } catch {}
-      }
-
-      /* ---- State ---- */
-      let state = loadState();
-      let activeGoal = {}; // { skillId: goalId }
-
-      /* ---- Init leaves from saved state ---- */
-      document.querySelectorAll(".leaf-node").forEach((leaf) => {
-        const id = leaf.dataset.goalId;
-        if (state[id]) {
-          leaf.setAttribute("data-checked", "true");
-          leaf.setAttribute("aria-checked", "true");
-          // Update number color
-          const num = document.querySelector(`[data-num-for="${id}"]`);
-          if (num) num.setAttribute("fill", "white");
-          // Update branch
-          const branch = document.querySelector(`[data-branch-for="${id}"]`);
-          if (branch) branch.setAttribute("data-checked", "true");
-        }
+      treeTabs.forEach(t => {
+        t.addEventListener('click', () => switchTreeTab(t.dataset.course));
       });
 
-      /* ---- Click / keyboard handling ---- */
-      document.querySelectorAll(".leaf-node").forEach((leaf) => {
+      /* ---- Init all courses' leaf states on page load ---- */
+      COURSES.forEach(course => {
+        const panel = document.getElementById(`tree-panel-${course}`);
+        if (!panel) return;
+
+        panel.querySelectorAll('.leaf-node').forEach(leaf => {
+          const id = leaf.dataset.goalId;
+          if (states[course][id]) {
+            leaf.setAttribute('data-checked', 'true');
+            leaf.setAttribute('aria-checked', 'true');
+            const num = panel.querySelector(`[data-num-for="${id}"]`);
+            if (num) num.setAttribute('fill', 'white');
+            const branch = panel.querySelector(`[data-branch-for="${id}"]`);
+            if (branch) branch.setAttribute('data-checked', 'true');
+          }
+        });
+      });
+
+      /* ---- Click / keyboard handling — scoped to course ---- */
+      document.querySelectorAll('.leaf-node').forEach(leaf => {
         function toggle() {
           const id = leaf.dataset.goalId;
           const skill = leaf.dataset.skill;
-          const wasChecked = leaf.getAttribute("data-checked") === "true";
+          const course = leaf.dataset.course;
+          const wasChecked = leaf.getAttribute('data-checked') === 'true';
           const nowChecked = !wasChecked;
 
-          // Update state
-          if (nowChecked) {
-            state[id] = true;
-          } else {
-            delete state[id];
-          }
-          saveState(state);
+          if (nowChecked) { states[course][id] = true; }
+          else { delete states[course][id]; }
+          saveState(course, states[course]);
 
-          // Update leaf visual
-          leaf.setAttribute("data-checked", String(nowChecked));
-          leaf.setAttribute("aria-checked", String(nowChecked));
+          leaf.setAttribute('data-checked', String(nowChecked));
+          leaf.setAttribute('aria-checked', String(nowChecked));
 
-          // Pop animation
-          leaf.classList.remove("leaf-pop");
-          void leaf.offsetWidth; // force reflow
-          leaf.classList.add("leaf-pop");
+          leaf.classList.remove('leaf-pop');
+          void leaf.offsetWidth;
+          leaf.classList.add('leaf-pop');
 
-          // Number color
-          const num = document.querySelector(`[data-num-for="${id}"]`);
-          if (num) num.setAttribute("fill", nowChecked ? "white" : "");
+          const panel = document.getElementById(`tree-panel-${course}`);
+          const num = panel.querySelector(`[data-num-for="${id}"]`);
+          if (num) num.setAttribute('fill', nowChecked ? 'white' : '');
 
-          // Branch
-          const branch = document.querySelector(`[data-branch-for="${id}"]`);
-          if (branch) branch.setAttribute("data-checked", String(nowChecked));
+          const branch = panel.querySelector(`[data-branch-for="${id}"]`);
+          if (branch) branch.setAttribute('data-checked', String(nowChecked));
 
-          // Show goal text
-          showGoalText(skill, id, nowChecked);
-
-          // Update progress
-          updateProgress(skill);
-
-          // Update crown glow
-          updateCrown(skill);
-
-          // Update radar
-          updateRadar();
+          showGoalText(course, skill, id, nowChecked);
+          updateProgress(course, skill);
+          updateCrown(course, skill);
+          updateRadar(course);
         }
 
-        leaf.addEventListener("click", toggle);
-        leaf.addEventListener("keydown", (e) => {
-          if (e.key === " " || e.key === "Enter") {
-            e.preventDefault();
-            toggle();
-          }
+        leaf.addEventListener('click', toggle);
+        leaf.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
         });
       });
 
-      /* ---- Goal text panel ---- */
-      function showGoalText(skillId, goalId, isChecked) {
-        const panel = document.querySelector(`[data-goal-panel="${skillId}"]`);
+      /* ---- Goal text panel — course-scoped ---- */
+      function showGoalText(course, skillId, goalId, isChecked) {
+        const panel = document.querySelector(`[data-goal-panel="${course}-${skillId}"]`);
         if (!panel) return;
-        const text = goalTexts[goalId] || "";
-        const check = isChecked ? "✓ " : "";
+        const courseTexts = allGoalTexts[course] || {};
+        const text = courseTexts[goalId] || "";
+        const check = isChecked ? "\u2713 " : "";
         panel.textContent = `${check}${text}`;
-        panel.classList.remove("italic", "text-stone-400");
-        panel.classList.add("text-stone-700");
-        activeGoal[skillId] = goalId;
+        panel.classList.remove('italic', 'text-stone-400');
+        panel.classList.add('text-stone-700');
       }
 
-      /* ---- Progress ---- */
-      function updateProgress(skillId) {
-        const skill = skillsClient.find((s) => s.id === skillId);
+      /* ---- Progress — course-scoped ---- */
+      function updateProgress(course, skillId) {
+        const skills = allSkillsClient[course];
+        if (!skills) return;
+        const skill = skills.find(s => s.id === skillId);
         if (!skill) return;
-        const checked = skill.goalIds.filter((id) => state[id]).length;
+        const checked = skill.goalIds.filter(id => states[course][id]).length;
         const total = skill.goalIds.length;
         const pct = Math.round((checked / total) * 100);
 
-        const progressEl = document.querySelector(`[data-tree-progress="${skillId}"]`);
+        const progressEl = document.querySelector(`[data-tree-progress="${course}-${skillId}"]`);
         if (progressEl) progressEl.textContent = `${checked} av ${total}`;
 
-        const bar = document.querySelector(`[data-progress-bar="${skillId}"]`);
+        const bar = document.querySelector(`[data-progress-bar="${course}-${skillId}"]`);
         if (bar) bar.style.width = `${pct}%`;
       }
 
-      /* ---- Crown glow ---- */
-      function updateCrown(skillId) {
-        const skill = skillsClient.find((s) => s.id === skillId);
+      /* ---- Crown glow — course-scoped ---- */
+      function updateCrown(course, skillId) {
+        const skills = allSkillsClient[course];
+        if (!skills) return;
+        const skill = skills.find(s => s.id === skillId);
         if (!skill) return;
-        const checked = skill.goalIds.filter((id) => state[id]).length;
+        const checked = skill.goalIds.filter(id => states[course][id]).length;
         const pct = checked / skill.goalIds.length;
-        const crown = document.querySelector(`[data-crown="${skillId}"]`);
+        const crown = document.querySelector(`[data-crown="${course}-${skillId}"]`);
         if (crown) crown.style.opacity = String(0.3 + pct * 0.7);
       }
 
-      /* ---- Radar chart (6-axis hexagon) ---- */
-      function updateRadar() {
+      /* ---- Radar chart — per course ---- */
+      function updateRadar(course) {
         const maxR = 110;
         const cx = 150, cy = 150;
+        const skills = allSkillsClient[course];
+        if (!skills) return;
 
-        const pcts = skillsClient.map((s) => {
-          const checked = s.goalIds.filter((id) => state[id]).length;
+        const pcts = skills.map(s => {
+          const checked = s.goalIds.filter(id => states[course][id]).length;
           return checked / s.goalIds.length;
         });
 
-        // Compute polygon points for 6 axes
         const pts = pcts.map((p, i) => {
           const angleDeg = -90 + i * 60;
           const rad = (angleDeg * Math.PI) / 180;
@@ -617,34 +643,33 @@ const tabClasses = {
           return `${Math.round(cx + r * Math.cos(rad))},${Math.round(cy + r * Math.sin(rad))}`;
         });
 
-        const polygon = document.getElementById("radar-polygon");
-        if (polygon) polygon.setAttribute("points", pts.join(" "));
+        const polygon = document.getElementById(`radar-polygon-${course}`);
+        if (polygon) polygon.setAttribute('points', pts.join(' '));
 
-        // Update dots
-        skillsClient.forEach((s, i) => {
+        skills.forEach((s, i) => {
           const angleDeg = -90 + i * 60;
           const rad = (angleDeg * Math.PI) / 180;
           const r = maxR * pcts[i];
-          const dot = document.getElementById(`radar-dot-${s.id}`);
+          const dot = document.getElementById(`radar-dot-${s.id}-${course}`);
           if (dot) {
-            dot.setAttribute("cx", String(Math.round(cx + r * Math.cos(rad))));
-            dot.setAttribute("cy", String(Math.round(cy + r * Math.sin(rad))));
+            dot.setAttribute('cx', String(Math.round(cx + r * Math.cos(rad))));
+            dot.setAttribute('cy', String(Math.round(cy + r * Math.sin(rad))));
           }
-        });
-
-        // Update percentage labels
-        skillsClient.forEach((s, i) => {
-          const el = document.getElementById(`pct-${s.id}`);
+          const el = document.getElementById(`pct-${s.id}-${course}`);
           if (el) el.textContent = `${Math.round(pcts[i] * 100)} %`;
         });
       }
 
-      /* ---- Initial render ---- */
-      skillsClient.forEach((s) => {
-        updateProgress(s.id);
-        updateCrown(s.id);
+      /* ---- Initial render — all courses ---- */
+      COURSES.forEach(course => {
+        const skills = allSkillsClient[course];
+        if (!skills) return;
+        skills.forEach(s => {
+          updateProgress(course, s.id);
+          updateCrown(course, s.id);
+        });
+        updateRadar(course);
       });
-      updateRadar();
     </script>
   </body>
 </html>
