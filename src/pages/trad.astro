@@ -1,0 +1,635 @@
+---
+import "../styles/global.css";
+import kursB from "../data/kurs-b.json";
+
+const skills = [
+  {
+    id: "hora",
+    label: "Höra",
+    sublabel: "Hörförståelse",
+    color: "#D97706",
+    colorLight: "#FEF3C7",
+    colorMid: "#FBBF24",
+    goals: kursB.domains.horforstaelse.goals,
+  },
+  {
+    id: "lasa",
+    label: "Läsa",
+    sublabel: "Läsförståelse",
+    color: "#2563EB",
+    colorLight: "#DBEAFE",
+    colorMid: "#60A5FA",
+    goals: kursB.domains.lasforstaelse.goals,
+  },
+  {
+    id: "tala",
+    label: "Tala",
+    sublabel: "Muntlig förmåga",
+    color: "#16A34A",
+    colorLight: "#DCFCE7",
+    colorMid: "#4ADE80",
+    goals: [
+      ...kursB.domains["muntlig-interaktion"].goals,
+      ...kursB.domains["muntlig-produktion"].goals,
+    ],
+  },
+  {
+    id: "skriva",
+    label: "Skriva",
+    sublabel: "Skriftlig färdighet",
+    color: "#DC2626",
+    colorLight: "#FEE2E2",
+    colorMid: "#F87171",
+    goals: kursB.domains["skriftlig-fardighet"].goals,
+  },
+  {
+    id: "uttal",
+    label: "Uttal",
+    sublabel: "Uttal",
+    color: "#0D9488",
+    colorLight: "#CCFBF1",
+    colorMid: "#2DD4BF",
+    goals: kursB.domains.uttal.goals,
+  },
+  {
+    id: "grammatik",
+    label: "Grammatik",
+    sublabel: "Grammatik",
+    color: "#CA8A04",
+    colorLight: "#FEF9C3",
+    colorMid: "#FACC15",
+    goals: kursB.domains.grammatik.goals,
+  },
+];
+
+/* ---- Leaf layout ---- */
+function computePositions(n: number) {
+  const cx = 150, cy = 170;
+  const positions: { x: number; y: number }[] = [];
+
+  if (n <= 6) {
+    const r = 90;
+    const arcStart = 200, arcEnd = 340;
+    for (let i = 0; i < n; i++) {
+      const angle = n === 1 ? 270 : arcStart + ((arcEnd - arcStart) / (n - 1)) * i;
+      const rad = (angle * Math.PI) / 180;
+      positions.push({
+        x: Math.round(cx + r * Math.cos(rad)),
+        y: Math.round(cy + r * Math.sin(rad)),
+      });
+    }
+  } else {
+    const inner = Math.floor(n / 2);
+    const outer = n - inner;
+    const r1 = 60, s1Start = 215, s1End = 325;
+    for (let i = 0; i < inner; i++) {
+      const angle = inner === 1 ? 270 : s1Start + ((s1End - s1Start) / (inner - 1)) * i;
+      const rad = (angle * Math.PI) / 180;
+      positions.push({ x: Math.round(cx + r1 * Math.cos(rad)), y: Math.round(cy + r1 * Math.sin(rad)) });
+    }
+    const r2 = 110, s2Start = 200, s2End = 340;
+    for (let i = 0; i < outer; i++) {
+      const angle = outer === 1 ? 270 : s2Start + ((s2End - s2Start) / (outer - 1)) * i;
+      const rad = (angle * Math.PI) / 180;
+      positions.push({ x: Math.round(cx + r2 * Math.cos(rad)), y: Math.round(cy + r2 * Math.sin(rad)) });
+    }
+  }
+  return positions;
+}
+
+function branchPath(lx: number, ly: number) {
+  const tx = 150, ty = 170;
+  const cp1x = tx + (lx - tx) * 0.25;
+  const cp1y = ty - 10;
+  const cp2x = lx - (lx - tx) * 0.15;
+  const cp2y = ly + (ty - ly) * 0.2;
+  return `M${tx},${ty} C${cp1x},${cp1y} ${cp2x},${cp2y} ${lx},${ly}`;
+}
+
+/* ---- Build render data ---- */
+const treesData = skills.map((skill) => {
+  const pos = computePositions(skill.goals.length);
+  return {
+    ...skill,
+    leaves: skill.goals.map((g, i) => ({
+      id: g.id,
+      text: g.text,
+      x: pos[i].x,
+      y: pos[i].y,
+      branch: branchPath(pos[i].x, pos[i].y),
+      bobDelay: (i * 0.4).toFixed(1),
+    })),
+  };
+});
+
+/* ---- Client-side data ---- */
+const goalTexts: Record<string, string> = {};
+skills.forEach((s) => s.goals.forEach((g) => { goalTexts[g.id] = g.text; }));
+
+const skillsClient = skills.map((s) => ({
+  id: s.id,
+  label: s.label,
+  color: s.color,
+  goalIds: s.goals.map((g) => g.id),
+}));
+
+/* ---- Radar layout (6-axis hexagon) ---- */
+const RADAR_CX = 150, RADAR_CY = 150, RADAR_R = 110;
+const radarAxes = skills.map((s, i) => {
+  const angleDeg = -90 + i * 60;
+  const rad = (angleDeg * Math.PI) / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  const anchor = i === 0 || i === 3 ? "middle" : i < 3 ? "start" : "end";
+  const lblR = RADAR_R + 18;
+  const pctR = RADAR_R + 16;
+  return {
+    id: s.id, label: s.label, color: s.color,
+    ex: Math.round(RADAR_CX + RADAR_R * cos),
+    ey: Math.round(RADAR_CY + RADAR_R * sin),
+    lx: Math.round(RADAR_CX + lblR * cos),
+    ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 12 : 4)),
+    px: Math.round(RADAR_CX + pctR * cos),
+    py: Math.round(RADAR_CY + pctR * sin + (i === 0 ? 8 : i === 3 ? 22 : 14)),
+    anchor,
+  };
+});
+
+function hexGrid(pct: number) {
+  return Array.from({ length: 6 }, (_, i) => {
+    const rad = ((-90 + i * 60) * Math.PI) / 180;
+    return `${Math.round(RADAR_CX + RADAR_R * pct * Math.cos(rad))},${Math.round(RADAR_CY + RADAR_R * pct * Math.sin(rad))}`;
+  }).join(" ");
+}
+---
+
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kunskapsträdet — Kurs B</title>
+  </head>
+  <body class="font-sans bg-stone-50 text-gray-900">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-20">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl" aria-hidden="true">🌳</span>
+          <div>
+            <h1 class="text-lg font-bold text-stone-800 leading-tight">Kunskapsträdet</h1>
+            <p class="text-xs text-stone-500">Kurs B &middot; Dina förmågor växer</p>
+          </div>
+        </div>
+        <a href="/" class="text-sm text-cyan-700 hover:text-cyan-900 font-medium">
+          Checklista &rarr;
+        </a>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6 space-y-8">
+      <!-- Radar chart -->
+      <section class="flex justify-center">
+        <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-5 w-full max-w-sm">
+          <h2 class="text-center text-sm font-semibold text-stone-600 mb-3">Min utveckling</h2>
+          <svg id="radar" viewBox="0 0 300 300" class="w-full">
+            <!-- Grid hexagons -->
+            {[0.25, 0.5, 0.75, 1].map((pct) => (
+              <polygon points={hexGrid(pct)} fill="none" stroke="#E7E5E4" stroke-width="1" />
+            ))}
+
+            <!-- Axis lines -->
+            {radarAxes.map((a) => (
+              <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#D6D3D1" stroke-width="1" />
+            ))}
+
+            <!-- Data polygon -->
+            <polygon
+              id="radar-polygon"
+              points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+              fill="rgba(34,197,94,0.12)"
+              stroke="#22C55E"
+              stroke-width="2.5"
+              stroke-linejoin="round"
+            />
+
+            <!-- Axis dots -->
+            {radarAxes.map((a) => (
+              <circle id={`radar-dot-${a.id}`} cx={RADAR_CX} cy={RADAR_CY} r="5" fill={a.color} />
+            ))}
+
+            <!-- Labels -->
+            {radarAxes.map((a) => (
+              <text x={a.lx} y={a.ly} text-anchor={a.anchor} font-size="12" font-weight="600" fill={a.color}>{a.label}</text>
+            ))}
+
+            <!-- Percentage labels -->
+            {radarAxes.map((a) => (
+              <text id={`pct-${a.id}`} x={a.px} y={a.py} text-anchor={a.anchor} font-size="10" fill="#A8A29E">0 %</text>
+            ))}
+          </svg>
+        </div>
+      </section>
+
+      <!-- Trees grid -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {treesData.map((tree) => (
+          <div class="tree-card bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden" data-skill={tree.id}>
+            <!-- Card header -->
+            <div class="px-4 pt-4 pb-1 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full inline-block" style={`background:${tree.color}`} />
+                <h2 class="font-bold text-stone-800">{tree.label}</h2>
+                <span class="text-xs text-stone-400">{tree.sublabel}</span>
+              </div>
+              <span class="text-xs font-medium text-stone-500" data-tree-progress={tree.id}>
+                0 av {tree.goals.length}
+              </span>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="mx-4 mt-1 h-1 bg-stone-100 rounded-full overflow-hidden">
+              <div
+                class="h-full rounded-full transition-all duration-500 ease-out"
+                style={`background:${tree.color};width:0%`}
+                data-progress-bar={tree.id}
+              />
+            </div>
+
+            <!-- Tree SVG -->
+            <svg viewBox="0 0 300 355" class="w-full tree-svg">
+              <defs>
+                <radialGradient id={`crown-${tree.id}`} cx="50%" cy="42%" r="55%">
+                  <stop offset="0%" stop-color={tree.colorLight} stop-opacity="0.8" />
+                  <stop offset="100%" stop-color={tree.colorLight} stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <!-- Ground -->
+              <ellipse cx="150" cy="312" rx="90" ry="10" fill="#D4C9B0" opacity="0.35" />
+
+              <!-- Roots -->
+              <path d="M138,297 C125,310 105,320 82,328" stroke="#7C5B2A" stroke-width="5" fill="none" stroke-linecap="round" />
+              <path d="M162,297 C175,310 195,320 218,328" stroke="#7C5B2A" stroke-width="5" fill="none" stroke-linecap="round" />
+              <path d="M144,300 C138,316 127,332 118,340" stroke="#7C5B2A" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              <path d="M156,300 C162,316 173,332 182,340" stroke="#7C5B2A" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              <path d="M150,302 C150,322 149,338 148,348" stroke="#7C5B2A" stroke-width="3" fill="none" stroke-linecap="round" />
+
+              <!-- Trunk -->
+              <path
+                d="M141,299 C138,267 136,232 139,202 C142,187 146,177 150,172 C154,177 158,187 161,202 C164,232 162,267 159,299 Z"
+                fill="#6B4226"
+              />
+              <path d="M148,282 C147,260 146,238 148,218" stroke="#5A3520" stroke-width="0.7" fill="none" opacity="0.35" />
+              <path d="M153,278 C154,258 153,238 151,215" stroke="#5A3520" stroke-width="0.7" fill="none" opacity="0.35" />
+
+              <!-- Crown glow -->
+              <ellipse
+                cx="150"
+                cy="100"
+                rx="130"
+                ry="105"
+                fill={`url(#crown-${tree.id})`}
+                data-crown={tree.id}
+                class="crown-glow"
+              />
+
+              <!-- Branches and leaves -->
+              {tree.leaves.map((leaf, i) => (
+                <g>
+                  <path
+                    d={leaf.branch}
+                    stroke="#A88B5C"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                    class="branch-line"
+                    data-branch-for={leaf.id}
+                  />
+                  <circle
+                    cx={leaf.x}
+                    cy={leaf.y}
+                    r="16"
+                    class="leaf-node"
+                    data-goal-id={leaf.id}
+                    data-skill={tree.id}
+                    data-checked="false"
+                    style={`--lc:${tree.color};--lcl:${tree.colorLight};--lcm:${tree.colorMid};--bob-delay:${leaf.bobDelay}s`}
+                    tabindex="0"
+                    role="checkbox"
+                    aria-checked="false"
+                    aria-label={leaf.text}
+                  />
+                  <text
+                    x={leaf.x}
+                    y={leaf.y + 5}
+                    text-anchor="middle"
+                    font-size="11"
+                    font-weight="700"
+                    class="leaf-num"
+                    data-num-for={leaf.id}
+                    fill={tree.color}
+                  >
+                    {i + 1}
+                  </text>
+                </g>
+              ))}
+            </svg>
+
+            <!-- Goal text panel -->
+            <div class="px-4 pb-4 -mt-2">
+              <div
+                class="goal-panel min-h-[2.75rem] bg-stone-50 rounded-lg px-3 py-2 text-sm text-stone-400 italic transition-all duration-300"
+                data-goal-panel={tree.id}
+              >
+                Tryck på en frukt för att se målet
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
+    </main>
+
+    <style>
+      /* ---- Leaf nodes ---- */
+      .leaf-node {
+        fill: #E7E5E4;
+        stroke: var(--lc);
+        stroke-width: 2;
+        stroke-dasharray: 5 3;
+        cursor: pointer;
+        transition:
+          fill 0.35s ease,
+          stroke-width 0.35s ease,
+          stroke-dasharray 0.35s ease,
+          filter 0.35s ease;
+      }
+
+      .leaf-node:hover,
+      .leaf-node:focus-visible {
+        filter: drop-shadow(0 0 8px var(--lcm));
+        outline: none;
+      }
+
+      .leaf-node[data-checked="true"] {
+        fill: var(--lc);
+        stroke: rgba(255, 255, 255, 0.5);
+        stroke-width: 2.5;
+        stroke-dasharray: none;
+        filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.18));
+      }
+
+      /* Leaf numbers */
+      .leaf-num {
+        pointer-events: none;
+        transition: fill 0.3s ease;
+      }
+
+      /* Crown glow */
+      .crown-glow {
+        opacity: 0.3;
+        transition: opacity 0.6s ease;
+      }
+
+      /* Branch lines */
+      .branch-line {
+        transition:
+          stroke 0.4s ease,
+          stroke-width 0.4s ease;
+      }
+
+      .branch-line[data-checked="true"] {
+        stroke: #7C5B2A;
+        stroke-width: 3;
+      }
+
+      /* Gentle bobbing for unchecked leaves */
+      @keyframes gentle-bob {
+        0%,
+        100% {
+          translate: 0 0;
+        }
+        50% {
+          translate: 0 -3px;
+        }
+      }
+
+      .leaf-node[data-checked="false"] {
+        animation: gentle-bob 3s ease-in-out infinite;
+        animation-delay: var(--bob-delay, 0s);
+      }
+      .leaf-node[data-checked="true"] {
+        animation: none;
+      }
+
+      /* Pulse when toggled */
+      @keyframes check-pop {
+        0% {
+          transform: scale(1);
+        }
+        40% {
+          transform: scale(1.25);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .leaf-pop {
+        animation: check-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Radar polygon */
+      #radar-polygon {
+        transition: points 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Tree SVG sizing */
+      .tree-svg {
+        max-height: 340px;
+      }
+
+      /* Print: hide interactive tree page */
+      @media print {
+        body {
+          display: none;
+        }
+      }
+    </style>
+
+    <script define:vars={{ skillsClient, goalTexts }}>
+      /* ---- localStorage (shared with checklist) ---- */
+      const STORAGE_KEY = "sfi-checklist-B";
+
+      function loadState() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        } catch {
+          return {};
+        }
+      }
+
+      function saveState(state) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch {}
+      }
+
+      /* ---- State ---- */
+      let state = loadState();
+      let activeGoal = {}; // { skillId: goalId }
+
+      /* ---- Init leaves from saved state ---- */
+      document.querySelectorAll(".leaf-node").forEach((leaf) => {
+        const id = leaf.dataset.goalId;
+        if (state[id]) {
+          leaf.setAttribute("data-checked", "true");
+          leaf.setAttribute("aria-checked", "true");
+          // Update number color
+          const num = document.querySelector(`[data-num-for="${id}"]`);
+          if (num) num.setAttribute("fill", "white");
+          // Update branch
+          const branch = document.querySelector(`[data-branch-for="${id}"]`);
+          if (branch) branch.setAttribute("data-checked", "true");
+        }
+      });
+
+      /* ---- Click / keyboard handling ---- */
+      document.querySelectorAll(".leaf-node").forEach((leaf) => {
+        function toggle() {
+          const id = leaf.dataset.goalId;
+          const skill = leaf.dataset.skill;
+          const wasChecked = leaf.getAttribute("data-checked") === "true";
+          const nowChecked = !wasChecked;
+
+          // Update state
+          if (nowChecked) {
+            state[id] = true;
+          } else {
+            delete state[id];
+          }
+          saveState(state);
+
+          // Update leaf visual
+          leaf.setAttribute("data-checked", String(nowChecked));
+          leaf.setAttribute("aria-checked", String(nowChecked));
+
+          // Pop animation
+          leaf.classList.remove("leaf-pop");
+          void leaf.offsetWidth; // force reflow
+          leaf.classList.add("leaf-pop");
+
+          // Number color
+          const num = document.querySelector(`[data-num-for="${id}"]`);
+          if (num) num.setAttribute("fill", nowChecked ? "white" : "");
+
+          // Branch
+          const branch = document.querySelector(`[data-branch-for="${id}"]`);
+          if (branch) branch.setAttribute("data-checked", String(nowChecked));
+
+          // Show goal text
+          showGoalText(skill, id, nowChecked);
+
+          // Update progress
+          updateProgress(skill);
+
+          // Update crown glow
+          updateCrown(skill);
+
+          // Update radar
+          updateRadar();
+        }
+
+        leaf.addEventListener("click", toggle);
+        leaf.addEventListener("keydown", (e) => {
+          if (e.key === " " || e.key === "Enter") {
+            e.preventDefault();
+            toggle();
+          }
+        });
+      });
+
+      /* ---- Goal text panel ---- */
+      function showGoalText(skillId, goalId, isChecked) {
+        const panel = document.querySelector(`[data-goal-panel="${skillId}"]`);
+        if (!panel) return;
+        const text = goalTexts[goalId] || "";
+        const check = isChecked ? "✓ " : "";
+        panel.textContent = `${check}${text}`;
+        panel.classList.remove("italic", "text-stone-400");
+        panel.classList.add("text-stone-700");
+        activeGoal[skillId] = goalId;
+      }
+
+      /* ---- Progress ---- */
+      function updateProgress(skillId) {
+        const skill = skillsClient.find((s) => s.id === skillId);
+        if (!skill) return;
+        const checked = skill.goalIds.filter((id) => state[id]).length;
+        const total = skill.goalIds.length;
+        const pct = Math.round((checked / total) * 100);
+
+        const progressEl = document.querySelector(`[data-tree-progress="${skillId}"]`);
+        if (progressEl) progressEl.textContent = `${checked} av ${total}`;
+
+        const bar = document.querySelector(`[data-progress-bar="${skillId}"]`);
+        if (bar) bar.style.width = `${pct}%`;
+      }
+
+      /* ---- Crown glow ---- */
+      function updateCrown(skillId) {
+        const skill = skillsClient.find((s) => s.id === skillId);
+        if (!skill) return;
+        const checked = skill.goalIds.filter((id) => state[id]).length;
+        const pct = checked / skill.goalIds.length;
+        const crown = document.querySelector(`[data-crown="${skillId}"]`);
+        if (crown) crown.style.opacity = String(0.3 + pct * 0.7);
+      }
+
+      /* ---- Radar chart (6-axis hexagon) ---- */
+      function updateRadar() {
+        const maxR = 110;
+        const cx = 150, cy = 150;
+
+        const pcts = skillsClient.map((s) => {
+          const checked = s.goalIds.filter((id) => state[id]).length;
+          return checked / s.goalIds.length;
+        });
+
+        // Compute polygon points for 6 axes
+        const pts = pcts.map((p, i) => {
+          const angleDeg = -90 + i * 60;
+          const rad = (angleDeg * Math.PI) / 180;
+          const r = maxR * p;
+          return `${Math.round(cx + r * Math.cos(rad))},${Math.round(cy + r * Math.sin(rad))}`;
+        });
+
+        const polygon = document.getElementById("radar-polygon");
+        if (polygon) polygon.setAttribute("points", pts.join(" "));
+
+        // Update dots
+        skillsClient.forEach((s, i) => {
+          const angleDeg = -90 + i * 60;
+          const rad = (angleDeg * Math.PI) / 180;
+          const r = maxR * pcts[i];
+          const dot = document.getElementById(`radar-dot-${s.id}`);
+          if (dot) {
+            dot.setAttribute("cx", String(Math.round(cx + r * Math.cos(rad))));
+            dot.setAttribute("cy", String(Math.round(cy + r * Math.sin(rad))));
+          }
+        });
+
+        // Update percentage labels
+        skillsClient.forEach((s, i) => {
+          const el = document.getElementById(`pct-${s.id}`);
+          if (el) el.textContent = `${Math.round(pcts[i] * 100)} %`;
+        });
+      }
+
+      /* ---- Initial render ---- */
+      skillsClient.forEach((s) => {
+        updateProgress(s.id);
+        updateCrown(s.id);
+      });
+      updateRadar();
+    </script>
+  </body>
+</html>
