@@ -2,7 +2,7 @@
 import minPlan from "../data/min-plan.json";
 import {
   GraduationCap, BookMarked, Library, Globe, Laptop,
-  Coffee, Tv, Radio, Play, Calendar
+  Coffee, Tv, Radio, Play, Calendar, Lock
 } from "@lucide/astro";
 
 const resourceIconMap: Record<string, any> = {
@@ -10,6 +10,8 @@ const resourceIconMap: Record<string, any> = {
 };
 
 const resources = minPlan.resources;
+const schoolItems = resources.items.filter(i => i.school);
+const openItems = resources.items.filter(i => !i.school);
 ---
 
 <div id="panel-resurser" class="course-panel pt-4 pb-8 hidden">
@@ -41,33 +43,81 @@ const resources = minPlan.resources;
     </div>
   )}
 
-  <div class="space-y-3 px-4">
-    {resources.items.map((item) => {
-      const IconComp = item.icon ? resourceIconMap[item.icon] : null;
-      return (
-        <a
-          href={item.link}
-          target="_blank"
-          rel="noopener"
-          class="block rounded-lg border border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm transition-all p-4"
-        >
-          <div class="flex items-start gap-3">
-            {IconComp && (
-              <span class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <IconComp size={20} />
-              </span>
-            )}
-            <div class="flex-1 min-w-0">
-              <p class="text-base font-semibold text-gray-800 mb-0.5">
-                {item.text} <span class="text-blue-400 text-sm">↗</span>
-              </p>
-              {item.desc && (
-                <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-              )}
-            </div>
-          </div>
-        </a>
-      );
-    })}
-  </div>
+  {/* --- School login required --- */}
+  {schoolItems.length > 0 && (
+    <div class="px-4 mb-6">
+      <div class="flex items-center gap-2 mb-3">
+        <Lock size={16} class="text-indigo-600" />
+        <p class="text-sm font-bold text-gray-700">Skolans verktyg</p>
+      </div>
+      <p class="text-xs text-gray-500 mb-3 bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-2">
+        Du måste vara inloggad med ditt skolkonto (@skola.lund.se) för att öppna dessa länkar. Logga in i Chrome med din skolmail först.
+      </p>
+      <div class="space-y-3">
+        {schoolItems.map((item) => {
+          const IconComp = item.icon ? resourceIconMap[item.icon] : null;
+          return (
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener"
+              class="block rounded-lg border border-indigo-100 bg-white hover:border-indigo-300 hover:shadow-sm transition-all p-4"
+            >
+              <div class="flex items-start gap-3">
+                {IconComp && (
+                  <span class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                    <IconComp size={20} />
+                  </span>
+                )}
+                <div class="flex-1 min-w-0">
+                  <p class="text-base font-semibold text-gray-800 mb-0.5">
+                    {item.text} <span class="text-indigo-400 text-xs font-normal">skolkonto ↗</span>
+                  </p>
+                  {item.desc && (
+                    <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                  )}
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  {/* --- Open for everyone --- */}
+  {openItems.length > 0 && (
+    <div class="px-4 mb-6">
+      <p class="text-sm font-bold text-gray-700 mb-3">Öppet för alla</p>
+      <div class="space-y-3">
+        {openItems.map((item) => {
+          const IconComp = item.icon ? resourceIconMap[item.icon] : null;
+          return (
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener"
+              class="block rounded-lg border border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm transition-all p-4"
+            >
+              <div class="flex items-start gap-3">
+                {IconComp && (
+                  <span class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                    <IconComp size={20} />
+                  </span>
+                )}
+                <div class="flex-1 min-w-0">
+                  <p class="text-base font-semibold text-gray-800 mb-0.5">
+                    {item.text} <span class="text-blue-400 text-sm">↗</span>
+                  </p>
+                  {item.desc && (
+                    <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                  )}
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  )}
 </div>
