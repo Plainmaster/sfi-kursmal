@@ -1,7 +1,10 @@
 ---
 import MinPlanSection from "./MinPlanSection.astro";
 import minPlan from "../data/min-plan.json";
-import tokens from "../data/design-tokens.json";
+import {
+  GraduationCap, BookMarked, Library, Globe, Laptop,
+  Coffee, Tv, Radio, Play, Calendar
+} from "@lucide/astro";
 
 const domainColorMap: Record<string, string> = {
   "horforstaelse": "bg-domain-hora",
@@ -18,12 +21,68 @@ const domainIconMap: Record<string, string> = {
   "skriftlig-fardighet": "PenLine",
   "digital": "Monitor",
 };
+
+const resourceIconMap: Record<string, any> = {
+  GraduationCap, BookMarked, Library, Globe, Laptop, Coffee, Tv, Radio, Play,
+};
 ---
 
 <div id="panel-plan" class="course-panel pt-4 pb-8 hidden">
   <h2 class="text-2xl font-bold text-gray-800 px-4 mb-1">{minPlan.header}</h2>
   <p class="text-gray-600 px-4 mb-6 text-sm leading-relaxed">{minPlan.intro}</p>
 
+  {/* --- Schedule & Resources FIRST --- */}
+  {minPlan.resources && (
+    <section class="mb-8">
+      <div class="bg-gray-700 rounded-t-lg px-4 py-3 flex items-center gap-2">
+        <Calendar size={24} class="text-white" />
+        <h2 class="text-white font-semibold text-lg">{minPlan.resources.header}</h2>
+      </div>
+      <div class="bg-white rounded-b-lg border border-t-0 border-gray-200">
+        {minPlan.resources.intro && (
+          <div class="px-4 py-3 border-b border-gray-200 bg-amber-50">
+            <p class="text-sm text-gray-800 font-medium leading-relaxed">{minPlan.resources.intro}</p>
+          </div>
+        )}
+
+        {minPlan.resources.calendar && (
+          <div class="px-4 py-3 border-b border-gray-200 print-hide">
+            <iframe
+              src={minPlan.resources.calendar}
+              class="w-full rounded border border-gray-200"
+              style="height: 400px;"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        )}
+
+        <div class="divide-y divide-gray-100">
+          {minPlan.resources.items.map((item) => {
+            const IconComp = item.icon ? resourceIconMap[item.icon] : null;
+            return (
+              <div class="flex items-center gap-3 py-3 px-4">
+                {IconComp && (
+                  <span class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600">
+                    <IconComp size={18} />
+                  </span>
+                )}
+                {item.link ? (
+                  <a href={item.link} target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    {item.text} <span class="text-blue-400">↗</span>
+                  </a>
+                ) : (
+                  <p class="text-sm text-gray-700">{item.text}</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* --- Skill domains with checkboxes --- */}
   {minPlan.domains.map((domain) => {
     const icon = domainIconMap[domain.key] || "BookOpen";
     const color = domainColorMap[domain.key] || "bg-gray-600";
@@ -38,46 +97,6 @@ const domainIconMap: Record<string, string> = {
       />
     );
   })}
-
-  {minPlan.resources && (
-    <section class="mb-6">
-      <div class="bg-gray-700 rounded-t-lg px-4 py-3">
-        <h2 class="text-white font-semibold text-lg">{minPlan.resources.header}</h2>
-      </div>
-      <div class="bg-white rounded-b-lg border border-t-0 border-gray-200">
-        {minPlan.resources.intro && (
-          <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
-            <p class="text-sm text-gray-700 font-medium">{minPlan.resources.intro}</p>
-          </div>
-        )}
-
-        {minPlan.resources.calendar && (
-          <div class="px-4 py-3 border-b border-gray-200 print-hide">
-            <p class="text-xs text-gray-500 mb-2">Schema — Lärcentrum Kompassen</p>
-            <iframe
-              src={minPlan.resources.calendar}
-              class="w-full rounded border border-gray-200"
-              style="height: 400px;"
-              frameborder="0"
-              scrolling="no"
-            ></iframe>
-          </div>
-        )}
-
-        {minPlan.resources.items.map((item) => (
-          <div class="py-2 px-4 border-b border-gray-100 last:border-b-0">
-            {item.link ? (
-              <a href={item.link} target="_blank" rel="noopener" class="text-blue-600 underline hover:text-blue-800 text-sm">
-                {item.text} ↗
-              </a>
-            ) : (
-              <p class="text-sm text-gray-700">{item.text}</p>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
 
   <div class="px-4 pt-2">
     <button

@@ -73,15 +73,15 @@
     "intro": "Lärcentrum Kompassen — Studiestöd i Studion: kl. 12:00–14:00 (sfi 1 & 2), onsdagar 11:00–12:00 (sfi 3). Språkcafé med Interkultur — torsdagar 10:30–13:30.",
     "calendar": "https://calendar.google.com/calendar/u/0/embed?ctz=Europe/Stockholm&src=komvux.info@skola.lund.se",
     "items": [
-      { "text": "Lärcentrum Kompassen — schema och studiestöd", "link": "https://sites.google.com/skola.lund.se/lrcentruminprogress200507/?usp=sharing" },
-      { "text": "Elevhandboken Komvux", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida" },
-      { "text": "Komvux bibliotek — böcker för sfi-elever", "link": "https://sites.google.com/skola.lund.se/komvuxbibliotek?usp=sharing" },
-      { "text": "Skolportalen (Inläsningstjänst, Lunis m.m.)", "link": "https://lund.se/skolportalen" },
-      { "text": "Lunis — digitalt läromedel", "link": "https://lunis.liber.se/" },
-      { "text": "Språkcaféer i Lunds kommun", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe" },
-      { "text": "Nyheter på lätt svenska (SVT)", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska" },
-      { "text": "Radio Sweden på lätt svenska", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska" },
-      { "text": "UR Play — program för sfi", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" }
+      { "icon": "GraduationCap", "text": "Lärcentrum Kompassen — schema och studiestöd", "link": "https://sites.google.com/skola.lund.se/lrcentruminprogress200507/?usp=sharing" },
+      { "icon": "BookMarked", "text": "Elevhandboken Komvux", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida" },
+      { "icon": "Library", "text": "Komvux bibliotek — böcker för sfi-elever", "link": "https://sites.google.com/skola.lund.se/komvuxbibliotek?usp=sharing" },
+      { "icon": "Globe", "text": "Skolportalen (Inläsningstjänst, Lunis m.m.)", "link": "https://lund.se/skolportalen" },
+      { "icon": "Laptop", "text": "Lunis — digitalt läromedel", "link": "https://lunis.liber.se/" },
+      { "icon": "Coffee", "text": "Språkcaféer i Lunds kommun", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe" },
+      { "icon": "Tv", "text": "Nyheter på lätt svenska (SVT)", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska" },
+      { "icon": "Radio", "text": "Radio Sweden på lätt svenska", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska" },
+      { "icon": "Play", "text": "UR Play — program för sfi", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" }
     ]
   }
 }
