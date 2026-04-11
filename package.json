@@ -17,5 +17,8 @@
   "devDependencies": {
     "prettier": "^3.0.0",
     "prettier-plugin-astro": "^0.14.1"
+  },
+  "overrides": {
+    "vite": "^7"
   }
 }
