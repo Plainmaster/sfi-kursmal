@@ -91,3 +91,13 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 2. Interaktiv checklista | 0/3 | Planning complete | - |
 | 3. Min Plan och fullstandig produkt | 0/2 | Planning complete | - |
 | 4. Driftsattning | 0/2 | Planning complete | - |
+
+### Phase 04.1: Kunskapsträd för alla kurser (INSERTED)
+
+**Goal:** Kunskapsträdssidan stödjer alla tre kurser (B, C, D) med kursanpassade trädstorlekar — C och D-träden är visuellt större/mer utarbetade eftersom eleverna är på högre CEFR-nivåer
+**Requirements**: TBD
+**Depends on:** Phase 4
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 04.1 to break down)

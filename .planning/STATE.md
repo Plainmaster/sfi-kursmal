@@ -90,6 +90,10 @@ Recent decisions affecting current work:
 
 None yet.
 
+### Roadmap Evolution
+
+- Phase 04.1 inserted after Phase 04: Kunskapsträd för alla kurser (URGENT)
+
 ### Blockers/Concerns
 
 - Phase 1 krav: Den faktiska kursmaltexten maste komma fran lararen. JSON-filerna kommer vara tomma tills forenklade "Jag kan..."-satser skrivs for alla fem fardighetsomraden x tre kurser.
