@@ -93,6 +93,34 @@ function branchPath(lx: number, ly: number) {
   return `M${tx},${ty} C${cp1x},${cp1y} ${cp2x},${cp2y} ${lx},${ly}`;
 }
 
+/* ---- Sub-branches for C and D (fork off main branch) ---- */
+function subBranches(lx: number, ly: number, tier: string, idx: number): string[] {
+  if (tier === "sapling") return [];
+  const tx = 150, ty = 170;
+  // Midpoint of the branch
+  const mx = tx + (lx - tx) * 0.55;
+  const my = ty + (ly - ty) * 0.45;
+  // Perpendicular direction for fork
+  const dx = lx - tx, dy = ly - ty;
+  const len = Math.sqrt(dx * dx + dy * dy) || 1;
+  const px = -dy / len, py = dx / len;
+  const forkLen = tier === "full" ? 18 : 13;
+  const side = idx % 2 === 0 ? 1 : -1;
+  const paths: string[] = [];
+  // One fork on medium, two on full
+  const fx = mx + px * forkLen * side;
+  const fy = my + py * forkLen * side;
+  paths.push(`M${Math.round(mx)},${Math.round(my)} Q${Math.round((mx+fx)/2)},${Math.round((my+fy)/2 - 5)} ${Math.round(fx)},${Math.round(fy)}`);
+  if (tier === "full") {
+    const mx2 = tx + (lx - tx) * 0.35;
+    const my2 = ty + (ly - ty) * 0.28;
+    const fx2 = mx2 + px * forkLen * 0.8 * -side;
+    const fy2 = my2 + py * forkLen * 0.8 * -side;
+    paths.push(`M${Math.round(mx2)},${Math.round(my2)} Q${Math.round((mx2+fx2)/2)},${Math.round((my2+fy2)/2 - 3)} ${Math.round(fx2)},${Math.round(fy2)}`);
+  }
+  return paths;
+}
+
 /* ---- Build data for all three courses ---- */
 const COURSES = ["B", "C", "D"] as const;
 const courseData = { B: kursB, C: kursC, D: kursD };
@@ -113,12 +141,14 @@ for (const course of COURSES) {
       ...skill,
       tier,
       course,
+      tierName: COURSE_TIER[course],
       leaves: skill.goals.map((g: any, i: number) => ({
         id: g.id,
         text: g.text,
         x: pos[i].x,
         y: pos[i].y,
         branch: branchPath(pos[i].x, pos[i].y),
+        subBranches: subBranches(pos[i].x, pos[i].y, COURSE_TIER[course], i),
         bobDelay: (i * 0.4).toFixed(1),
       })),
     };
@@ -134,53 +164,49 @@ for (const course of COURSES) {
   }));
 }
 
-/* ---- Radar layout — concentric per course (B small, C medium, D large) ---- */
-const RADAR_CX = 150, RADAR_CY = 150;
-const RADAR_SIZES = {
-  B: { own: 65, prev: [] as number[], prevColors: [] as string[] },
-  C: { own: 90, prev: [65], prevColors: ["#06B6D4"] },
-  D: { own: 110, prev: [65, 90], prevColors: ["#06B6D4", "#8B5CF6"] },
+/* ---- Radar layout — same size, density increases per course ---- */
+const RADAR_CX = 150, RADAR_CY = 150, RADAR_R = 110;
+
+/* Grid ring counts increase with CEFR level — denser = more advanced */
+const RADAR_CONFIG = {
+  B: { rings: 4, prev: [] as string[], prevPcts: [] as number[] },
+  C: { rings: 6, prev: ["B"], prevPcts: [0.6] },
+  D: { rings: 8, prev: ["B", "C"], prevPcts: [0.45, 0.72] },
 } as const;
 
-function makeRadarAxes(R: number) {
-  return allSkills["B"].map((s: any, i: number) => {
-    const angleDeg = -90 + i * 60;
-    const rad = (angleDeg * Math.PI) / 180;
-    const cos = Math.cos(rad), sin = Math.sin(rad);
-    const anchor = i === 0 || i === 3 ? "middle" : i < 3 ? "start" : "end";
-    const lblR = R + 18;
-    const pctR = R + 16;
-    return {
-      id: s.id, label: s.label, color: s.color,
-      ex: Math.round(RADAR_CX + R * cos),
-      ey: Math.round(RADAR_CY + R * sin),
-      lx: Math.round(RADAR_CX + lblR * cos),
-      ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 12 : 4)),
-      px: Math.round(RADAR_CX + pctR * cos),
-      py: Math.round(RADAR_CY + pctR * sin + (i === 0 ? 8 : i === 3 ? 22 : 14)),
-      anchor,
-    };
-  });
-}
+const PREV_COLORS: Record<string, string> = { B: "#06B6D4", C: "#8B5CF6" };
 
-const radarAxesPerCourse = {
-  B: makeRadarAxes(RADAR_SIZES.B.own),
-  C: makeRadarAxes(RADAR_SIZES.C.own),
-  D: makeRadarAxes(RADAR_SIZES.D.own),
-};
+const radarAxes = allSkills["B"].map((s: any, i: number) => {
+  const angleDeg = -90 + i * 60;
+  const rad = (angleDeg * Math.PI) / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  const anchor = i === 0 || i === 3 ? "middle" : i < 3 ? "start" : "end";
+  const lblR = RADAR_R + 18;
+  const pctR = RADAR_R + 16;
+  return {
+    id: s.id, label: s.label, color: s.color,
+    ex: Math.round(RADAR_CX + RADAR_R * cos),
+    ey: Math.round(RADAR_CY + RADAR_R * sin),
+    lx: Math.round(RADAR_CX + lblR * cos),
+    ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 12 : 4)),
+    px: Math.round(RADAR_CX + pctR * cos),
+    py: Math.round(RADAR_CY + pctR * sin + (i === 0 ? 8 : i === 3 ? 22 : 14)),
+    anchor,
+  };
+});
 
-function hexGridR(R: number, pct: number) {
+function hexGrid(pct: number) {
   return Array.from({ length: 6 }, (_, i) => {
     const rad = ((-90 + i * 60) * Math.PI) / 180;
-    return `${Math.round(RADAR_CX + R * pct * Math.cos(rad))},${Math.round(RADAR_CY + R * pct * Math.sin(rad))}`;
+    return `${Math.round(RADAR_CX + RADAR_R * pct * Math.cos(rad))},${Math.round(RADAR_CY + RADAR_R * pct * Math.sin(rad))}`;
   }).join(" ");
 }
 
 /* ---- Tab classes (Tailwind-safe, no dynamic string interpolation) ---- */
 const tabClasses = {
-  B: { active: "border-cyan-600 text-cyan-700", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
-  C: { active: "border-violet-600 text-violet-700", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
-  D: { active: "border-rose-600 text-rose-700", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
+  B: { active: "border-cyan-600 text-cyan-700 bg-cyan-50 shadow-sm", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
+  C: { active: "border-violet-600 text-violet-700 bg-violet-50 shadow-sm", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
+  D: { active: "border-rose-600 text-rose-700 bg-rose-50 shadow-sm", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
 };
 ---
 
@@ -191,18 +217,20 @@ const tabClasses = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kunskapsträdet</title>
   </head>
-  <body class="font-sans bg-stone-50 text-gray-900">
+  <body class="font-sans bg-gradient-to-br from-stone-50 via-emerald-50/30 to-amber-50/20 text-gray-900 min-h-screen">
     <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-20">
+    <header class="bg-white/70 backdrop-blur-xl border-b border-white/40 sticky top-0 z-20 shadow-sm">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="text-2xl" aria-hidden="true">🌳</span>
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md shadow-emerald-200/50">
+            <span class="text-lg text-white" aria-hidden="true">🌳</span>
+          </div>
           <div>
-            <h1 class="text-lg font-bold text-stone-800 leading-tight">Kunskapsträdet</h1>
+            <h1 class="text-lg font-bold bg-gradient-to-r from-stone-800 to-stone-600 bg-clip-text text-transparent leading-tight">Kunskapsträdet</h1>
             <p class="text-xs text-stone-500" id="tree-header-subtitle">Kurs B &middot; Dina förmågor växer</p>
           </div>
         </div>
-        <a href="/" class="text-sm text-cyan-700 hover:text-cyan-900 font-medium">
+        <a href="/" class="text-sm text-emerald-700 hover:text-emerald-900 font-medium px-3 py-1.5 rounded-lg hover:bg-emerald-50 transition-all">
           Checklista &rarr;
         </a>
       </div>
@@ -210,12 +238,12 @@ const tabClasses = {
 
     <main class="max-w-5xl mx-auto px-4 py-6 space-y-8">
       <!-- Tab navigation -->
-      <nav class="flex justify-center gap-1 mb-6" role="tablist" aria-label="Välj kurs">
+      <nav class="flex justify-center gap-2 mb-6" role="tablist" aria-label="Välj kurs">
         {COURSES.map((course) => {
           const isActive = course === "B";
           return (
             <button
-              class={`tree-tab px-5 py-2 text-sm font-semibold rounded-t-lg border-b-2 transition-colors ${isActive ? tabClasses[course].active : tabClasses[course].inactive}`}
+              class={`tree-tab px-5 py-2.5 text-sm font-semibold rounded-xl border-2 transition-all duration-200 ${isActive ? tabClasses[course].active + " shadow-sm" : tabClasses[course].inactive}`}
               data-course={course}
               role="tab"
               aria-selected={isActive ? "true" : "false"}
@@ -234,58 +262,53 @@ const tabClasses = {
           <div id={`tree-panel-${course}`} class={`course-tree-panel ${course !== "B" ? "hidden" : ""}`} role="tabpanel">
             <!-- Radar chart for this course -->
             <section class="flex justify-center">
-              <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-5 w-full max-w-sm">
-                <h2 class="text-center text-sm font-semibold text-stone-600 mb-3">Min utveckling</h2>
+              <div class="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/40 border border-white/50 p-5 w-full max-w-sm ring-1 ring-stone-100/50">
+                <h2 class="text-center text-sm font-semibold text-stone-600 mb-3 tracking-wide uppercase">Min utveckling</h2>
                 <svg id={`radar-${course}`} viewBox="0 0 300 300" class="w-full">
                   {(() => {
-                    const sizes = RADAR_SIZES[course];
-                    const R = sizes.own;
-                    const axes = radarAxesPerCourse[course];
+                    const cfg = RADAR_CONFIG[course];
+                    const ringSteps = Array.from({ length: cfg.rings }, (_, i) => (i + 1) / cfg.rings);
                     return (
                       <Fragment>
-                        {/* Grid hexagons at own radius */}
-                        {[0.25, 0.5, 0.75, 1].map((pct) => (
-                          <polygon points={hexGridR(R, pct)} fill="none" stroke="#E7E5E4" stroke-width="1" />
+                        {/* Density grid — more rings for higher courses */}
+                        {ringSteps.map((pct) => (
+                          <polygon points={hexGrid(pct)} fill="none" stroke="#E7E5E4" stroke-width={pct === 1 ? "1.2" : "0.7"} opacity={pct === 1 ? "1" : "0.5"} />
                         ))}
 
-                        {/* Axis lines to own radius */}
-                        {axes.map((a: any) => (
+                        {/* Axis lines */}
+                        {radarAxes.map((a) => (
                           <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#D6D3D1" stroke-width="1" />
                         ))}
 
                         {/* Previous course boundary rings + baseline polygons */}
-                        {sizes.prev.map((prevR: number, pi: number) => {
-                          const prevCourse = pi === 0 ? "B" : "C";
-                          const color = sizes.prevColors[pi];
-                          const label = `Kurs ${prevCourse}`;
+                        {cfg.prev.map((prevCourse: string, pi: number) => {
+                          const color = PREV_COLORS[prevCourse];
+                          const boundaryPct = cfg.prevPcts[pi];
                           return (
                             <Fragment>
-                              {/* Boundary ring for previous course */}
                               <polygon
-                                points={hexGridR(prevR, 1)}
+                                points={hexGrid(boundaryPct)}
                                 fill="none"
                                 stroke={color}
                                 stroke-width="1.5"
                                 stroke-dasharray="6 4"
-                                opacity="0.45"
+                                opacity="0.5"
                               />
-                              {/* Small label on the boundary */}
                               <text
-                                x={RADAR_CX + prevR + 4}
+                                x={RADAR_CX + RADAR_R * boundaryPct + 4}
                                 y={RADAR_CY - 4}
                                 font-size="9"
                                 fill={color}
                                 opacity="0.7"
-                              >{label}</text>
-                              {/* Baseline completion polygon at previous course's radius */}
+                              >{`Kurs ${prevCourse}`}</text>
                               <polygon
                                 id={`radar-baseline-${prevCourse}-on-${course}`}
                                 points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
-                                fill={`${color}18`}
+                                fill={`${color}15`}
                                 stroke={color}
                                 stroke-width="1.5"
                                 stroke-linejoin="round"
-                                opacity="0.55"
+                                opacity="0.5"
                               />
                             </Fragment>
                           );
@@ -301,14 +324,14 @@ const tabClasses = {
                           stroke-linejoin="round"
                         />
 
-                        {/* Dots and labels at own radius */}
-                        {axes.map((a: any) => (
+                        {/* Dots and labels */}
+                        {radarAxes.map((a) => (
                           <circle id={`radar-dot-${a.id}-${course}`} cx={RADAR_CX} cy={RADAR_CY} r="5" fill={a.color} />
                         ))}
-                        {axes.map((a: any) => (
+                        {radarAxes.map((a) => (
                           <text x={a.lx} y={a.ly} text-anchor={a.anchor} font-size="12" font-weight="600" fill={a.color}>{a.label}</text>
                         ))}
-                        {axes.map((a: any) => (
+                        {radarAxes.map((a) => (
                           <text id={`pct-${a.id}-${course}`} x={a.px} y={a.py} text-anchor={a.anchor} font-size="10" fill="#A8A29E">0 %</text>
                         ))}
                       </Fragment>
@@ -354,7 +377,7 @@ const tabClasses = {
             <!-- Trees grid for this course -->
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               {allTreesData[course].map((tree: any) => (
-                <div class="tree-card bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden" data-skill={tree.id} data-course={course}>
+                <div class="tree-card bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden hover:shadow-xl hover:shadow-stone-200/40 transition-shadow duration-300" data-skill={tree.id} data-course={course}>
                   <!-- Card header -->
                   <div class="px-4 pt-4 pb-1 flex items-center justify-between">
                     <div class="flex items-center gap-2">
@@ -424,10 +447,14 @@ const tabClasses = {
                       class="crown-glow"
                     />
 
-                    <!-- Branches and leaves — parameterized leaf radius -->
+                    <!-- Branches, sub-branches, and leaves -->
                     {tree.leaves.map((leaf: any, i: number) => (
                       <g>
                         <path d={leaf.branch} stroke="#A88B5C" stroke-width="2" fill="none" stroke-linecap="round" class="branch-line" data-branch-for={leaf.id} />
+                        {/* Sub-branches for C (medium) and D (full) */}
+                        {leaf.subBranches.map((sb: string) => (
+                          <path d={sb} stroke="#C4A97D" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7" />
+                        ))}
                         <circle
                           cx={leaf.x} cy={leaf.y} r={String(tier.leafR)}
                           class="leaf-node"
@@ -451,7 +478,7 @@ const tabClasses = {
                   <!-- Goal text panel -->
                   <div class="px-4 pb-4 -mt-2">
                     <div
-                      class="goal-panel min-h-[2.75rem] bg-stone-50 rounded-lg px-3 py-2 text-sm text-stone-400 italic transition-all duration-300"
+                      class="goal-panel min-h-[2.75rem] bg-stone-50/80 backdrop-blur-sm rounded-xl px-3 py-2 text-sm text-stone-400 italic transition-all duration-300 border border-stone-100"
                       data-goal-panel={`${course}-${tree.id}`}
                     >
                       Tryck på en frukt för att se målet
@@ -571,7 +598,7 @@ const tabClasses = {
       }
     </style>
 
-    <script define:vars={{ allSkillsClient, allGoalTexts, RADAR_SIZES }}>
+    <script define:vars={{ allSkillsClient, allGoalTexts, RADAR_CONFIG, PREV_COLORS, RADAR_R }}>
       /* ---- Multi-course localStorage (shared with checklist) ---- */
       const COURSES = ["B", "C", "D"];
       const PREV_COURSES = { C: ["B"], D: ["B", "C"] };
@@ -598,11 +625,11 @@ const tabClasses = {
       const headerSubtitle = document.getElementById('tree-header-subtitle');
 
       const tabActiveClasses = {
-        B: ["border-cyan-600", "text-cyan-700"],
-        C: ["border-violet-600", "text-violet-700"],
-        D: ["border-rose-600", "text-rose-700"],
+        B: ["border-cyan-600", "text-cyan-700", "bg-cyan-50", "shadow-sm"],
+        C: ["border-violet-600", "text-violet-700", "bg-violet-50", "shadow-sm"],
+        D: ["border-rose-600", "text-rose-700", "bg-rose-50", "shadow-sm"],
       };
-      const tabInactiveClasses = ["border-transparent", "text-gray-400"];
+      const tabInactiveClasses = ["border-transparent", "text-gray-400", "hover:text-gray-600"];
 
       const backLink = document.querySelector('a[href="/"]');
 
@@ -740,13 +767,13 @@ const tabClasses = {
         if (crown) crown.style.opacity = String(0.3 + pct * 0.7);
       }
 
-      /* ---- Radar chart — concentric per course ---- */
-      const cx = 150, cy = 150;
+      /* ---- Radar chart — same size, density varies ---- */
+      const rcx = 150, rcy = 150;
 
-      function radarPoints(pcts, R) {
+      function radarPoints(pcts, maxR) {
         return pcts.map((p, i) => {
           const rad = ((-90 + i * 60) * Math.PI) / 180;
-          return `${Math.round(cx + R * p * Math.cos(rad))},${Math.round(cy + R * p * Math.sin(rad))}`;
+          return `${Math.round(rcx + maxR * p * Math.cos(rad))},${Math.round(rcy + maxR * p * Math.sin(rad))}`;
         }).join(' ');
       }
 
@@ -760,40 +787,37 @@ const tabClasses = {
       }
 
       function updateRadar(course) {
-        const sizes = RADAR_SIZES[course];
-        const R = sizes.own;
         const skills = allSkillsClient[course];
         if (!skills) return;
 
         const pcts = getCoursePcts(course);
 
         const polygon = document.getElementById(`radar-polygon-${course}`);
-        if (polygon) polygon.setAttribute('points', radarPoints(pcts, R));
+        if (polygon) polygon.setAttribute('points', radarPoints(pcts, RADAR_R));
 
         skills.forEach((s, i) => {
           const rad = ((-90 + i * 60) * Math.PI) / 180;
-          const r = R * pcts[i];
+          const r = RADAR_R * pcts[i];
           const dot = document.getElementById(`radar-dot-${s.id}-${course}`);
           if (dot) {
-            dot.setAttribute('cx', String(Math.round(cx + r * Math.cos(rad))));
-            dot.setAttribute('cy', String(Math.round(cy + r * Math.sin(rad))));
+            dot.setAttribute('cx', String(Math.round(rcx + r * Math.cos(rad))));
+            dot.setAttribute('cy', String(Math.round(rcy + r * Math.sin(rad))));
           }
           const el = document.getElementById(`pct-${s.id}-${course}`);
           if (el) el.textContent = `${Math.round(pcts[i] * 100)} %`;
         });
 
-        // Update baseline polygons from previous courses at their own (smaller) radii
         updateBaselineRadars(course);
       }
 
       function updateBaselineRadars(course) {
-        const sizes = RADAR_SIZES[course];
-        if (!sizes.prev || sizes.prev.length === 0) return;
+        const cfg = RADAR_CONFIG[course];
+        if (!cfg.prev || cfg.prev.length === 0) return;
 
-        sizes.prev.forEach((prevR, pi) => {
-          const prevCourse = pi === 0 ? "B" : "C";
+        cfg.prev.forEach((prevCourse, pi) => {
+          const boundaryR = RADAR_R * cfg.prevPcts[pi];
           const el = document.getElementById(`radar-baseline-${prevCourse}-on-${course}`);
-          if (el) el.setAttribute("points", radarPoints(getCoursePcts(prevCourse), prevR));
+          if (el) el.setAttribute("points", radarPoints(getCoursePcts(prevCourse), boundaryR));
         });
       }
 
