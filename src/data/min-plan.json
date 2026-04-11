@@ -1,16 +1,19 @@
 {
   "header": "Min plan — Vad ska jag träna?",
-  "intro": "Välj vad du ska träna. Kryssa i det du vill göra. Du kan också skriva egna mål.",
+  "intro": "Välj vad du ska träna. Kryssa i det du vill göra. Du kan också skriva egna mål. Kom ihåg: att lära sig ett nytt språk tar tid. Det är normalt att det känns svårt ibland — alla känner så! Det viktiga är att du hittar sätt som fungerar för dig och att du tränar lite varje dag.",
   "domains": [
     {
       "key": "lasforstaelse",
       "label": "Läsa",
       "items": [
-        { "id": "plan-lasa-01", "text": "läsa böcker på lätt svenska" },
-        { "id": "plan-lasa-02", "text": "läsa reklam från affärer" },
+        { "id": "plan-lasa-01", "text": "läsa böcker på lätt svenska (biblioteket har många böcker för sfi-elever)" },
+        { "id": "plan-lasa-02", "text": "läsa reklam från affärer och annonser" },
         { "id": "plan-lasa-03", "text": "läsa ord och meningar i svenska tidningar" },
         { "id": "plan-lasa-04", "text": "läsa information på anslagstavlor" },
-        { "id": "plan-lasa-05", "text": "läsa vad jag har skrivit på kursen" }
+        { "id": "plan-lasa-05", "text": "läsa vad jag har skrivit på kursen" },
+        { "id": "plan-lasa-06", "text": "läsa nyheter på lätt svenska", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska", "linkText": "SVT Nyheter på lätt svenska" },
+        { "id": "plan-lasa-07", "text": "lyssna på ljudbok med text via Inläsningstjänst (lund.se/skolportalen)" },
+        { "id": "plan-lasa-08", "text": "öva svenska i Lunis (digitalt läromedel) hemma" }
       ]
     },
     {
@@ -18,21 +21,25 @@
       "label": "Skriva",
       "items": [
         { "id": "plan-skriva-01", "text": "skriva dagbok varje dag" },
-        { "id": "plan-skriva-02", "text": "skriva fem nya ord varje vecka" },
+        { "id": "plan-skriva-02", "text": "skriva fem nya ord varje vecka i min ordbok" },
         { "id": "plan-skriva-03", "text": "skriva fem meningar varje vecka" },
         { "id": "plan-skriva-04", "text": "kopiera en text varje vecka" },
-        { "id": "plan-skriva-05", "text": "skriva ord på mitt förstaspråk och översätta till svenska" }
+        { "id": "plan-skriva-05", "text": "skriva ord på mitt förstaspråk och översätta till svenska" },
+        { "id": "plan-skriva-06", "text": "sätta en timer och skriva en text utan stöd — sen fråga AI eller läraren om feedback" },
+        { "id": "plan-skriva-07", "text": "studera nya ord från dagens lektion och skriva dem i min ordbok" }
       ]
     },
     {
       "key": "horforstaelse",
       "label": "Höra",
       "items": [
-        { "id": "plan-hora-01", "text": "titta och lyssna på svensk tv" },
-        { "id": "plan-hora-02", "text": "lyssna på svensk radio varje dag" },
+        { "id": "plan-hora-01", "text": "titta på svenska program på SVT Play eller UR Play", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi", "linkText": "UR Play — program för sfi" },
+        { "id": "plan-hora-02", "text": "lyssna på Radio Sweden på lätt svenska", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska", "linkText": "Radio Sweden på lätt svenska" },
         { "id": "plan-hora-03", "text": "lyssna på personer som pratar svenska" },
         { "id": "plan-hora-04", "text": "lyssna på hörförståelser på nätet" },
-        { "id": "plan-hora-05", "text": "lyssna på information, till exempel på en tågstation" }
+        { "id": "plan-hora-05", "text": "lyssna på information, till exempel på en tågstation" },
+        { "id": "plan-hora-06", "text": "lyssna på ljudbok med text via Inläsningstjänst (lund.se/skolportalen)" },
+        { "id": "plan-hora-07", "text": "titta på nyheter på lätt svenska", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska", "linkText": "SVT Nyheter" }
       ]
     },
     {
@@ -42,9 +49,36 @@
         { "id": "plan-tala-01", "text": "prata svenska med personal i affärer" },
         { "id": "plan-tala-02", "text": "prata svenska med mig själv när jag är ensam" },
         { "id": "plan-tala-03", "text": "säga två nya meningar varje vecka" },
-        { "id": "plan-tala-04", "text": "gå till ett språkcafé och prata svenska" },
-        { "id": "plan-tala-05", "text": "fråga en person om något på svenska" }
+        { "id": "plan-tala-04", "text": "gå till Språkcafé med Interkultur (torsdagar 10:30–13:30)" },
+        { "id": "plan-tala-05", "text": "fråga en person om något på svenska" },
+        { "id": "plan-tala-06", "text": "gå till ett språkcafé i Lunds kommun", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe", "linkText": "Språkcaféer i Lund" },
+        { "id": "plan-tala-07", "text": "öva uttal framför spegeln — lyssna och repetera ord många gånger" }
+      ]
+    },
+    {
+      "key": "digital",
+      "label": "Digital kompetens",
+      "items": [
+        { "id": "plan-digital-01", "text": "kunna använda datorn och mobilen för skolarbete" },
+        { "id": "plan-digital-02", "text": "kunna läsa och skriva på Google Classroom" },
+        { "id": "plan-digital-03", "text": "öva svenska i Lunis hemma" },
+        { "id": "plan-digital-04", "text": "använda AI som stöd — ställa frågor och få hjälp med texter" },
+        { "id": "plan-digital-05", "text": "hitta information på lund.se/skolportalen" }
       ]
     }
-  ]
+  ],
+  "resources": {
+    "header": "Resurser och stöd",
+    "items": [
+      { "text": "Studiestöd på Komvux: Läsa, skriva, höra i Studion kl. 12:00–14:00 (sfi 1 & 2), onsdagar 11:00–12:00 (sfi 3)" },
+      { "text": "Språkcafé med Interkultur — torsdagar 10:30–13:30" },
+      { "text": "Språkcaféer i Lunds kommun", "link": "https://lund.se/omsorg-och-stod/stod-for-nyanlanda/ova-pa-svenska---sprakkafe" },
+      { "text": "Nyheter på lätt svenska (SVT)", "link": "https://www.svtplay.se/nyheter-pa-latt-svenska" },
+      { "text": "Radio Sweden på lätt svenska", "link": "https://www.sverigesradio.se/radioswedenpalattsvenska" },
+      { "text": "UR Play — program för sfi", "link": "https://urplay.se/sok?include_pages=true&is_audio_described=false&is_sign_language_interpreted=false&language[]=Svenska&singles_and_series=false&typical_age_range[]=sfi" },
+      { "text": "Ljudböcker med text via Inläsningstjänst (lund.se/skolportalen)" },
+      { "text": "Lunis — digitalt läromedel (tillgängligt hemma)" },
+      { "text": "Biblioteket — böcker för vuxna sfi-elever" }
+    ]
+  }
 }

@@ -8,27 +8,57 @@ const domainColorMap: Record<string, string> = {
   "lasforstaelse": "bg-domain-lasa",
   "muntlig-interaktion": "bg-domain-prata",
   "skriftlig-fardighet": "bg-domain-skriva",
+  "digital": "bg-teal-600",
+};
+
+const domainIconMap: Record<string, string> = {
+  "horforstaelse": "Ear",
+  "lasforstaelse": "BookOpen",
+  "muntlig-interaktion": "MessagesSquare",
+  "skriftlig-fardighet": "PenLine",
+  "digital": "Monitor",
 };
 ---
 
 <div id="panel-plan" class="course-panel pt-4 pb-8 hidden">
   <h2 class="text-2xl font-bold text-gray-800 px-4 mb-1">{minPlan.header}</h2>
-  <p class="text-gray-600 px-4 mb-6">{minPlan.intro}</p>
+  <p class="text-gray-600 px-4 mb-6 text-sm leading-relaxed">{minPlan.intro}</p>
 
   {minPlan.domains.map((domain) => {
-    const tokenData = tokens.domains[domain.key];
-    if (!tokenData) return null;
+    const icon = domainIconMap[domain.key] || "BookOpen";
+    const color = domainColorMap[domain.key] || "bg-gray-600";
     return (
       <MinPlanSection
         domainKey={domain.key}
         label={domain.label}
-        icon={tokenData.icon}
-        colorClass={domainColorMap[domain.key]}
+        icon={icon}
+        colorClass={color}
         items={domain.items}
         customRowCount={2}
       />
     );
   })}
+
+  {minPlan.resources && (
+    <section class="mb-6">
+      <div class="bg-gray-700 rounded-t-lg px-4 py-3">
+        <h2 class="text-white font-semibold text-lg">{minPlan.resources.header}</h2>
+      </div>
+      <div class="bg-white rounded-b-lg border border-t-0 border-gray-200">
+        {minPlan.resources.items.map((item) => (
+          <div class="py-2 px-4 border-b border-gray-100 last:border-b-0">
+            {item.link ? (
+              <a href={item.link} target="_blank" rel="noopener" class="text-blue-600 underline hover:text-blue-800 text-sm">
+                {item.text} ↗
+              </a>
+            ) : (
+              <p class="text-sm text-gray-700">{item.text}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
 
   <div class="px-4 pt-2">
     <button
