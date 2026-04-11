@@ -58,6 +58,12 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
       }
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Sync tree link with active course
+    const treeLink = document.getElementById('tree-link');
+    if (treeLink && course !== 'plan' && course !== 'resurser') {
+      treeLink.setAttribute('href', `/trad/?course=${course}`);
+    }
   }
 
   tabs.forEach(tab => {
@@ -65,6 +71,12 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
       switchTab(tab.dataset.course);
     });
   });
+
+  // Read course from URL param (e.g. coming back from tree page)
+  const urlCourse = new URLSearchParams(window.location.search).get('course');
+  if (urlCourse && ['B', 'C', 'D'].includes(urlCourse)) {
+    switchTab(urlCourse);
+  }
 
   // --- 2. localStorage Persistence ---
   const STORAGE_KEY = (course) => `sfi-checklist-${course}`;

@@ -229,6 +229,43 @@ const tabClasses = {
                   {radarAxes.map((a) => (
                     <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#D6D3D1" stroke-width="1" />
                   ))}
+                  {/* Baseline radar polygons from previous courses */}
+                  {course === "C" && (
+                    <polygon
+                      id="radar-baseline-B-on-C"
+                      points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                      fill="rgba(6,182,212,0.08)"
+                      stroke="#06B6D4"
+                      stroke-width="1.5"
+                      stroke-dasharray="4 3"
+                      stroke-linejoin="round"
+                      opacity="0.5"
+                    />
+                  )}
+                  {course === "D" && (
+                    <Fragment>
+                      <polygon
+                        id="radar-baseline-B-on-D"
+                        points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                        fill="rgba(6,182,212,0.06)"
+                        stroke="#06B6D4"
+                        stroke-width="1"
+                        stroke-dasharray="4 3"
+                        stroke-linejoin="round"
+                        opacity="0.4"
+                      />
+                      <polygon
+                        id="radar-baseline-C-on-D"
+                        points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                        fill="rgba(139,92,246,0.08)"
+                        stroke="#8B5CF6"
+                        stroke-width="1.5"
+                        stroke-dasharray="4 3"
+                        stroke-linejoin="round"
+                        opacity="0.5"
+                      />
+                    </Fragment>
+                  )}
                   <polygon
                     id={`radar-polygon-${course}`}
                     points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
@@ -249,6 +286,39 @@ const tabClasses = {
                 </svg>
               </div>
             </section>
+
+            {/* "Jag har klarat" buttons for inheriting previous course completion */}
+            {course === "C" && (
+              <div id="inherit-B-on-C" class="hidden flex justify-center mt-4">
+                <button
+                  class="inherit-btn px-4 py-2 text-sm font-medium rounded-lg border-2 border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100 transition-colors"
+                  data-fill-course="B"
+                  data-on-course="C"
+                >
+                  Jag har klarat Kurs B — fyll i alla mal
+                </button>
+              </div>
+            )}
+            {course === "D" && (
+              <div id="inherit-on-D" class="hidden flex justify-center gap-3 mt-4 flex-wrap">
+                <button
+                  class="inherit-btn px-4 py-2 text-sm font-medium rounded-lg border-2 border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100 transition-colors"
+                  data-fill-course="B"
+                  data-on-course="D"
+                  id="inherit-B-on-D-btn"
+                >
+                  Jag har klarat Kurs B
+                </button>
+                <button
+                  class="inherit-btn px-4 py-2 text-sm font-medium rounded-lg border-2 border-violet-300 bg-violet-50 text-violet-800 hover:bg-violet-100 transition-colors"
+                  data-fill-course="C"
+                  data-on-course="D"
+                  id="inherit-C-on-D-btn"
+                >
+                  Jag har klarat Kurs C
+                </button>
+              </div>
+            )}
 
             <!-- Trees grid for this course -->
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
@@ -473,6 +543,7 @@ const tabClasses = {
     <script define:vars={{ allSkillsClient, allGoalTexts }}>
       /* ---- Multi-course localStorage (shared with checklist) ---- */
       const COURSES = ["B", "C", "D"];
+      const PREV_COURSES = { C: ["B"], D: ["B", "C"] };
       const states = {};
 
       function loadState(course) {
@@ -484,8 +555,12 @@ const tabClasses = {
 
       COURSES.forEach(c => { states[c] = loadState(c); });
 
+      /* ---- Read course from URL param ---- */
+      const urlCourse = new URLSearchParams(window.location.search).get("course");
+      const initialCourse = (urlCourse && COURSES.includes(urlCourse)) ? urlCourse : "B";
+
       /* ---- Tab switching ---- */
-      let activeCourse = "B";
+      let activeCourse = initialCourse;
 
       const treeTabs = document.querySelectorAll('.tree-tab');
       const treePanels = document.querySelectorAll('.course-tree-panel');
@@ -497,6 +572,8 @@ const tabClasses = {
         D: ["border-rose-600", "text-rose-700"],
       };
       const tabInactiveClasses = ["border-transparent", "text-gray-400"];
+
+      const backLink = document.querySelector('a[href="/"]');
 
       function switchTreeTab(course) {
         activeCourse = course;
@@ -520,6 +597,14 @@ const tabClasses = {
         if (headerSubtitle) {
           headerSubtitle.textContent = `Kurs ${course} \u00B7 Dina f\u00F6rm\u00E5gor v\u00E4xer`;
         }
+
+        // Sync back-link with active course
+        if (backLink) {
+          backLink.setAttribute('href', `/?course=${course}`);
+        }
+
+        // Show/hide inherit buttons based on previous course completion
+        updateInheritButtons();
       }
 
       treeTabs.forEach(t => {
@@ -624,31 +709,36 @@ const tabClasses = {
         if (crown) crown.style.opacity = String(0.3 + pct * 0.7);
       }
 
-      /* ---- Radar chart — per course ---- */
-      function updateRadar(course) {
-        const maxR = 110;
-        const cx = 150, cy = 150;
-        const skills = allSkillsClient[course];
-        if (!skills) return;
+      /* ---- Radar chart — per course with baseline polygons ---- */
+      function radarPoints(pcts) {
+        const maxR = 110, cx = 150, cy = 150;
+        return pcts.map((p, i) => {
+          const rad = ((-90 + i * 60) * Math.PI) / 180;
+          return `${Math.round(cx + maxR * p * Math.cos(rad))},${Math.round(cy + maxR * p * Math.sin(rad))}`;
+        }).join(' ');
+      }
 
-        const pcts = skills.map(s => {
+      function getCoursePcts(course) {
+        const skills = allSkillsClient[course];
+        if (!skills) return [0,0,0,0,0,0];
+        return skills.map(s => {
           const checked = s.goalIds.filter(id => states[course][id]).length;
           return checked / s.goalIds.length;
         });
+      }
 
-        const pts = pcts.map((p, i) => {
-          const angleDeg = -90 + i * 60;
-          const rad = (angleDeg * Math.PI) / 180;
-          const r = maxR * p;
-          return `${Math.round(cx + r * Math.cos(rad))},${Math.round(cy + r * Math.sin(rad))}`;
-        });
+      function updateRadar(course) {
+        const maxR = 110, cx = 150, cy = 150;
+        const skills = allSkillsClient[course];
+        if (!skills) return;
+
+        const pcts = getCoursePcts(course);
 
         const polygon = document.getElementById(`radar-polygon-${course}`);
-        if (polygon) polygon.setAttribute('points', pts.join(' '));
+        if (polygon) polygon.setAttribute('points', radarPoints(pcts));
 
         skills.forEach((s, i) => {
-          const angleDeg = -90 + i * 60;
-          const rad = (angleDeg * Math.PI) / 180;
+          const rad = ((-90 + i * 60) * Math.PI) / 180;
           const r = maxR * pcts[i];
           const dot = document.getElementById(`radar-dot-${s.id}-${course}`);
           if (dot) {
@@ -658,7 +748,93 @@ const tabClasses = {
           const el = document.getElementById(`pct-${s.id}-${course}`);
           if (el) el.textContent = `${Math.round(pcts[i] * 100)} %`;
         });
+
+        // Update baseline polygons from previous courses
+        updateBaselineRadars(course);
       }
+
+      function updateBaselineRadars(course) {
+        if (course === "C") {
+          const el = document.getElementById("radar-baseline-B-on-C");
+          if (el) el.setAttribute("points", radarPoints(getCoursePcts("B")));
+        } else if (course === "D") {
+          const elB = document.getElementById("radar-baseline-B-on-D");
+          if (elB) elB.setAttribute("points", radarPoints(getCoursePcts("B")));
+          const elC = document.getElementById("radar-baseline-C-on-D");
+          if (elC) elC.setAttribute("points", radarPoints(getCoursePcts("C")));
+        }
+      }
+
+      /* ---- "Jag har klarat" inherit buttons ---- */
+      function isCourseFull(course) {
+        const skills = allSkillsClient[course];
+        if (!skills) return false;
+        return skills.every(s => s.goalIds.every(id => states[course][id]));
+      }
+
+      function updateInheritButtons() {
+        // Kurs C: show "klarat B" button if B is not fully checked
+        const inheritC = document.getElementById("inherit-B-on-C");
+        if (inheritC) {
+          inheritC.classList.toggle("hidden", isCourseFull("B"));
+        }
+
+        // Kurs D: show container if either B or C not full
+        const inheritD = document.getElementById("inherit-on-D");
+        if (inheritD) {
+          const bFull = isCourseFull("B");
+          const cFull = isCourseFull("C");
+          inheritD.classList.toggle("hidden", bFull && cFull);
+          const btnB = document.getElementById("inherit-B-on-D-btn");
+          if (btnB) btnB.classList.toggle("hidden", bFull);
+          const btnC = document.getElementById("inherit-C-on-D-btn");
+          if (btnC) btnC.classList.toggle("hidden", cFull);
+        }
+      }
+
+      function fillCourse(course) {
+        const skills = allSkillsClient[course];
+        if (!skills) return;
+        skills.forEach(s => {
+          s.goalIds.forEach(id => { states[course][id] = true; });
+        });
+        saveState(course, states[course]);
+
+        // Update visual state for filled course
+        const panel = document.getElementById(`tree-panel-${course}`);
+        if (panel) {
+          panel.querySelectorAll('.leaf-node').forEach(leaf => {
+            const id = leaf.dataset.goalId;
+            leaf.setAttribute('data-checked', 'true');
+            leaf.setAttribute('aria-checked', 'true');
+            const num = panel.querySelector(`[data-num-for="${id}"]`);
+            if (num) num.setAttribute('fill', 'white');
+            const branch = panel.querySelector(`[data-branch-for="${id}"]`);
+            if (branch) branch.setAttribute('data-checked', 'true');
+          });
+        }
+
+        skills.forEach(s => {
+          updateProgress(course, s.id);
+          updateCrown(course, s.id);
+        });
+        updateRadar(course);
+
+        // Also update baseline radars on courses that depend on this one
+        if (course === "B") { updateBaselineRadars("C"); updateBaselineRadars("D"); }
+        if (course === "C") { updateBaselineRadars("D"); }
+
+        updateInheritButtons();
+      }
+
+      document.querySelectorAll('.inherit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fillC = btn.dataset.fillCourse;
+          if (confirm(`Alla mal i Kurs ${fillC} markeras som avklarade. Fortsatt?`)) {
+            fillCourse(fillC);
+          }
+        });
+      });
 
       /* ---- Initial render — all courses ---- */
       COURSES.forEach(course => {
@@ -670,6 +846,12 @@ const tabClasses = {
         });
         updateRadar(course);
       });
+
+      // Switch to initial course (from URL param or default B)
+      if (initialCourse !== "B") {
+        switchTreeTab(initialCourse);
+      }
+      updateInheritButtons();
     </script>
   </body>
 </html>
