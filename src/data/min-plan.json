@@ -71,7 +71,7 @@
   "resources": {
     "header": "Resurser och stöd",
     "intro": "Lärcentrum Kompassen — Studiestöd i Studion: kl. 12:00–14:00 (sfi 1 & 2), onsdagar 11:00–12:00 (sfi 3). Språkcafé med Interkultur — torsdagar 10:30–13:30.",
-    "calendar": "https://calendar.google.com/calendar/u/0/embed?ctz=Europe/Stockholm&src=komvux.info@skola.lund.se",
+    "calendar": "https://calendar.google.com/calendar/u/0/embed?mode=AGENDA&hl=sv&ctz=Europe/Stockholm&src=komvux.info@skola.lund.se",
     "items": [
       { "icon": "GraduationCap", "text": "Lärcentrum Kompassen", "desc": "Här kan du få extra hjälp med svenska. Lärare hjälper dig med läsa, skriva och höra.", "link": "https://sites.google.com/skola.lund.se/lrcentruminprogress200507/?usp=sharing", "school": true },
       { "icon": "BookMarked", "text": "Elevhandboken", "desc": "Viktig information om din skola. Regler, kontakter och hur saker fungerar på Komvux.", "link": "https://sites.google.com/skola.lund.se/elevhandbokenkomvux/startsida", "school": true },
