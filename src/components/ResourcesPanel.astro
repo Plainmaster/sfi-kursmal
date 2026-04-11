@@ -50,8 +50,27 @@ const openItems = resources.items.filter(i => !i.school);
         <Lock size={16} class="text-indigo-600" />
         <p class="text-sm font-bold text-gray-700">Skolans verktyg</p>
       </div>
-      <p class="text-xs text-gray-500 mb-3 bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-2">
-        Du måste vara inloggad med ditt skolkonto (@skola.lund.se) för att öppna dessa länkar. Logga in i Chrome med din skolmail först.
+
+      <a
+        href="https://lund.se/skolportalen"
+        target="_blank"
+        rel="noopener"
+        class="block mb-3 rounded-lg border-2 border-indigo-300 bg-indigo-50 hover:bg-indigo-100 transition-all p-4"
+      >
+        <div class="flex items-center gap-3">
+          <span class="shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 text-white">
+            <Globe size={24} />
+          </span>
+          <div>
+            <p class="text-base font-bold text-indigo-800">Skolportalen — Logga in här</p>
+            <p class="text-sm text-indigo-600">lund.se/skolportalen → Elev → Välj ditt verktyg</p>
+          </div>
+        </div>
+        <p class="text-xs text-indigo-500 mt-2 ml-15">Använd ditt skolkonto (@skola.lund.se). Här hittar du Inläsningstjänst, Lunis och mer.</p>
+      </a>
+
+      <p class="text-xs text-gray-500 mb-3">
+        Länkarna nedan kräver att du är inloggad med ditt skolkonto i Chrome.
       </p>
       <div class="space-y-3">
         {schoolItems.map((item) => {
