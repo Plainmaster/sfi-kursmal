@@ -31,6 +31,14 @@
 - [x] **DESIGN-05**: Enkel svenska anpassad till respektive kursniva
 - [x] **DESIGN-06**: Utskriftsvy via @media print for klassrumsanvandning
 
+### Kunskapstrad (Phase 04.1)
+
+- [ ] **TREE-01**: Kunskapstradssidan stodjer alla tre kurser (B, C, D) med kursspecifika tradpaneler
+- [ ] **TREE-02**: Fliknavigering mellan kurser pa tradssidan med kursfarger (cyan/violet/rose)
+- [ ] **TREE-03**: Visuell traddifferentiering per CEFR-niva: B=planta (liten), C=medeltrad, D=fullt trad (stor)
+- [ ] **TREE-04**: Separat radardiagram per kurs som visar fardighetsframsteg for den kursen
+- [ ] **TREE-05**: Delad localStorage-state mellan checklistan och tradssidan via befintliga sfi-checklist-{kurs}-nycklar
+
 ## v2 Requirements
 
 ### Tillganglighet och Utvidgning
@@ -74,12 +82,17 @@
 | DESIGN-04 | Phase 2 | Complete |
 | INTER-03 | Phase 3 | Complete |
 | DESIGN-06 | Phase 3 | Complete |
+| TREE-01 | Phase 04.1 | Planned |
+| TREE-02 | Phase 04.1 | Planned |
+| TREE-03 | Phase 04.1 | Planned |
+| TREE-04 | Phase 04.1 | Planned |
+| TREE-05 | Phase 04.1 | Planned |
 
 **Coverage:**
-- v1 requirements: 17 total
-- Mapped to phases: 17
+- v1 requirements: 22 total
+- Mapped to phases: 22
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-10*
-*Last updated: 2026-04-10 -- traceability updated after roadmap creation*
+*Last updated: 2026-04-11 -- TREE requirements added for Phase 04.1*
