@@ -134,31 +134,45 @@ for (const course of COURSES) {
   }));
 }
 
-/* ---- Radar layout (6-axis hexagon) — uses Kurs B skill labels/colors (same across courses) ---- */
-const RADAR_CX = 150, RADAR_CY = 150, RADAR_R = 110;
-const radarAxes = allSkills["B"].map((s: any, i: number) => {
-  const angleDeg = -90 + i * 60;
-  const rad = (angleDeg * Math.PI) / 180;
-  const cos = Math.cos(rad), sin = Math.sin(rad);
-  const anchor = i === 0 || i === 3 ? "middle" : i < 3 ? "start" : "end";
-  const lblR = RADAR_R + 18;
-  const pctR = RADAR_R + 16;
-  return {
-    id: s.id, label: s.label, color: s.color,
-    ex: Math.round(RADAR_CX + RADAR_R * cos),
-    ey: Math.round(RADAR_CY + RADAR_R * sin),
-    lx: Math.round(RADAR_CX + lblR * cos),
-    ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 12 : 4)),
-    px: Math.round(RADAR_CX + pctR * cos),
-    py: Math.round(RADAR_CY + pctR * sin + (i === 0 ? 8 : i === 3 ? 22 : 14)),
-    anchor,
-  };
-});
+/* ---- Radar layout — concentric per course (B small, C medium, D large) ---- */
+const RADAR_CX = 150, RADAR_CY = 150;
+const RADAR_SIZES = {
+  B: { own: 65, prev: [] as number[], prevColors: [] as string[] },
+  C: { own: 90, prev: [65], prevColors: ["#06B6D4"] },
+  D: { own: 110, prev: [65, 90], prevColors: ["#06B6D4", "#8B5CF6"] },
+} as const;
 
-function hexGrid(pct: number) {
+function makeRadarAxes(R: number) {
+  return allSkills["B"].map((s: any, i: number) => {
+    const angleDeg = -90 + i * 60;
+    const rad = (angleDeg * Math.PI) / 180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    const anchor = i === 0 || i === 3 ? "middle" : i < 3 ? "start" : "end";
+    const lblR = R + 18;
+    const pctR = R + 16;
+    return {
+      id: s.id, label: s.label, color: s.color,
+      ex: Math.round(RADAR_CX + R * cos),
+      ey: Math.round(RADAR_CY + R * sin),
+      lx: Math.round(RADAR_CX + lblR * cos),
+      ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 12 : 4)),
+      px: Math.round(RADAR_CX + pctR * cos),
+      py: Math.round(RADAR_CY + pctR * sin + (i === 0 ? 8 : i === 3 ? 22 : 14)),
+      anchor,
+    };
+  });
+}
+
+const radarAxesPerCourse = {
+  B: makeRadarAxes(RADAR_SIZES.B.own),
+  C: makeRadarAxes(RADAR_SIZES.C.own),
+  D: makeRadarAxes(RADAR_SIZES.D.own),
+};
+
+function hexGridR(R: number, pct: number) {
   return Array.from({ length: 6 }, (_, i) => {
     const rad = ((-90 + i * 60) * Math.PI) / 180;
-    return `${Math.round(RADAR_CX + RADAR_R * pct * Math.cos(rad))},${Math.round(RADAR_CY + RADAR_R * pct * Math.sin(rad))}`;
+    return `${Math.round(RADAR_CX + R * pct * Math.cos(rad))},${Math.round(RADAR_CY + R * pct * Math.sin(rad))}`;
   }).join(" ");
 }
 
@@ -223,66 +237,83 @@ const tabClasses = {
               <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-5 w-full max-w-sm">
                 <h2 class="text-center text-sm font-semibold text-stone-600 mb-3">Min utveckling</h2>
                 <svg id={`radar-${course}`} viewBox="0 0 300 300" class="w-full">
-                  {[0.25, 0.5, 0.75, 1].map((pct) => (
-                    <polygon points={hexGrid(pct)} fill="none" stroke="#E7E5E4" stroke-width="1" />
-                  ))}
-                  {radarAxes.map((a) => (
-                    <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#D6D3D1" stroke-width="1" />
-                  ))}
-                  {/* Baseline radar polygons from previous courses */}
-                  {course === "C" && (
-                    <polygon
-                      id="radar-baseline-B-on-C"
-                      points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
-                      fill="rgba(6,182,212,0.08)"
-                      stroke="#06B6D4"
-                      stroke-width="1.5"
-                      stroke-dasharray="4 3"
-                      stroke-linejoin="round"
-                      opacity="0.5"
-                    />
-                  )}
-                  {course === "D" && (
-                    <Fragment>
-                      <polygon
-                        id="radar-baseline-B-on-D"
-                        points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
-                        fill="rgba(6,182,212,0.06)"
-                        stroke="#06B6D4"
-                        stroke-width="1"
-                        stroke-dasharray="4 3"
-                        stroke-linejoin="round"
-                        opacity="0.4"
-                      />
-                      <polygon
-                        id="radar-baseline-C-on-D"
-                        points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
-                        fill="rgba(139,92,246,0.08)"
-                        stroke="#8B5CF6"
-                        stroke-width="1.5"
-                        stroke-dasharray="4 3"
-                        stroke-linejoin="round"
-                        opacity="0.5"
-                      />
-                    </Fragment>
-                  )}
-                  <polygon
-                    id={`radar-polygon-${course}`}
-                    points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
-                    fill="rgba(34,197,94,0.12)"
-                    stroke="#22C55E"
-                    stroke-width="2.5"
-                    stroke-linejoin="round"
-                  />
-                  {radarAxes.map((a) => (
-                    <circle id={`radar-dot-${a.id}-${course}`} cx={RADAR_CX} cy={RADAR_CY} r="5" fill={a.color} />
-                  ))}
-                  {radarAxes.map((a) => (
-                    <text x={a.lx} y={a.ly} text-anchor={a.anchor} font-size="12" font-weight="600" fill={a.color}>{a.label}</text>
-                  ))}
-                  {radarAxes.map((a) => (
-                    <text id={`pct-${a.id}-${course}`} x={a.px} y={a.py} text-anchor={a.anchor} font-size="10" fill="#A8A29E">0 %</text>
-                  ))}
+                  {(() => {
+                    const sizes = RADAR_SIZES[course];
+                    const R = sizes.own;
+                    const axes = radarAxesPerCourse[course];
+                    return (
+                      <Fragment>
+                        {/* Grid hexagons at own radius */}
+                        {[0.25, 0.5, 0.75, 1].map((pct) => (
+                          <polygon points={hexGridR(R, pct)} fill="none" stroke="#E7E5E4" stroke-width="1" />
+                        ))}
+
+                        {/* Axis lines to own radius */}
+                        {axes.map((a: any) => (
+                          <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#D6D3D1" stroke-width="1" />
+                        ))}
+
+                        {/* Previous course boundary rings + baseline polygons */}
+                        {sizes.prev.map((prevR: number, pi: number) => {
+                          const prevCourse = pi === 0 ? "B" : "C";
+                          const color = sizes.prevColors[pi];
+                          const label = `Kurs ${prevCourse}`;
+                          return (
+                            <Fragment>
+                              {/* Boundary ring for previous course */}
+                              <polygon
+                                points={hexGridR(prevR, 1)}
+                                fill="none"
+                                stroke={color}
+                                stroke-width="1.5"
+                                stroke-dasharray="6 4"
+                                opacity="0.45"
+                              />
+                              {/* Small label on the boundary */}
+                              <text
+                                x={RADAR_CX + prevR + 4}
+                                y={RADAR_CY - 4}
+                                font-size="9"
+                                fill={color}
+                                opacity="0.7"
+                              >{label}</text>
+                              {/* Baseline completion polygon at previous course's radius */}
+                              <polygon
+                                id={`radar-baseline-${prevCourse}-on-${course}`}
+                                points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                                fill={`${color}18`}
+                                stroke={color}
+                                stroke-width="1.5"
+                                stroke-linejoin="round"
+                                opacity="0.55"
+                              />
+                            </Fragment>
+                          );
+                        })}
+
+                        {/* Current course completion polygon */}
+                        <polygon
+                          id={`radar-polygon-${course}`}
+                          points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                          fill="rgba(34,197,94,0.12)"
+                          stroke="#22C55E"
+                          stroke-width="2.5"
+                          stroke-linejoin="round"
+                        />
+
+                        {/* Dots and labels at own radius */}
+                        {axes.map((a: any) => (
+                          <circle id={`radar-dot-${a.id}-${course}`} cx={RADAR_CX} cy={RADAR_CY} r="5" fill={a.color} />
+                        ))}
+                        {axes.map((a: any) => (
+                          <text x={a.lx} y={a.ly} text-anchor={a.anchor} font-size="12" font-weight="600" fill={a.color}>{a.label}</text>
+                        ))}
+                        {axes.map((a: any) => (
+                          <text id={`pct-${a.id}-${course}`} x={a.px} y={a.py} text-anchor={a.anchor} font-size="10" fill="#A8A29E">0 %</text>
+                        ))}
+                      </Fragment>
+                    );
+                  })()}
                 </svg>
               </div>
             </section>
@@ -540,7 +571,7 @@ const tabClasses = {
       }
     </style>
 
-    <script define:vars={{ allSkillsClient, allGoalTexts }}>
+    <script define:vars={{ allSkillsClient, allGoalTexts, RADAR_SIZES }}>
       /* ---- Multi-course localStorage (shared with checklist) ---- */
       const COURSES = ["B", "C", "D"];
       const PREV_COURSES = { C: ["B"], D: ["B", "C"] };
@@ -709,12 +740,13 @@ const tabClasses = {
         if (crown) crown.style.opacity = String(0.3 + pct * 0.7);
       }
 
-      /* ---- Radar chart — per course with baseline polygons ---- */
-      function radarPoints(pcts) {
-        const maxR = 110, cx = 150, cy = 150;
+      /* ---- Radar chart — concentric per course ---- */
+      const cx = 150, cy = 150;
+
+      function radarPoints(pcts, R) {
         return pcts.map((p, i) => {
           const rad = ((-90 + i * 60) * Math.PI) / 180;
-          return `${Math.round(cx + maxR * p * Math.cos(rad))},${Math.round(cy + maxR * p * Math.sin(rad))}`;
+          return `${Math.round(cx + R * p * Math.cos(rad))},${Math.round(cy + R * p * Math.sin(rad))}`;
         }).join(' ');
       }
 
@@ -728,18 +760,19 @@ const tabClasses = {
       }
 
       function updateRadar(course) {
-        const maxR = 110, cx = 150, cy = 150;
+        const sizes = RADAR_SIZES[course];
+        const R = sizes.own;
         const skills = allSkillsClient[course];
         if (!skills) return;
 
         const pcts = getCoursePcts(course);
 
         const polygon = document.getElementById(`radar-polygon-${course}`);
-        if (polygon) polygon.setAttribute('points', radarPoints(pcts));
+        if (polygon) polygon.setAttribute('points', radarPoints(pcts, R));
 
         skills.forEach((s, i) => {
           const rad = ((-90 + i * 60) * Math.PI) / 180;
-          const r = maxR * pcts[i];
+          const r = R * pcts[i];
           const dot = document.getElementById(`radar-dot-${s.id}-${course}`);
           if (dot) {
             dot.setAttribute('cx', String(Math.round(cx + r * Math.cos(rad))));
@@ -749,20 +782,19 @@ const tabClasses = {
           if (el) el.textContent = `${Math.round(pcts[i] * 100)} %`;
         });
 
-        // Update baseline polygons from previous courses
+        // Update baseline polygons from previous courses at their own (smaller) radii
         updateBaselineRadars(course);
       }
 
       function updateBaselineRadars(course) {
-        if (course === "C") {
-          const el = document.getElementById("radar-baseline-B-on-C");
-          if (el) el.setAttribute("points", radarPoints(getCoursePcts("B")));
-        } else if (course === "D") {
-          const elB = document.getElementById("radar-baseline-B-on-D");
-          if (elB) elB.setAttribute("points", radarPoints(getCoursePcts("B")));
-          const elC = document.getElementById("radar-baseline-C-on-D");
-          if (elC) elC.setAttribute("points", radarPoints(getCoursePcts("C")));
-        }
+        const sizes = RADAR_SIZES[course];
+        if (!sizes.prev || sizes.prev.length === 0) return;
+
+        sizes.prev.forEach((prevR, pi) => {
+          const prevCourse = pi === 0 ? "B" : "C";
+          const el = document.getElementById(`radar-baseline-${prevCourse}-on-${course}`);
+          if (el) el.setAttribute("points", radarPoints(getCoursePcts(prevCourse), prevR));
+        });
       }
 
       /* ---- "Jag har klarat" inherit buttons ---- */
