@@ -74,7 +74,11 @@ Plans:
   1. Sajten ar atkomlig via en publik URL utan inloggning
   2. En larare kan uppdatera en JSON-kursmalsfil, trigga en ny build och se de nya malen -- utan att andra nagon kod
   3. Sajten fungerar korrekt pa bade iOS Safari och Android Chrome
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md -- Netlify deployment config, build verification, and GitHub push
+- [ ] 04-02-PLAN.md -- Swedish teacher update guide and cross-browser verification
 
 ## Progress
 
@@ -86,4 +90,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Innehallsgrund | 2/2 | Complete | 2026-04-10 |
 | 2. Interaktiv checklista | 0/3 | Planning complete | - |
 | 3. Min Plan och fullstandig produkt | 0/2 | Planning complete | - |
-| 4. Driftsattning | 0/? | Not started | - |
+| 4. Driftsattning | 0/2 | Planning complete | - |
