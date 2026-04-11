@@ -1,93 +1,80 @@
 ---
 import "../styles/global.css";
 import kursB from "../data/kurs-b.json";
+import kursC from "../data/kurs-c.json";
+import kursD from "../data/kurs-d.json";
 
-const skills = [
-  {
-    id: "hora",
-    label: "Höra",
-    sublabel: "Hörförståelse",
-    color: "#D97706",
-    colorLight: "#FEF3C7",
-    colorMid: "#FBBF24",
-    goals: kursB.domains.horforstaelse.goals,
+/* ---- Tier parameters (visual size per course level) ---- */
+const TIERS = {
+  sapling: {
+    trunkWidthHalf: 9,
+    crownRx: 110, crownRy: 85, crownCy: 110,
+    rootStrokeMain: 4, rootStrokeSub: 2.5, rootCount: 3,
+    leafR: 14,
+    innerOrbit: 55, outerOrbit: 100,
+    innerArcStart: 220, innerArcEnd: 320,
+    outerArcStart: 205, outerArcEnd: 335,
+    singleR: 80, singleArcStart: 205, singleArcEnd: 335,
   },
-  {
-    id: "lasa",
-    label: "Läsa",
-    sublabel: "Läsförståelse",
-    color: "#2563EB",
-    colorLight: "#DBEAFE",
-    colorMid: "#60A5FA",
-    goals: kursB.domains.lasforstaelse.goals,
+  medium: {
+    trunkWidthHalf: 11,
+    crownRx: 125, crownRy: 100, crownCy: 100,
+    rootStrokeMain: 5, rootStrokeSub: 3.5, rootCount: 5,
+    leafR: 16,
+    innerOrbit: 60, outerOrbit: 110,
+    innerArcStart: 215, innerArcEnd: 325,
+    outerArcStart: 200, outerArcEnd: 340,
+    singleR: 90, singleArcStart: 200, singleArcEnd: 340,
   },
-  {
-    id: "tala",
-    label: "Tala",
-    sublabel: "Muntlig förmåga",
-    color: "#16A34A",
-    colorLight: "#DCFCE7",
-    colorMid: "#4ADE80",
-    goals: [
-      ...kursB.domains["muntlig-interaktion"].goals,
-      ...kursB.domains["muntlig-produktion"].goals,
-    ],
+  full: {
+    trunkWidthHalf: 13,
+    crownRx: 140, crownRy: 115, crownCy: 90,
+    rootStrokeMain: 6, rootStrokeSub: 4.5, rootCount: 7,
+    leafR: 17,
+    innerOrbit: 65, outerOrbit: 118,
+    innerArcStart: 210, innerArcEnd: 330,
+    outerArcStart: 195, outerArcEnd: 345,
+    singleR: 95, singleArcStart: 195, singleArcEnd: 345,
   },
-  {
-    id: "skriva",
-    label: "Skriva",
-    sublabel: "Skriftlig färdighet",
-    color: "#DC2626",
-    colorLight: "#FEE2E2",
-    colorMid: "#F87171",
-    goals: kursB.domains["skriftlig-fardighet"].goals,
-  },
-  {
-    id: "uttal",
-    label: "Uttal",
-    sublabel: "Uttal",
-    color: "#0D9488",
-    colorLight: "#CCFBF1",
-    colorMid: "#2DD4BF",
-    goals: kursB.domains.uttal.goals,
-  },
-  {
-    id: "grammatik",
-    label: "Grammatik",
-    sublabel: "Grammatik",
-    color: "#CA8A04",
-    colorLight: "#FEF9C3",
-    colorMid: "#FACC15",
-    goals: kursB.domains.grammatik.goals,
-  },
-];
+};
 
-/* ---- Leaf layout ---- */
-function computePositions(n: number) {
+const COURSE_TIER = { B: "sapling", C: "medium", D: "full" } as const;
+
+/* ---- Build skills array from course data ---- */
+function buildSkills(kursData: any) {
+  return [
+    { id: "hora", label: "Höra", sublabel: "Hörförståelse", color: "#D97706", colorLight: "#FEF3C7", colorMid: "#FBBF24", goals: kursData.domains.horforstaelse.goals },
+    { id: "lasa", label: "Läsa", sublabel: "Läsförståelse", color: "#2563EB", colorLight: "#DBEAFE", colorMid: "#60A5FA", goals: kursData.domains.lasforstaelse.goals },
+    { id: "tala", label: "Tala", sublabel: "Muntlig förmåga", color: "#16A34A", colorLight: "#DCFCE7", colorMid: "#4ADE80", goals: [...kursData.domains["muntlig-interaktion"].goals, ...kursData.domains["muntlig-produktion"].goals] },
+    { id: "skriva", label: "Skriva", sublabel: "Skriftlig färdighet", color: "#DC2626", colorLight: "#FEE2E2", colorMid: "#F87171", goals: kursData.domains["skriftlig-fardighet"].goals },
+    { id: "uttal", label: "Uttal", sublabel: "Uttal", color: "#0D9488", colorLight: "#CCFBF1", colorMid: "#2DD4BF", goals: kursData.domains.uttal.goals },
+    { id: "grammatik", label: "Grammatik", sublabel: "Grammatik", color: "#CA8A04", colorLight: "#FEF9C3", colorMid: "#FACC15", goals: kursData.domains.grammatik.goals },
+  ];
+}
+
+/* ---- Leaf layout (tier-parameterized) ---- */
+function computePositions(n: number, tier: typeof TIERS.medium) {
   const cx = 150, cy = 170;
   const positions: { x: number; y: number }[] = [];
 
   if (n <= 6) {
-    const r = 90;
-    const arcStart = 200, arcEnd = 340;
+    const r = tier.singleR;
+    const arcStart = tier.singleArcStart, arcEnd = tier.singleArcEnd;
     for (let i = 0; i < n; i++) {
       const angle = n === 1 ? 270 : arcStart + ((arcEnd - arcStart) / (n - 1)) * i;
       const rad = (angle * Math.PI) / 180;
-      positions.push({
-        x: Math.round(cx + r * Math.cos(rad)),
-        y: Math.round(cy + r * Math.sin(rad)),
-      });
+      positions.push({ x: Math.round(cx + r * Math.cos(rad)), y: Math.round(cy + r * Math.sin(rad)) });
     }
   } else {
     const inner = Math.floor(n / 2);
     const outer = n - inner;
-    const r1 = 60, s1Start = 215, s1End = 325;
+    const r1 = tier.innerOrbit, s1Start = tier.innerArcStart, s1End = tier.innerArcEnd;
     for (let i = 0; i < inner; i++) {
       const angle = inner === 1 ? 270 : s1Start + ((s1End - s1Start) / (inner - 1)) * i;
       const rad = (angle * Math.PI) / 180;
       positions.push({ x: Math.round(cx + r1 * Math.cos(rad)), y: Math.round(cy + r1 * Math.sin(rad)) });
     }
-    const r2 = 110, s2Start = 200, s2End = 340;
+    const r2 = tier.outerOrbit, s2Start = tier.outerArcStart, s2End = tier.outerArcEnd;
     for (let i = 0; i < outer; i++) {
       const angle = outer === 1 ? 270 : s2Start + ((s2End - s2Start) / (outer - 1)) * i;
       const rad = (angle * Math.PI) / 180;
@@ -106,36 +93,50 @@ function branchPath(lx: number, ly: number) {
   return `M${tx},${ty} C${cp1x},${cp1y} ${cp2x},${cp2y} ${lx},${ly}`;
 }
 
-/* ---- Build render data ---- */
-const treesData = skills.map((skill) => {
-  const pos = computePositions(skill.goals.length);
-  return {
-    ...skill,
-    leaves: skill.goals.map((g, i) => ({
-      id: g.id,
-      text: g.text,
-      x: pos[i].x,
-      y: pos[i].y,
-      branch: branchPath(pos[i].x, pos[i].y),
-      bobDelay: (i * 0.4).toFixed(1),
-    })),
-  };
-});
+/* ---- Build data for all three courses ---- */
+const COURSES = ["B", "C", "D"] as const;
+const courseData = { B: kursB, C: kursC, D: kursD };
 
-/* ---- Client-side data ---- */
-const goalTexts: Record<string, string> = {};
-skills.forEach((s) => s.goals.forEach((g) => { goalTexts[g.id] = g.text; }));
+const allTreesData: Record<string, any[]> = {};
+const allSkills: Record<string, any[]> = {};
+const allGoalTexts: Record<string, Record<string, string>> = {};
+const allSkillsClient: Record<string, any[]> = {};
 
-const skillsClient = skills.map((s) => ({
-  id: s.id,
-  label: s.label,
-  color: s.color,
-  goalIds: s.goals.map((g) => g.id),
-}));
+for (const course of COURSES) {
+  const tier = TIERS[COURSE_TIER[course]];
+  const skills = buildSkills(courseData[course]);
+  allSkills[course] = skills;
 
-/* ---- Radar layout (6-axis hexagon) ---- */
+  allTreesData[course] = skills.map((skill) => {
+    const pos = computePositions(skill.goals.length, tier);
+    return {
+      ...skill,
+      tier,
+      course,
+      leaves: skill.goals.map((g: any, i: number) => ({
+        id: g.id,
+        text: g.text,
+        x: pos[i].x,
+        y: pos[i].y,
+        branch: branchPath(pos[i].x, pos[i].y),
+        bobDelay: (i * 0.4).toFixed(1),
+      })),
+    };
+  });
+
+  const texts: Record<string, string> = {};
+  skills.forEach((s) => s.goals.forEach((g: any) => { texts[g.id] = g.text; }));
+  allGoalTexts[course] = texts;
+
+  allSkillsClient[course] = skills.map((s) => ({
+    id: s.id, label: s.label, color: s.color,
+    goalIds: s.goals.map((g: any) => g.id),
+  }));
+}
+
+/* ---- Radar layout (6-axis hexagon) — uses Kurs B skill labels/colors (same across courses) ---- */
 const RADAR_CX = 150, RADAR_CY = 150, RADAR_R = 110;
-const radarAxes = skills.map((s, i) => {
+const radarAxes = allSkills["B"].map((s: any, i: number) => {
   const angleDeg = -90 + i * 60;
   const rad = (angleDeg * Math.PI) / 180;
   const cos = Math.cos(rad), sin = Math.sin(rad);
@@ -160,6 +161,13 @@ function hexGrid(pct: number) {
     return `${Math.round(RADAR_CX + RADAR_R * pct * Math.cos(rad))},${Math.round(RADAR_CY + RADAR_R * pct * Math.sin(rad))}`;
   }).join(" ");
 }
+
+/* ---- Tab classes (Tailwind-safe, no dynamic string interpolation) ---- */
+const tabClasses = {
+  B: { active: "border-cyan-600 text-cyan-700", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
+  C: { active: "border-violet-600 text-violet-700", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
+  D: { active: "border-rose-600 text-rose-700", inactive: "border-transparent text-gray-400 hover:text-gray-600" },
+};
 ---
 
 <!doctype html>
@@ -455,7 +463,7 @@ function hexGrid(pct: number) {
       }
     </style>
 
-    <script define:vars={{ skillsClient, goalTexts }}>
+    <script define:vars={{ allSkillsClient, allGoalTexts }}>
       /* ---- localStorage (shared with checklist) ---- */
       const STORAGE_KEY = "sfi-checklist-B";
 
