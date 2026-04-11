@@ -33,9 +33,9 @@
 
 ### Kunskapstrad (Phase 04.1)
 
-- [ ] **TREE-01**: Kunskapstradssidan stodjer alla tre kurser (B, C, D) med kursspecifika tradpaneler
+- [x] **TREE-01**: Kunskapstradssidan stodjer alla tre kurser (B, C, D) med kursspecifika tradpaneler
 - [ ] **TREE-02**: Fliknavigering mellan kurser pa tradssidan med kursfarger (cyan/violet/rose)
-- [ ] **TREE-03**: Visuell traddifferentiering per CEFR-niva: B=planta (liten), C=medeltrad, D=fullt trad (stor)
+- [x] **TREE-03**: Visuell traddifferentiering per CEFR-niva: B=planta (liten), C=medeltrad, D=fullt trad (stor)
 - [ ] **TREE-04**: Separat radardiagram per kurs som visar fardighetsframsteg for den kursen
 - [ ] **TREE-05**: Delad localStorage-state mellan checklistan och tradssidan via befintliga sfi-checklist-{kurs}-nycklar
 

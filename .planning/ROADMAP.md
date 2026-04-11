@@ -97,8 +97,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 **Goal:** Kunskapstradssidan stodjer alla tre kurser (B, C, D) med kursanpassade tradstorlekar -- C och D-traden ar visuellt storre/mer utarbetade eftersom eleverna ar pa hogre CEFR-nivaer
 **Requirements**: TREE-01, TREE-02, TREE-03, TREE-04, TREE-05
 **Depends on:** Phase 4
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 04.1-01-PLAN.md -- Multi-course data pipeline and tier-differentiated SVG tree panels
+- [x] 04.1-01-PLAN.md -- Multi-course data pipeline and tier-differentiated SVG tree panels
 - [ ] 04.1-02-PLAN.md -- Client-side JS for multi-course interactivity and visual verification

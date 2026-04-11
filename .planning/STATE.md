@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 04.1 context gathered (assumptions mode)
-last_updated: "2026-04-11T20:23:50.298Z"
-last_activity: 2026-04-11 -- Phase 04.1 planning complete
+stopped_at: Completed 04.1-01-PLAN.md
+last_updated: "2026-04-11T20:31:01.355Z"
+last_activity: 2026-04-11
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 11
-  completed_plans: 8
-  percent: 73
+  completed_plans: 9
+  percent: 82
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-10)
 
 **Core value:** Eleverna forstar vad de ska lara sig och kan folja sin egen utveckling -- kursmalen blir ett verktyg for eleven, inte bara for lararen
-**Current focus:** Phase 04 — driftsattning
+**Current focus:** Phase 04.1 — kunskapstr-d-f-r-alla-kurser
 
 ## Current Position
 
-Phase: 04 (driftsattning) — EXECUTING
-Plan: 1 of 2
+Phase: 04.1 (kunskapstr-d-f-r-alla-kurser) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-04-11 -- Phase 04.1 planning complete
+Last activity: 2026-04-11
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02 P03 | 1min | 2 tasks | 1 files |
 | Phase 03 P01 | 2min | 2 tasks | 5 files |
 | Phase 03 P02 | 1min | 2 tasks | 3 files |
+| Phase 04.1-kunskapstr-d-f-r-alla-kurser P01 | 4min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Recent decisions affecting current work:
 - [Phase 03]: MinPlanSection as separate component (not reusing DomainSection) for simplicity
 - [Phase 03]: Emerald color for Min plan tab, distinct from course tabs
 - [Phase 03]: Print header uses underlines for handwritten name/date, domain headers #555 gray for grayscale
+- [Phase 04.1]: TIERS constant (sapling/medium/full) controls SVG visual properties per course
+- [Phase 04.1]: tree-tab class avoids conflict with index.astro course-tab TabNav script
+- [Phase 04.1]: All SVG IDs course-prefixed at build time to prevent DOM collisions
 
 ### Pending Todos
 
@@ -101,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T20:06:19.948Z
-Stopped at: Phase 04.1 context gathered (assumptions mode)
-Resume file: .planning/phases/04.1-kunskapstr-d-f-r-alla-kurser/04.1-CONTEXT.md
+Last session: 2026-04-11T20:31:01.353Z
+Stopped at: Completed 04.1-01-PLAN.md
+Resume file: None
