@@ -8,6 +8,7 @@ import kursD from "../data/kurs-d.json";
 import tokens from "../data/design-tokens.json";
 import examples from "../data/examples.json";
 import lexinAudio from "../data/lexin-audio.json";
+import audioManifest from "../data/audio-manifest.json";
 import MinPlanPanel from "../components/MinPlanPanel.astro";
 import ResourcesPanel from "../components/ResourcesPanel.astro";
 ---
@@ -22,7 +23,117 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
     <ResourcesPanel />
   </main>
 
-<script define:vars={{ examples, lexinAudio }}>
+<script define:vars={{ examples, lexinAudio, audioManifest }}>
+  // --- 0. TTS Engine (Edge TTS pre-generated MP3s, Swedish voices) ---
+  // audioManifest is { hash: text } — reverse it to { text: hash } for lookup
+  const textToHash = {};
+  Object.entries(audioManifest).forEach(([hash, text]) => {
+    textToHash[text] = hash;
+  });
+
+  const VOICE_KEYS = ['sofie', 'mattias']; // 0 = female, 1 = male
+  let voiceOffset = 0; // toggle to invert the alternation
+  let currentAudio = null;
+
+  function stripHtml(text) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = text;
+    return (tmp.textContent || tmp.innerText || '').replace(/🔊/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  // Assign alternating voices to each goal checkbox by DOM position.
+  // Each course panel restarts the alternation so B, C, D each begin with sofie.
+  function assignGoalVoices() {
+    document.querySelectorAll('.course-panel').forEach(panel => {
+      const goalBtns = panel.querySelectorAll('.goal-item .tts-btn[data-tts-text]');
+      goalBtns.forEach((btn, i) => {
+        btn.dataset.ttsVoice = VOICE_KEYS[i % 2];
+      });
+    });
+  }
+
+  function pickVoice(btn) {
+    const goalItem = btn.closest('.goal-item');
+    const isExample = !!btn.closest('[data-details-for]');
+
+    if (isExample && goalItem) {
+      // Goal button has data-tts-voice from assignGoalVoices
+      const goalBtn = goalItem.querySelector(':scope > div > .tts-btn[data-tts-voice]');
+      const goalIdx = VOICE_KEYS.indexOf(goalBtn?.dataset.ttsVoice || VOICE_KEYS[0]);
+      // Alternate within examples, starting with the OPPOSITE of the goal's voice
+      const exampleBtns = Array.from(goalItem.querySelectorAll('[data-details-for] .tts-btn'));
+      const idx = exampleBtns.indexOf(btn);
+      return VOICE_KEYS[(goalIdx + idx + 1 + voiceOffset) % 2];
+    }
+
+    // Goal button: use assigned voice + global offset
+    const assigned = btn.dataset.ttsVoice || VOICE_KEYS[0];
+    const idx = VOICE_KEYS.indexOf(assigned);
+    return VOICE_KEYS[(idx + voiceOffset) % 2];
+  }
+
+  function speakSwedish(rawText, btn) {
+    const text = stripHtml(rawText);
+    const hash = textToHash[text];
+    if (!hash) {
+      console.warn('No audio for text:', text);
+      return;
+    }
+
+    // Stop any ongoing audio
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+    document.querySelectorAll('.tts-btn.text-blue-600').forEach(b => b.classList.remove('text-blue-600'));
+
+    const voice = pickVoice(btn);
+    const url = `/audio/${voice}/${hash}.mp3`;
+    const audio = new Audio(url);
+    currentAudio = audio;
+
+    if (btn) btn.classList.add('text-blue-600');
+
+    audio.play().then(() => {
+      audio.onended = () => {
+        if (btn) btn.classList.remove('text-blue-600');
+        if (currentAudio === audio) currentAudio = null;
+      };
+    }).catch(err => {
+      console.warn('Audio play failed:', err);
+      if (btn) btn.classList.remove('text-blue-600');
+    });
+  }
+
+  function toggleVoice() {
+    voiceOffset = (voiceOffset + 1) % 2;
+  }
+
+  // Initial voice assignment for goals
+  assignGoalVoices();
+
+  // Delegated TTS click handler
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tts-btn');
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      speakSwedish(btn.dataset.ttsText, btn);
+    }
+  });
+
+  // Voice toggle button in nav — flips alternation pattern
+  const voiceToggleBtn = document.getElementById('voice-toggle');
+  const voiceLabel = document.getElementById('voice-label');
+  if (voiceToggleBtn) {
+    voiceToggleBtn.addEventListener('click', () => {
+      toggleVoice();
+      if (voiceLabel) {
+        voiceLabel.textContent = voiceOffset === 0 ? 'Mix' : 'Mix↻';
+      }
+    });
+  }
+
   // --- 1. Tab Switching with distinct course colors ---
   const tabs = document.querySelectorAll('.course-tab');
   const panels = document.querySelectorAll('.course-panel');
@@ -183,9 +294,15 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
         if (exampleEl && examples[goalId]) {
           const text = examples[goalId];
           const parts = text.split('|').filter(s => s.trim());
-          exampleEl.innerHTML = parts.map(s =>
-            `<li class="text-gray-600 pl-3 border-l-2 border-gray-300">${s.trim()}</li>`
-          ).join('');
+          exampleEl.innerHTML = parts.map(s => {
+            const escaped = s.trim().replace(/"/g, '&quot;');
+            return `<li class="text-gray-600 pl-3 border-l-2 border-gray-300 flex items-center gap-2">
+              <span class="flex-1">${s.trim()}</span>
+              <button class="tts-btn shrink-0 w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors" data-tts-text="${escaped}" aria-label="Lyssna" type="button" title="Lyssna på exemplet">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+            </li>`;
+          }).join('');
         } else if (exampleEl) {
           exampleEl.innerHTML = '<li class="text-gray-500 italic">Inget exempel ännu.</li>';
         }
