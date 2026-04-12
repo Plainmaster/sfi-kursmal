@@ -5,18 +5,22 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "npm run build && wrangler dev",
+    "generate-types": "wrangler types",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
-    "astro": "^6.1.5",
-    "tailwindcss": "^4.2.2",
-    "@tailwindcss/vite": "^4.2.2",
+    "@astrojs/cloudflare": "^13.1.8",
+    "@fontsource/inter": "^5.2.8",
     "@lucide/astro": "^1.8.0",
-    "@fontsource/inter": "^5.2.8"
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.1.5",
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "prettier": "^3.0.0",
-    "prettier-plugin-astro": "^0.14.1"
+    "prettier-plugin-astro": "^0.14.1",
+    "wrangler": "^4.81.1"
   },
   "overrides": {
     "vite": "^7"
