@@ -1,0 +1,297 @@
+---
+import "../styles/global.css";
+import TreePreview from "../components/TreePreview.astro";
+import RadarPreview from "../components/RadarPreview.astro";
+
+const radarDemoSkills = [
+  { id: "hora", label: "Höra", color: "#D97706", pct: 0.65 },
+  { id: "lasa", label: "Läsa", color: "#2563EB", pct: 0.80 },
+  { id: "tala", label: "Tala", color: "#16A34A", pct: 0.50 },
+  { id: "skriva", label: "Skriva", color: "#DC2626", pct: 0.90 },
+  { id: "uttal", label: "Uttal", color: "#0D9488", pct: 0.40 },
+  { id: "grammatik", label: "Grammatik", color: "#7C3AED", pct: 0.75 },
+];
+
+const skills = [
+  { id: "tala", label: "Tala", color: "#16A34A", colorLight: "#DCFCE7", colorMid: "#4ADE80" },
+  { id: "lasa", label: "Läsa", color: "#2563EB", colorLight: "#DBEAFE", colorMid: "#60A5FA" },
+];
+
+/* Medium-tier (Kurs C) layout — samma som trad.astro */
+const tier = {
+  innerOrbit: 60, outerOrbit: 110,
+  innerArcStart: 215, innerArcEnd: 325,
+  outerArcStart: 200, outerArcEnd: 340,
+};
+const cx = 150, cy = 170;
+
+function computePositions(n: number) {
+  const inner = Math.floor(n / 2);
+  const outer = n - inner;
+  const pos: { x: number; y: number }[] = [];
+  for (let i = 0; i < inner; i++) {
+    const angle = tier.innerArcStart + ((tier.innerArcEnd - tier.innerArcStart) / (inner - 1)) * i;
+    const rad = (angle * Math.PI) / 180;
+    pos.push({
+      x: Math.round(cx + tier.innerOrbit * Math.cos(rad)),
+      y: Math.round(cy + tier.innerOrbit * Math.sin(rad)),
+    });
+  }
+  for (let i = 0; i < outer; i++) {
+    const angle = tier.outerArcStart + ((tier.outerArcEnd - tier.outerArcStart) / (outer - 1)) * i;
+    const rad = (angle * Math.PI) / 180;
+    pos.push({
+      x: Math.round(cx + tier.outerOrbit * Math.cos(rad)),
+      y: Math.round(cy + tier.outerOrbit * Math.sin(rad)),
+    });
+  }
+  return pos;
+}
+
+function branchPath(lx: number, ly: number) {
+  const tx = 150, ty = 170;
+  const cp1x = tx + (lx - tx) * 0.25;
+  const cp1y = ty - 10;
+  const cp2x = lx - (lx - tx) * 0.15;
+  const cp2y = ly + (ty - ly) * 0.2;
+  return `M${tx},${ty} C${cp1x},${cp1y} ${cp2x},${cp2y} ${lx},${ly}`;
+}
+
+const leaves = computePositions(8);
+const branches = leaves.map((l) => branchPath(l.x, l.y));
+
+/* dots passas vidare av kompatibilitetsskäl till TreePreview även när foliage=4 */
+const dots: { x: number; y: number; r: number }[] = [];
+
+/* ============ Bollkronor ============ */
+function generateBalls(opts: { spacing: number; jitter: number; rMin: number; rMax: number }) {
+  const { spacing, jitter, rMin, rMax } = opts;
+  const cxC = 150, cyC = 100, rxC = 118, ryC = 92;
+  const out: { x: number; y: number; r: number; shade: number }[] = [];
+  const cols = Math.ceil(rxC / spacing) + 2;
+  const rows = Math.ceil(ryC / spacing) + 2;
+  const frac = (n: number) => n - Math.floor(n);
+  for (let row = -rows; row <= rows; row++) {
+    for (let col = -cols; col <= cols; col++) {
+      const offset = row % 2 === 0 ? 0 : spacing / 2;
+      const baseX = cxC + col * spacing + offset;
+      const baseY = cyC + row * spacing * 0.86;
+      const j1 = frac(Math.sin(row * 12.9898 + col * 78.233) * 43758.5453) - 0.5;
+      const j2 = frac(Math.sin(row * 39.346 + col * 11.135) * 29853.123) - 0.5;
+      const x = baseX + j1 * jitter;
+      const y = baseY + j2 * jitter;
+      const norm = ((x - cxC) / rxC) ** 2 + ((y - cyC) / ryC) ** 2;
+      if (norm > 1.02) continue;
+      const r = rMin + frac(Math.sin(row * 3.7 + col * 9.1) * 1000) * (rMax - rMin);
+      const shade = Math.floor(frac(Math.sin(row * 5.3 + col * 2.7) * 500) * 3);
+      out.push({
+        x: Math.round(x * 10) / 10,
+        y: Math.round(y * 10) / 10,
+        r: Math.round(r * 10) / 10,
+        shade,
+      });
+    }
+  }
+  return out;
+}
+
+const ballConfigs = [
+  { id: "med",   title: "4a · Medium (nuvarande)",   desc: "Måttlig storlek, måttlig täthet.",         spacing: 14, jitter: 7,   rMin: 4.5, rMax: 8.5, soft: false },
+  { id: "small", title: "4b · Små täta bollar",      desc: "Tätare, mer prickigt.",                    spacing: 10, jitter: 4.5, rMin: 3,   rMax: 5.5, soft: false },
+  { id: "large", title: "4c · Stora yviga bollar",   desc: "Färre och chunkigare, mer abstrakt.",      spacing: 19, jitter: 8,   rMin: 7,   rMax: 12,  soft: false },
+  { id: "soft",  title: "4d · Mjuka pastellfärger",  desc: "Medium-bollar men mycket dämpad palett.",  spacing: 14, jitter: 7,   rMin: 4.5, rMax: 8.5, soft: true  },
+] as const;
+
+const ballSets = ballConfigs.map((c) => ({ ...c, balls: generateBalls(c) }));
+
+/* Soft pastel-paletter per skill */
+const softPalettes: Record<string, { light: string; mid: string; dark: string }> = {
+  tala: { light: "#F0FDF4", mid: "#D1FAE5", dark: "#A7F3D0" },
+  lasa: { light: "#F0F7FF", mid: "#DBEAFE", dark: "#BFDBFE" },
+};
+
+/* Mark/bakgrund-varianter */
+const groundVariants: { id: "sand" | "none" | "soft-base" | "soft-wide" | "card-bg" | "grass-mound"; title: string; desc: string }[] = [
+  { id: "sand",        title: "G1 · Nuvarande sand-ellips",     desc: "För jämförelse — den som ligger fel just nu." },
+  { id: "none",        title: "G2 · Inget alls",                desc: "Bara stam och rötter, ingen mark eller skugga." },
+  { id: "soft-base",   title: "G3 · Mjuk skugga vid stammen",   desc: "Liten suddig skugga vid trunk-basen, rötterna får ligga fritt." },
+  { id: "soft-wide",   title: "G4 · Bred skugga under rötterna", desc: "Bred mjuk skugga vid root-spetsarna." },
+  { id: "card-bg",     title: "G5 · Pastell-bakgrund",          desc: "Mjuk oval bakgrund bakom hela trädet." },
+  { id: "grass-mound", title: "G6 · Gräskulle",                 desc: "Mjuk grön kulle som rötterna går ner i." },
+];
+---
+
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trädförslag – förhandsvisning</title>
+  </head>
+  <body class="font-sans bg-gradient-to-br from-stone-50 via-emerald-50/30 to-amber-50/20 text-gray-900 min-h-screen">
+    <header class="bg-white/70 backdrop-blur-xl border-b border-white/40 sticky top-0 z-20 shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold text-stone-800">Trädförslag – förhandsvisning</h1>
+          <p class="text-xs text-stone-500">Bollkrona-varianter och mark/bakgrund.</p>
+        </div>
+        <a href="/trad" class="text-sm text-emerald-700 hover:text-emerald-900 font-medium px-3 py-1.5 rounded-lg hover:bg-emerald-50 transition-all">
+          Tillbaka till trädet &rarr;
+        </a>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-14">
+
+      {/* ======================== RADAR-ETIKETTER ======================== */}
+      <section>
+        <header class="mb-5">
+          <h2 class="text-2xl font-bold text-stone-800">Radar — etiketter</h2>
+          <p class="text-sm text-stone-500">
+            Tre varianter för rubrikerna runt radardiagrammet. Procenttalen är borttagna,
+            texten är större. Välj en stil så använder jag den i <code>/trad</code>.
+          </p>
+        </header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {([
+            { id: "bigColored",   title: "L1 · Stora färgade",         desc: "Stor fet text i förmågans färg. Enklast och lätt att läsa." },
+            { id: "chips",        title: "L2 · Pill-chips",            desc: "Färgad pastell-pill bakom varje etikett — väldigt tydlig." },
+            { id: "darkWithDot",  title: "L3 · Mörk text + färgprick", desc: "Stor mörk text med en färgprick som markör — neutralare bas." },
+          ] as const).map((lv) => (
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden p-4">
+              <div class="mb-2">
+                <h4 class="font-bold text-stone-800 text-sm">{lv.title}</h4>
+                <p class="text-xs text-stone-500">{lv.desc}</p>
+              </div>
+              <RadarPreview skills={radarDemoSkills} labelStyle={lv.id} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ======================== BOLLKRONA-VARIANTER ======================== */}
+      <section>
+        <header class="mb-5">
+          <h2 class="text-2xl font-bold text-stone-800">Bollkrona — storlek och färg</h2>
+          <p class="text-sm text-stone-500">
+            Fyra varianter av variant 4. Stam A + rötter A i alla, ingen mark/skugga
+            (mark visas i nästa sektion). Varje variant visas i grön (Tala) och blå (Läsa).
+          </p>
+        </header>
+
+        <div class="space-y-8">
+          {ballSets.map((bs) => (
+            <div>
+              <div class="mb-3">
+                <h3 class="text-lg font-semibold text-stone-700">{bs.title}</h3>
+                <p class="text-xs text-stone-500">{bs.desc} · {bs.balls.length} bollar</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {skills.flatMap((skill) => [false, true].map((checked) => (
+                  <div class="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden">
+                    <div class="px-4 pt-3 pb-1 flex items-center gap-2">
+                      <span class="w-3 h-3 rounded-full inline-block" style={`background:${skill.color}`} />
+                      <h4 class="font-bold text-stone-800 text-sm">{skill.label}</h4>
+                      <span class="text-xs text-stone-400">{checked ? "ifylld" : "tom"}</span>
+                    </div>
+                    <TreePreview
+                      skill={skill}
+                      checked={checked}
+                      foliage={4}
+                      trunk="A"
+                      root="A"
+                      ground="none"
+                      ballPalette={bs.soft ? softPalettes[skill.id] : undefined}
+                      variantKey={bs.id}
+                      leaves={leaves}
+                      branches={branches}
+                      dots={dots}
+                      balls={bs.balls}
+                    />
+                  </div>
+                )))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ======================== MARK / BAKGRUND ======================== */}
+      <section>
+        <header class="mb-5">
+          <h2 class="text-2xl font-bold text-stone-800">Mark, skugga & bakgrund</h2>
+          <p class="text-sm text-stone-500">
+            Sex alternativ. Använder stam A, rötter A och bollkrona 4a som baseline så bara
+            marken/skuggan skiljer sig.
+          </p>
+        </header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {groundVariants.map((gv) => (
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden">
+              <div class="px-4 pt-3 pb-1">
+                <h4 class="font-bold text-stone-800 text-sm">{gv.title}</h4>
+                <p class="text-xs text-stone-500">{gv.desc}</p>
+              </div>
+              <TreePreview
+                skill={skills[0]}
+                checked={true}
+                foliage={4}
+                trunk="A"
+                root="A"
+                ground={gv.id}
+                variantKey={`ground-${gv.id}`}
+                leaves={leaves}
+                branches={branches}
+                dots={dots}
+                balls={ballSets[0].balls}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ======================== BAKGRUNDSEFFEKT ======================== */}
+      <section>
+        <header class="mb-5">
+          <h2 class="text-2xl font-bold text-stone-800">Bakgrundseffekt när målen är ifyllda</h2>
+          <p class="text-sm text-stone-500">
+            Tre alternativ för vad som händer i bakgrunden när alla mål för en förmåga är klara.
+            Trädet visas fullt ifyllt med bollkrona 4a, ingen mark.
+          </p>
+        </header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {([
+            { id: "sun" as const, title: "E1 · Solstrålar", desc: "Mjuk gul sol bakom kronan med långsamt roterande strålar." },
+            { id: "sparkles" as const, title: "E2 · Glittrande gnistor", desc: "Små guldgnistor som tindrar runt trädet." },
+            { id: "aura" as const, title: "E3 · Pulserande aura", desc: "Mjuk färgad halo bakom trädet som andas." },
+          ]).map((ev) => (
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden">
+              <div class="px-4 pt-3 pb-1">
+                <h4 class="font-bold text-stone-800 text-sm">{ev.title}</h4>
+                <p class="text-xs text-stone-500">{ev.desc}</p>
+              </div>
+              <TreePreview
+                skill={skills[0]}
+                checked={true}
+                foliage={4}
+                trunk="A"
+                root="A"
+                ground="none"
+                effect={ev.id}
+                variantKey={`effect-${ev.id}`}
+                leaves={leaves}
+                branches={branches}
+                dots={dots}
+                balls={ballSets[0].balls}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer class="text-center text-sm text-stone-500 pt-4">
+        Säg vilken effekt (E1 / E2 / E3) du vill ha när målen är ifyllda.
+      </footer>
+    </main>
+  </body>
+</html>

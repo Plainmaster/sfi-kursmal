@@ -8,10 +8,10 @@
   --color-domain-hora: #D97706;
   --color-domain-lasa: #2563EB;
   --color-domain-prata: #16A34A;
-  --color-domain-beratta: #7C3AED;
+  --color-domain-beratta: #DB2777;
   --color-domain-skriva: #DC2626;
   --color-domain-uttal: #0D9488;
-  --color-domain-grammatik: #CA8A04;
+  --color-domain-grammatik: #7C3AED;
 }
 
 @keyframes fade-out {

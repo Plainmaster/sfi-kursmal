@@ -32,7 +32,6 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
   });
 
   const VOICE_KEYS = ['sofie', 'mattias']; // 0 = female, 1 = male
-  let voiceOffset = 0; // toggle to invert the alternation
   let currentAudio = null;
 
   function stripHtml(text) {
@@ -63,13 +62,10 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
       // Alternate within examples, starting with the OPPOSITE of the goal's voice
       const exampleBtns = Array.from(goalItem.querySelectorAll('[data-details-for] .tts-btn'));
       const idx = exampleBtns.indexOf(btn);
-      return VOICE_KEYS[(goalIdx + idx + 1 + voiceOffset) % 2];
+      return VOICE_KEYS[(goalIdx + idx + 1) % 2];
     }
 
-    // Goal button: use assigned voice + global offset
-    const assigned = btn.dataset.ttsVoice || VOICE_KEYS[0];
-    const idx = VOICE_KEYS.indexOf(assigned);
-    return VOICE_KEYS[(idx + voiceOffset) % 2];
+    return btn.dataset.ttsVoice || VOICE_KEYS[0];
   }
 
   function speakSwedish(rawText, btn) {
@@ -105,11 +101,7 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
     });
   }
 
-  function toggleVoice() {
-    voiceOffset = (voiceOffset + 1) % 2;
-  }
-
-  // Initial voice assignment for goals
+  // Initial voice assignment for goals — alternates man/woman per goal
   assignGoalVoices();
 
   // Delegated TTS click handler
@@ -121,18 +113,6 @@ import ResourcesPanel from "../components/ResourcesPanel.astro";
       speakSwedish(btn.dataset.ttsText, btn);
     }
   });
-
-  // Voice toggle button in nav — flips alternation pattern
-  const voiceToggleBtn = document.getElementById('voice-toggle');
-  const voiceLabel = document.getElementById('voice-label');
-  if (voiceToggleBtn) {
-    voiceToggleBtn.addEventListener('click', () => {
-      toggleVoice();
-      if (voiceLabel) {
-        voiceLabel.textContent = voiceOffset === 0 ? 'Mix' : 'Mix↻';
-      }
-    });
-  }
 
   // --- 1. Tab Switching with distinct course colors ---
   const tabs = document.querySelectorAll('.course-tab');

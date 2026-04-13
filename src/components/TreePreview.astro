@@ -1,0 +1,261 @@
+---
+interface Skill {
+  id: string;
+  label: string;
+  color: string;
+  colorLight: string;
+  colorMid: string;
+}
+interface Props {
+  skill: Skill;
+  checked: boolean;
+  foliage: 3 | 4;
+  trunk: "A" | "B" | "C";
+  root: "A" | "B" | "C";
+  ground?: "none" | "sand" | "soft-base" | "soft-wide" | "card-bg" | "grass-mound";
+  effect?: "none" | "sun" | "sparkles" | "aura";
+  ballPalette?: { light: string; mid: string; dark: string };
+  variantKey?: string;
+  leaves: { x: number; y: number }[];
+  branches: string[];
+  dots: { x: number; y: number; r: number }[];
+  balls: { x: number; y: number; r: number; shade: number }[];
+}
+const {
+  skill, checked, foliage, trunk, root,
+  ground = "none", effect = "none", ballPalette, variantKey = "",
+  leaves, branches, dots, balls,
+} = Astro.props;
+
+const sparklePositions: [number, number][] = [
+  [60, 50], [120, 28], [200, 38], [240, 78], [252, 138],
+  [82, 178], [50, 128], [75, 82], [180, 28], [222, 56],
+  [55, 168], [228, 168], [155, 200],
+];
+const uid = `${skill.id}-f${foliage}-t${trunk}-r${root}-g${ground}-${variantKey}-${checked ? "on" : "off"}`;
+const palette = ballPalette ?? { light: skill.colorLight, mid: skill.colorMid, dark: skill.color };
+---
+
+<svg viewBox="0 0 300 355" class="w-full max-h-[340px]">
+  <defs>
+    <filter id={`shadow-${uid}`} x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3.5" />
+    </filter>
+    {trunk === "C" && (
+      <linearGradient id={`trunkgrad-${uid}`} x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%" stop-color="#3F2614" />
+        <stop offset="50%" stop-color="#8A5A30" />
+        <stop offset="100%" stop-color="#3F2614" />
+      </linearGradient>
+    )}
+    {effect === "sun" && (
+      <radialGradient id={`sun-${uid}`} cx="50%" cy="32%" r="65%">
+        <stop offset="0%" stop-color="#FEF3C7" stop-opacity="0.9" />
+        <stop offset="55%" stop-color="#FEF3C7" stop-opacity="0.32" />
+        <stop offset="100%" stop-color="#FEF3C7" stop-opacity="0" />
+      </radialGradient>
+    )}
+  </defs>
+
+  {/* === Background effect (rendered first so it sits behind everything) === */}
+  {effect === "sun" && (
+    <>
+      <circle cx="150" cy="105" r="170" fill={`url(#sun-${uid})`} />
+      <g class="sun-rays-anim">
+        {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => {
+          const rad = (deg * Math.PI) / 180;
+          return (
+            <line
+              x1={Math.round(150 + 38 * Math.cos(rad))}
+              y1={Math.round(105 + 38 * Math.sin(rad))}
+              x2={Math.round(150 + 168 * Math.cos(rad))}
+              y2={Math.round(105 + 168 * Math.sin(rad))}
+              stroke="#FCD34D"
+              stroke-width="2"
+              opacity="0.55"
+              stroke-linecap="round"
+            />
+          );
+        })}
+      </g>
+    </>
+  )}
+  {effect === "aura" && (
+    <ellipse cx="150" cy="160" rx="155" ry="170" fill={palette.mid} class="aura-anim" />
+  )}
+  {effect === "sparkles" && (
+    <g>
+      {sparklePositions.map(([sx, sy], i) => (
+        <g class="sparkle-anim" style={`animation-delay:${(i * 0.22).toFixed(2)}s`}>
+          <circle cx={sx} cy={sy} r="5" fill="#FBBF24" opacity="0.25" />
+          <circle cx={sx} cy={sy} r="2.2" fill="#FBBF24" />
+          <circle cx={sx} cy={sy} r="1" fill="#FFFBEB" />
+        </g>
+      ))}
+    </g>
+  )}
+
+  {/* === Background / ground (drawn first so it sits behind the tree) === */}
+  {ground === "card-bg" && (
+    <ellipse cx="150" cy="180" rx="142" ry="160" fill="#FAFAF9" opacity="0.85" />
+  )}
+  {ground === "grass-mound" && (
+    <>
+      <path d="M-10,322 Q150,290 310,322 L310,360 L-10,360 Z" fill="#BBF7D0" opacity="0.55" />
+      <path d="M-10,322 Q150,290 310,322" stroke="#4ADE80" stroke-width="1.5" fill="none" opacity="0.55" />
+    </>
+  )}
+
+  {/* === Roots === */}
+  {root === "A" && (
+    <>
+      <path d="M138,297 C125,310 105,320 82,328" stroke="#7C5B2A" stroke-width="5" fill="none" stroke-linecap="round" />
+      <path d="M162,297 C175,310 195,320 218,328" stroke="#7C5B2A" stroke-width="5" fill="none" stroke-linecap="round" />
+      <path d="M150,302 C150,322 149,338 148,348" stroke="#7C5B2A" stroke-width="3.5" fill="none" stroke-linecap="round" />
+      <path d="M144,300 C138,316 127,332 118,340" stroke="#7C5B2A" stroke-width="3.5" fill="none" stroke-linecap="round" />
+      <path d="M156,300 C162,316 173,332 182,340" stroke="#7C5B2A" stroke-width="3.5" fill="none" stroke-linecap="round" />
+    </>
+  )}
+
+  {/* === Ground markings drawn AFTER roots so the shadow sits on top of root tips === */}
+  {ground === "sand" && (
+    <ellipse cx="150" cy="312" rx="90" ry="10" fill="#D4C9B0" opacity="0.35" />
+  )}
+  {ground === "soft-base" && (
+    <ellipse cx="150" cy="305" rx="46" ry="5" fill="#1f1410" opacity="0.2" filter={`url(#shadow-${uid})`} />
+  )}
+  {ground === "soft-wide" && (
+    <ellipse cx="150" cy="346" rx="108" ry="7" fill="#1f1410" opacity="0.18" filter={`url(#shadow-${uid})`} />
+  )}
+  {root === "B" && (
+    <>
+      <ellipse cx="150" cy="309" rx="68" ry="8" fill="#1f1410" opacity="0.22" filter={`url(#shadow-${uid})`} />
+      <ellipse cx="150" cy="309" rx="50" ry="5" fill="#1f1410" opacity="0.18" />
+    </>
+  )}
+  {root === "C" && (
+    <>
+      <ellipse cx="150" cy="312" rx="60" ry="7" fill="#1f1410" opacity="0.2" filter={`url(#shadow-${uid})`} />
+      <path d="M142,298 C137,305 130,309 121,311" stroke="#6B4226" stroke-width="3.5" fill="none" stroke-linecap="round" />
+      <path d="M158,298 C163,305 170,309 179,311" stroke="#6B4226" stroke-width="3.5" fill="none" stroke-linecap="round" />
+      <path d="M150,300 C150,307 150,311 150,314" stroke="#6B4226" stroke-width="2.5" fill="none" stroke-linecap="round" />
+      <path d="M118,309 L120,302 M124,309 L126,303 M128,309 L130,304" stroke="#7BAA4A" stroke-width="1.3" stroke-linecap="round" fill="none" />
+      <path d="M170,309 L172,303 M174,309 L176,304 M178,309 L180,302" stroke="#7BAA4A" stroke-width="1.3" stroke-linecap="round" fill="none" />
+    </>
+  )}
+
+  {/* === Trunk === */}
+  {trunk === "A" && (
+    <>
+      <path
+        d="M139,299 C136,267 134,232 137,202 C147,187 146,177 150,172 C154,177 153,187 163,202 C166,232 164,267 161,299 Z"
+        fill="#6B4226"
+      />
+      <path d="M148,282 C147,260 146,238 148,218" stroke="#5A3520" stroke-width="0.7" fill="none" opacity="0.35" />
+      <path d="M153,278 C154,258 153,238 151,215" stroke="#5A3520" stroke-width="0.7" fill="none" opacity="0.35" />
+    </>
+  )}
+  {trunk === "B" && (
+    <>
+      <path
+        d="M134,300 C130,263 128,225 134,195 C142,180 144,176 150,170 C156,176 158,180 166,195 C172,225 170,263 166,300 Z"
+        fill="#5C3920"
+      />
+      <path d="M161,290 C163,258 164,222 161,193" stroke="#7C5230" stroke-width="2" fill="none" opacity="0.55" stroke-linecap="round" />
+      <path d="M139,290 C137,258 136,222 139,193" stroke="#3D2515" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round" />
+      <path d="M138,248 Q150,251 162,248" stroke="#3D2515" stroke-width="0.8" fill="none" opacity="0.5" />
+      <path d="M138,222 Q150,225 162,222" stroke="#3D2515" stroke-width="0.8" fill="none" opacity="0.5" />
+      <path d="M138,275 Q150,278 162,275" stroke="#3D2515" stroke-width="0.8" fill="none" opacity="0.5" />
+    </>
+  )}
+  {trunk === "C" && (
+    <path
+      d="M142,300 C140,268 138,232 142,202 C146,188 148,180 150,172 C152,180 154,188 158,202 C162,232 160,268 158,300 Z"
+      fill={`url(#trunkgrad-${uid})`}
+    />
+  )}
+
+  {/* === Foliage behind branches === */}
+  {foliage === 3 && (
+    <>
+      <ellipse cx="150" cy="100" rx="118" ry="92" fill={skill.colorLight} opacity={checked ? "0.85" : "0.55"} />
+      <ellipse cx="150" cy="100" rx="118" ry="92" fill="none" stroke={skill.colorMid} stroke-width="1.2" opacity={checked ? "0.6" : "0.35"} />
+      {dots.map((d) => (
+        <circle cx={d.x} cy={d.y} r={d.r} fill={skill.colorMid} opacity={checked ? "1" : "0.7"} />
+      ))}
+    </>
+  )}
+  {foliage === 4 && (
+    <g opacity={checked ? "1" : "0.78"}>
+      {balls.map((b) => {
+        const fill = b.shade === 0 ? palette.light : b.shade === 1 ? palette.mid : palette.dark;
+        const op = b.shade === 2 ? "0.82" : b.shade === 1 ? "0.95" : "1";
+        return <circle cx={b.x} cy={b.y} r={b.r} fill={fill} opacity={op} />;
+      })}
+    </g>
+  )}
+
+  {/* === Branches === */}
+  {branches.map((d) => (
+    <path d={d} stroke="#A88B5C" stroke-width="2" fill="none" stroke-linecap="round" />
+  ))}
+
+  {/* === Fruits === */}
+  {leaves.map((leaf, i) => (
+    <>
+      <circle
+        cx={leaf.x}
+        cy={leaf.y}
+        r="16"
+        fill={checked ? skill.color : "#E7E5E4"}
+        stroke={checked ? "rgba(255,255,255,0.6)" : skill.color}
+        stroke-width={checked ? "2.5" : "2"}
+        stroke-dasharray={checked ? "none" : "5 3"}
+      />
+      <text
+        x={leaf.x}
+        y={leaf.y + 5}
+        text-anchor="middle"
+        font-size="11"
+        font-weight="700"
+        fill={checked ? "#ffffff" : skill.color}
+      >
+        {i + 1}
+      </text>
+    </>
+  ))}
+</svg>
+
+<style>
+  @keyframes sun-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .sun-rays-anim {
+    transform-box: view-box;
+    transform-origin: 150px 105px;
+    animation: sun-rotate 30s linear infinite;
+  }
+
+  @keyframes aura-pulse {
+    0%, 100% { opacity: 0.18; }
+    50% { opacity: 0.38; }
+  }
+  .aura-anim {
+    animation: aura-pulse 4.5s ease-in-out infinite;
+  }
+
+  @keyframes sparkle-twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+  .sparkle-anim {
+    animation: sparkle-twinkle 2.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sun-rays-anim, .aura-anim, .sparkle-anim {
+      animation: none;
+    }
+  }
+</style>

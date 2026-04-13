@@ -9,7 +9,7 @@ const TIERS = {
   sapling: {
     trunkWidthHalf: 9,
     crownRx: 110, crownRy: 85, crownCy: 110,
-    rootStrokeMain: 4, rootStrokeSub: 2.5, rootCount: 3,
+    rootStrokeMain: 4, rootStrokeSub: 2.5, rootCount: 5,
     leafR: 14,
     innerOrbit: 55, outerOrbit: 100,
     innerArcStart: 220, innerArcEnd: 320,
@@ -29,7 +29,7 @@ const TIERS = {
   full: {
     trunkWidthHalf: 13,
     crownRx: 140, crownRy: 115, crownCy: 90,
-    rootStrokeMain: 6, rootStrokeSub: 4.5, rootCount: 7,
+    rootStrokeMain: 6, rootStrokeSub: 4.5, rootCount: 5,
     leafR: 17,
     innerOrbit: 65, outerOrbit: 118,
     innerArcStart: 210, innerArcEnd: 330,
@@ -40,6 +40,44 @@ const TIERS = {
 
 const COURSE_TIER = { B: "sapling", C: "medium", D: "full" } as const;
 
+/* ---- Bollkrona (foliage variant 4a) — per-tier ball cluster generator ---- */
+function generateCrownBalls(rxC: number, ryC: number, cyC: number) {
+  const cxC = 150;
+  const spacing = 14, jitter = 7, rMin = 4.5, rMax = 8.5;
+  const out: { x: number; y: number; r: number; shade: number }[] = [];
+  const cols = Math.ceil(rxC / spacing) + 2;
+  const rows = Math.ceil(ryC / spacing) + 2;
+  const frac = (n: number) => n - Math.floor(n);
+  for (let row = -rows; row <= rows; row++) {
+    for (let col = -cols; col <= cols; col++) {
+      const offset = row % 2 === 0 ? 0 : spacing / 2;
+      const baseX = cxC + col * spacing + offset;
+      const baseY = cyC + row * spacing * 0.86;
+      const j1 = frac(Math.sin(row * 12.9898 + col * 78.233) * 43758.5453) - 0.5;
+      const j2 = frac(Math.sin(row * 39.346 + col * 11.135) * 29853.123) - 0.5;
+      const x = baseX + j1 * jitter;
+      const y = baseY + j2 * jitter;
+      const norm = ((x - cxC) / rxC) ** 2 + ((y - cyC) / ryC) ** 2;
+      if (norm > 1.02) continue;
+      const r = rMin + frac(Math.sin(row * 3.7 + col * 9.1) * 1000) * (rMax - rMin);
+      const shade = Math.floor(frac(Math.sin(row * 5.3 + col * 2.7) * 500) * 3);
+      out.push({
+        x: Math.round(x * 10) / 10,
+        y: Math.round(y * 10) / 10,
+        r: Math.round(r * 10) / 10,
+        shade,
+      });
+    }
+  }
+  return out;
+}
+
+const TIER_BALLS: Record<string, { x: number; y: number; r: number; shade: number }[]> = {
+  sapling: generateCrownBalls(TIERS.sapling.crownRx, TIERS.sapling.crownRy, TIERS.sapling.crownCy),
+  medium: generateCrownBalls(TIERS.medium.crownRx, TIERS.medium.crownRy, TIERS.medium.crownCy),
+  full: generateCrownBalls(TIERS.full.crownRx, TIERS.full.crownRy, TIERS.full.crownCy),
+};
+
 /* ---- Build skills array from course data ---- */
 function buildSkills(kursData: any) {
   return [
@@ -48,7 +86,7 @@ function buildSkills(kursData: any) {
     { id: "tala", label: "Tala", sublabel: "Muntlig förmåga", color: "#16A34A", colorLight: "#DCFCE7", colorMid: "#4ADE80", goals: [...kursData.domains["muntlig-interaktion"].goals, ...kursData.domains["muntlig-produktion"].goals] },
     { id: "skriva", label: "Skriva", sublabel: "Skriftlig färdighet", color: "#DC2626", colorLight: "#FEE2E2", colorMid: "#F87171", goals: kursData.domains["skriftlig-fardighet"].goals },
     { id: "uttal", label: "Uttal", sublabel: "Uttal", color: "#0D9488", colorLight: "#CCFBF1", colorMid: "#2DD4BF", goals: kursData.domains.uttal.goals },
-    { id: "grammatik", label: "Grammatik", sublabel: "Grammatik", color: "#CA8A04", colorLight: "#FEF9C3", colorMid: "#FACC15", goals: kursData.domains.grammatik.goals },
+    { id: "grammatik", label: "Grammatik", sublabel: "Grammatik", color: "#7C3AED", colorLight: "#EDE9FE", colorMid: "#A78BFA", goals: kursData.domains.grammatik.goals },
   ];
 }
 
@@ -142,6 +180,7 @@ for (const course of COURSES) {
       tier,
       course,
       tierName: COURSE_TIER[course],
+      balls: TIER_BALLS[COURSE_TIER[course]],
       leaves: skill.goals.map((g: any, i: number) => ({
         id: g.id,
         text: g.text,
@@ -176,31 +215,58 @@ const RADAR_CONFIG = {
 
 const PREV_COLORS: Record<string, string> = { B: "#06B6D4", C: "#8B5CF6" };
 
-const radarAxes = allSkills["B"].map((s: any, i: number) => {
+/* Radar axis order — Grammatik placed at the bottom so it has horizontal room.
+   Tree card grid uses buildSkills() order and is unaffected by this. */
+const RADAR_ORDER = ["hora", "lasa", "tala", "grammatik", "uttal", "skriva"] as const;
+
+const radarAxes = RADAR_ORDER.map((skillId, i) => {
+  const s = allSkills["B"].find((x: any) => x.id === skillId);
   const angleDeg = -90 + i * 60;
   const rad = (angleDeg * Math.PI) / 180;
   const cos = Math.cos(rad), sin = Math.sin(rad);
   const anchor = i === 0 || i === 3 ? "middle" : i < 3 ? "start" : "end";
-  const lblR = RADAR_R + 18;
-  const pctR = RADAR_R + 16;
+  const lblR = RADAR_R + 22;
   return {
     id: s.id, label: s.label, color: s.color,
     ex: Math.round(RADAR_CX + RADAR_R * cos),
     ey: Math.round(RADAR_CY + RADAR_R * sin),
     lx: Math.round(RADAR_CX + lblR * cos),
-    ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 12 : 4)),
-    px: Math.round(RADAR_CX + pctR * cos),
-    py: Math.round(RADAR_CY + pctR * sin + (i === 0 ? 8 : i === 3 ? 22 : 14)),
+    ly: Math.round(RADAR_CY + lblR * sin + (i === 0 ? -4 : i === 3 ? 16 : 5)),
     anchor,
   };
 });
 
-function hexGrid(pct: number) {
-  return Array.from({ length: 6 }, (_, i) => {
-    const rad = ((-90 + i * 60) * Math.PI) / 180;
-    return `${Math.round(RADAR_CX + RADAR_R * pct * Math.cos(rad))},${Math.round(RADAR_CY + RADAR_R * pct * Math.sin(rad))}`;
-  }).join(" ");
+/* Smooth closed Catmull-Rom-to-Bezier path through N points — used for radar data shapes */
+function smoothClosedPath(points: { x: number; y: number }[], tension = 0.22) {
+  const n = points.length;
+  if (n < 2) return "";
+  let d = `M${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = points[(i - 1 + n) % n];
+    const p1 = points[i];
+    const p2 = points[(i + 1) % n];
+    const p3 = points[(i + 2) % n];
+    const cp1x = p1.x + (p2.x - p0.x) * tension;
+    const cp1y = p1.y + (p2.y - p0.y) * tension;
+    const cp2x = p2.x - (p3.x - p1.x) * tension;
+    const cp2y = p2.y - (p3.y - p1.y) * tension;
+    d += ` C${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+  }
+  return d + " Z";
 }
+
+function radarPath(pcts: number[], maxR: number) {
+  const points = pcts.map((p, i) => {
+    const rad = ((-90 + i * 60) * Math.PI) / 180;
+    return {
+      x: RADAR_CX + maxR * p * Math.cos(rad),
+      y: RADAR_CY + maxR * p * Math.sin(rad),
+    };
+  });
+  return smoothClosedPath(points);
+}
+
+const RADAR_INIT_PATH = `M${RADAR_CX},${RADAR_CY} Z`;
 
 /* ---- Tab classes (Tailwind-safe, no dynamic string interpolation) ---- */
 const tabClasses = {
@@ -215,23 +281,26 @@ const tabClasses = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kunskapsträdet</title>
+    <title>Min utveckling</title>
   </head>
   <body class="font-sans bg-gradient-to-br from-stone-50 via-emerald-50/30 to-amber-50/20 text-gray-900 min-h-screen">
     <!-- Header -->
     <header class="bg-white/70 backdrop-blur-xl border-b border-white/40 sticky top-0 z-20 shadow-sm">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md shadow-emerald-200/50">
-            <span class="text-lg text-white" aria-hidden="true">🌳</span>
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-700 flex items-center justify-center shadow-md shadow-emerald-200/60 ring-1 ring-white/40">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 3v18h18" />
+              <path d="M7 14l4-4 4 4 5-6" />
+            </svg>
           </div>
           <div>
-            <h1 class="text-lg font-bold bg-gradient-to-r from-stone-800 to-stone-600 bg-clip-text text-transparent leading-tight">Kunskapsträdet</h1>
+            <h1 class="text-lg font-bold bg-gradient-to-r from-emerald-800 to-stone-700 bg-clip-text text-transparent leading-tight">Min utveckling</h1>
             <p class="text-xs text-stone-500" id="tree-header-subtitle">Kurs B &middot; Dina förmågor växer</p>
           </div>
         </div>
         <a href="/" class="text-sm text-emerald-700 hover:text-emerald-900 font-medium px-3 py-1.5 rounded-lg hover:bg-emerald-50 transition-all">
-          Checklista &rarr;
+          Mina kurser &rarr;
         </a>
       </div>
     </header>
@@ -264,30 +333,40 @@ const tabClasses = {
             <section class="flex justify-center">
               <div class="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/40 border border-white/50 p-5 w-full max-w-sm ring-1 ring-stone-100/50">
                 <h2 class="text-center text-sm font-semibold text-stone-600 mb-3 tracking-wide uppercase">Min utveckling</h2>
-                <svg id={`radar-${course}`} viewBox="0 0 300 300" class="w-full">
+                <svg id={`radar-${course}`} viewBox="-25 -10 350 320" class="w-full">
                   {(() => {
                     const cfg = RADAR_CONFIG[course];
                     const ringSteps = Array.from({ length: cfg.rings }, (_, i) => (i + 1) / cfg.rings);
                     return (
                       <Fragment>
-                        {/* Density grid — more rings for higher courses */}
+                        {/* Density grid — concentric circles */}
                         {ringSteps.map((pct) => (
-                          <polygon points={hexGrid(pct)} fill="none" stroke="#E7E5E4" stroke-width={pct === 1 ? "1.2" : "0.7"} opacity={pct === 1 ? "1" : "0.5"} />
+                          <circle
+                            cx={RADAR_CX}
+                            cy={RADAR_CY}
+                            r={Math.round(RADAR_R * pct * 10) / 10}
+                            fill="none"
+                            stroke={pct === 1 ? "#A8A29E" : "#D6D3D1"}
+                            stroke-width={pct === 1 ? "1.8" : "1.1"}
+                            opacity={pct === 1 ? "1" : "0.75"}
+                          />
                         ))}
 
                         {/* Axis lines */}
                         {radarAxes.map((a) => (
-                          <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#D6D3D1" stroke-width="1" />
+                          <line x1={RADAR_CX} y1={RADAR_CY} x2={a.ex} y2={a.ey} stroke="#B8B2AB" stroke-width="1.4" />
                         ))}
 
-                        {/* Previous course boundary rings + baseline polygons */}
+                        {/* Previous course boundary rings + baseline shapes */}
                         {cfg.prev.map((prevCourse: string, pi: number) => {
                           const color = PREV_COLORS[prevCourse];
                           const boundaryPct = cfg.prevPcts[pi];
                           return (
                             <Fragment>
-                              <polygon
-                                points={hexGrid(boundaryPct)}
+                              <circle
+                                cx={RADAR_CX}
+                                cy={RADAR_CY}
+                                r={Math.round(RADAR_R * boundaryPct * 10) / 10}
                                 fill="none"
                                 stroke={color}
                                 stroke-width="1.5"
@@ -295,15 +374,16 @@ const tabClasses = {
                                 opacity="0.5"
                               />
                               <text
-                                x={RADAR_CX + RADAR_R * boundaryPct + 4}
-                                y={RADAR_CY - 4}
-                                font-size="9"
+                                x={RADAR_CX + RADAR_R * boundaryPct + 5}
+                                y={RADAR_CY - 3}
+                                font-size="13"
+                                font-weight="800"
                                 fill={color}
-                                opacity="0.7"
-                              >{`Kurs ${prevCourse}`}</text>
-                              <polygon
+                                opacity="0.85"
+                              >{prevCourse}</text>
+                              <path
                                 id={`radar-baseline-${prevCourse}-on-${course}`}
-                                points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                                d={RADAR_INIT_PATH}
                                 fill={`${color}15`}
                                 stroke={color}
                                 stroke-width="1.5"
@@ -314,10 +394,10 @@ const tabClasses = {
                           );
                         })}
 
-                        {/* Current course completion polygon */}
-                        <polygon
+                        {/* Current course completion shape — smooth path */}
+                        <path
                           id={`radar-polygon-${course}`}
-                          points={Array(6).fill(`${RADAR_CX},${RADAR_CY}`).join(" ")}
+                          d={RADAR_INIT_PATH}
                           fill="rgba(34,197,94,0.12)"
                           stroke="#22C55E"
                           stroke-width="2.5"
@@ -329,10 +409,7 @@ const tabClasses = {
                           <circle id={`radar-dot-${a.id}-${course}`} cx={RADAR_CX} cy={RADAR_CY} r="5" fill={a.color} />
                         ))}
                         {radarAxes.map((a) => (
-                          <text x={a.lx} y={a.ly} text-anchor={a.anchor} font-size="12" font-weight="600" fill={a.color}>{a.label}</text>
-                        ))}
-                        {radarAxes.map((a) => (
-                          <text id={`pct-${a.id}-${course}`} x={a.px} y={a.py} text-anchor={a.anchor} font-size="10" fill="#A8A29E">0 %</text>
+                          <text x={a.lx} y={a.ly} text-anchor={a.anchor} font-size="15" font-weight="700" fill={a.color}>{a.label}</text>
                         ))}
                       </Fragment>
                     );
@@ -349,7 +426,7 @@ const tabClasses = {
                   data-fill-course="B"
                   data-on-course="C"
                 >
-                  Jag har klarat Kurs B — fyll i alla mal
+                  Jag har klarat Kurs B — fyll i alla mål
                 </button>
               </div>
             )}
@@ -377,7 +454,7 @@ const tabClasses = {
             <!-- Trees grid for this course -->
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               {allTreesData[course].map((tree: any) => (
-                <div class="tree-card bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden hover:shadow-xl hover:shadow-stone-200/40 transition-shadow duration-300" data-skill={tree.id} data-course={course}>
+                <div class="tree-card bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg shadow-stone-200/30 border border-white/50 ring-1 ring-stone-100/30 overflow-hidden hover:shadow-xl hover:shadow-stone-200/40 transition-all duration-300" data-skill={tree.id} data-course={course} data-tree-state="empty">
                   <!-- Card header -->
                   <div class="px-4 pt-4 pb-1 flex items-center justify-between">
                     <div class="flex items-center gap-2">
@@ -399,18 +476,8 @@ const tabClasses = {
                     />
                   </div>
 
-                  <!-- Tree SVG — course-scoped gradient IDs -->
-                  <svg viewBox="0 0 300 355" class="w-full tree-svg">
-                    <defs>
-                      <radialGradient id={`crown-${course}-${tree.id}`} cx="50%" cy="42%" r="55%">
-                        <stop offset="0%" stop-color={tree.colorLight} stop-opacity="0.8" />
-                        <stop offset="100%" stop-color={tree.colorLight} stop-opacity="0" />
-                      </radialGradient>
-                    </defs>
-
-                    <!-- Ground -->
-                    <ellipse cx="150" cy="312" rx="90" ry="10" fill="#D4C9B0" opacity="0.35" />
-
+                  <!-- Tree SVG — extended viewBox to fit C/D crown fully -->
+                  <svg viewBox="-10 -45 320 405" class="w-full tree-svg">
                     <!-- Roots — parameterized by tier.rootCount -->
                     <path d="M138,297 C125,310 105,320 82,328" stroke="#7C5B2A" stroke-width={String(tier.rootStrokeMain)} fill="none" stroke-linecap="round" />
                     <path d="M162,297 C175,310 195,320 218,328" stroke="#7C5B2A" stroke-width={String(tier.rootStrokeMain)} fill="none" stroke-linecap="round" />
@@ -438,14 +505,14 @@ const tabClasses = {
                     <path d="M148,282 C147,260 146,238 148,218" stroke="#5A3520" stroke-width="0.7" fill="none" opacity="0.35" />
                     <path d="M153,278 C154,258 153,238 151,215" stroke="#5A3520" stroke-width="0.7" fill="none" opacity="0.35" />
 
-                    <!-- Crown glow — parameterized size, course-scoped gradient reference -->
-                    <ellipse
-                      cx="150" cy={String(tier.crownCy)}
-                      rx={String(tier.crownRx)} ry={String(tier.crownRy)}
-                      fill={`url(#crown-${course}-${tree.id})`}
-                      data-crown={`${course}-${tree.id}`}
-                      class="crown-glow"
-                    />
+                    <!-- Crown — bollkrona (foliage variant 4a) -->
+                    <g class="crown-balls" data-crown-balls={`${course}-${tree.id}`} data-tree-state="empty">
+                      {tree.balls.map((b: any) => {
+                        const fill = b.shade === 0 ? tree.colorLight : b.shade === 1 ? tree.colorMid : tree.color;
+                        const op = b.shade === 2 ? "0.82" : b.shade === 1 ? "0.95" : "1";
+                        return <circle cx={b.x} cy={b.y} r={b.r} fill={fill} opacity={op} />;
+                      })}
+                    </g>
 
                     <!-- Branches, sub-branches, and leaves -->
                     {tree.leaves.map((leaf: any, i: number) => (
@@ -527,10 +594,30 @@ const tabClasses = {
         transition: fill 0.3s ease;
       }
 
-      /* Crown glow */
-      .crown-glow {
-        opacity: 0.3;
-        transition: opacity 0.6s ease;
+      /* Crown — bollkrona, three states */
+      .crown-balls {
+        transition: opacity 0.5s ease, filter 0.5s ease;
+      }
+      .crown-balls[data-tree-state="empty"] {
+        opacity: 0.55;
+        filter: saturate(0.18) brightness(1.05);
+      }
+      .crown-balls[data-tree-state="started"] {
+        opacity: 0.92;
+        filter: saturate(0.85);
+      }
+      .crown-balls[data-tree-state="done"] {
+        opacity: 1;
+        filter: saturate(1.05);
+      }
+
+      /* Tree card border accent reflects state */
+      .tree-card[data-tree-state="empty"] {
+        border-color: rgba(231, 229, 228, 0.7);
+      }
+      .tree-card[data-tree-state="done"] {
+        border-color: rgba(34, 197, 94, 0.45);
+        box-shadow: 0 4px 24px -4px rgba(34, 197, 94, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04);
       }
 
       /* Branch lines */
@@ -580,9 +667,10 @@ const tabClasses = {
         animation: check-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
-      /* Radar polygon */
-      [id^="radar-polygon"] {
-        transition: points 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* Radar shape */
+      [id^="radar-polygon"],
+      [id^="radar-baseline"] {
+        transition: d 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
       /* Tree SVG sizing */
@@ -755,32 +843,64 @@ const tabClasses = {
         if (bar) bar.style.width = `${pct}%`;
       }
 
-      /* ---- Crown glow — course-scoped ---- */
+      /* ---- Crown state — empty / started / done ---- */
       function updateCrown(course, skillId) {
         const skills = allSkillsClient[course];
         if (!skills) return;
         const skill = skills.find(s => s.id === skillId);
         if (!skill) return;
+        const total = skill.goalIds.length;
         const checked = skill.goalIds.filter(id => states[course][id]).length;
-        const pct = checked / skill.goalIds.length;
-        const crown = document.querySelector(`[data-crown="${course}-${skillId}"]`);
-        if (crown) crown.style.opacity = String(0.3 + pct * 0.7);
+        const state = checked === 0 ? "empty" : checked >= total ? "done" : "started";
+
+        const crown = document.querySelector(`[data-crown-balls="${course}-${skillId}"]`);
+        if (crown) crown.setAttribute('data-tree-state', state);
+
+        const card = document.querySelector(`.tree-card[data-skill="${skillId}"][data-course="${course}"]`);
+        if (card) card.setAttribute('data-tree-state', state);
       }
 
       /* ---- Radar chart — same size, density varies ---- */
       const rcx = 150, rcy = 150;
 
-      function radarPoints(pcts, maxR) {
-        return pcts.map((p, i) => {
-          const rad = ((-90 + i * 60) * Math.PI) / 180;
-          return `${Math.round(rcx + maxR * p * Math.cos(rad))},${Math.round(rcy + maxR * p * Math.sin(rad))}`;
-        }).join(' ');
+      function smoothClosedPath(points) {
+        const n = points.length;
+        if (n < 2) return '';
+        const tension = 0.22;
+        let d = `M${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
+        for (let i = 0; i < n; i++) {
+          const p0 = points[(i - 1 + n) % n];
+          const p1 = points[i];
+          const p2 = points[(i + 1) % n];
+          const p3 = points[(i + 2) % n];
+          const cp1x = p1.x + (p2.x - p0.x) * tension;
+          const cp1y = p1.y + (p2.y - p0.y) * tension;
+          const cp2x = p2.x - (p3.x - p1.x) * tension;
+          const cp2y = p2.y - (p3.y - p1.y) * tension;
+          d += ` C${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+        }
+        return d + ' Z';
       }
+
+      function radarPath(pcts, maxR) {
+        const points = pcts.map((p, i) => {
+          const rad = ((-90 + i * 60) * Math.PI) / 180;
+          return {
+            x: rcx + maxR * p * Math.cos(rad),
+            y: rcy + maxR * p * Math.sin(rad),
+          };
+        });
+        return smoothClosedPath(points);
+      }
+
+      const RADAR_ORDER = ["hora", "lasa", "tala", "grammatik", "uttal", "skriva"];
 
       function getCoursePcts(course) {
         const skills = allSkillsClient[course];
         if (!skills) return [0,0,0,0,0,0];
-        return skills.map(s => {
+        return RADAR_ORDER.map(skillId => {
+          const s = skills.find(x => x.id === skillId);
+          if (!s) return 0;
           const checked = s.goalIds.filter(id => states[course][id]).length;
           return checked / s.goalIds.length;
         });
@@ -793,18 +913,16 @@ const tabClasses = {
         const pcts = getCoursePcts(course);
 
         const polygon = document.getElementById(`radar-polygon-${course}`);
-        if (polygon) polygon.setAttribute('points', radarPoints(pcts, RADAR_R));
+        if (polygon) polygon.setAttribute('d', radarPath(pcts, RADAR_R));
 
-        skills.forEach((s, i) => {
+        RADAR_ORDER.forEach((skillId, i) => {
           const rad = ((-90 + i * 60) * Math.PI) / 180;
           const r = RADAR_R * pcts[i];
-          const dot = document.getElementById(`radar-dot-${s.id}-${course}`);
+          const dot = document.getElementById(`radar-dot-${skillId}-${course}`);
           if (dot) {
             dot.setAttribute('cx', String(Math.round(rcx + r * Math.cos(rad))));
             dot.setAttribute('cy', String(Math.round(rcy + r * Math.sin(rad))));
           }
-          const el = document.getElementById(`pct-${s.id}-${course}`);
-          if (el) el.textContent = `${Math.round(pcts[i] * 100)} %`;
         });
 
         updateBaselineRadars(course);
@@ -817,7 +935,7 @@ const tabClasses = {
         cfg.prev.forEach((prevCourse, pi) => {
           const boundaryR = RADAR_R * cfg.prevPcts[pi];
           const el = document.getElementById(`radar-baseline-${prevCourse}-on-${course}`);
-          if (el) el.setAttribute("points", radarPoints(getCoursePcts(prevCourse), boundaryR));
+          if (el) el.setAttribute("d", radarPath(getCoursePcts(prevCourse), boundaryR));
         });
       }
 
@@ -886,7 +1004,7 @@ const tabClasses = {
       document.querySelectorAll('.inherit-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const fillC = btn.dataset.fillCourse;
-          if (confirm(`Alla mal i Kurs ${fillC} markeras som avklarade. Fortsatt?`)) {
+          if (confirm(`Alla mål i Kurs ${fillC} markeras som avklarade. Fortsätt?`)) {
             fillCourse(fillC);
           }
         });
